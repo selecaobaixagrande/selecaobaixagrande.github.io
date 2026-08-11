@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Área do Treinador | Seleção de Baixa Grande</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.login-area{
+    min-height:calc(100vh - 130px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:50px 20px;
+
+    background:
+    radial-gradient(
+        circle at center,
+        rgba(181,18,27,.30),
+        transparent 55%
+    ),
+    #080808;
+}
+
+.login-box{
+    width:100%;
+    max-width:430px;
+
+    background:linear-gradient(
+        145deg,
+        #1c1c1c,
+        #101010
+    );
+
+    border:1px solid #333;
+    border-top:4px solid #b5121b;
+
+    border-radius:20px;
+
+    padding:35px;
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.5);
+}
+
+.login-logo{
+    width:100px;
+    height:100px;
+
+    object-fit:contain;
+
+    display:block;
+
+    margin:0 auto 20px;
+}
+
+.login-box h2{
+    text-align:center;
+    font-size:28px;
+}
+
+.subtitulo{
+    text-align:center;
+
+    color:#999;
+
+    font-size:14px;
+
+    margin-top:6px;
+
+    margin-bottom:30px;
+}
+
+.campo{
+    margin-bottom:18px;
+}
+
+.campo label{
+    display:block;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-bottom:7px;
+}
+
+.campo input{
+    width:100%;
+
+    padding:14px;
+
+    border-radius:9px;
+
+    border:1px solid #333;
+
+    background:#080808;
+
+    color:#fff;
+
+    outline:none;
+
+    font-size:15px;
+}
+
+.campo input:focus{
+    border-color:#b5121b;
+
+    box-shadow:
+    0 0 0 2px rgba(181,18,27,.15);
+}
+
+.btn-login{
+    width:100%;
+
+    border:none;
+
+    cursor:pointer;
+
+    padding:14px;
+
+    border-radius:9px;
+
+    background:#b5121b;
+
+    color:#fff;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+    transition:.2s;
+}
+
+.btn-login:hover{
+    background:#e32632;
+
+    transform:translateY(-2px);
+}
+
+.voltar{
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#aaa;
+
+    font-size:13px;
+}
+
+.voltar:hover{
+    color:#fff;
+}
+
+.aviso-login{
+    margin-top:20px;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    background:#111;
+
+    border:1px solid #292929;
+
+    color:#888;
+
+    font-size:12px;
+
+    text-align:center;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= CABEÇALHO ================= -->
+
+<header>
+
+<div class="header">
+
+
+<a href="index.html" class="marca">
+
+<img
+src="1000001685.png"
+alt="Escudo da Seleção de Baixa Grande"
+class="logo-header">
+
+
+<h1>
+SELEÇÃO DE <span>BAIXA GRANDE</span>
+</h1>
+
+</a>
+
+
+<nav>
+
+<a href="index.html">
+Início
+</a>
+
+<a href="jogos.html">
+Jogos
+</a>
+
+<a href="resultados.html">
+Resultados
+</a>
+
+<a href="categorias.html">
+Categorias
+</a>
+
+<a href="elenco.html">
+Elenco
+</a>
+
+<a href="noticias.html">
+Notícias
+</a>
+
+<a href="galeria.html">
+Galeria
+</a>
+
+<a href="atleta.html">
+👤 Atleta
+</a>
+
+<a href="treinador.html" class="ativo">
+🎓 Treinador
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+
+<!-- ================= ÁREA DE LOGIN ================= -->
+
+<main>
+
+<div class="login-area">
+
+
+<div class="login-box">
+
+
+<img
+src="1000001685.png"
+alt="Escudo da Seleção de Baixa Grande"
+class="login-logo">
+
+
+<h2>
+🎓 Área do Treinador
+</h2>
+
+
+<p class="subtitulo">
+
+Acesse o painel exclusivo da comissão técnica.
+
+</p>
+
+
+
+<form>
+
+
+<div class="campo">
+
+<label for="nome">
+
+Nome
+
+</label>
+
+
+<input
+type="text"
+id="nome"
+name="nome"
+placeholder="Digite seu nome"
+autocomplete="username"
+required>
+
+</div>
+
+
+
+<div class="campo">
+
+<label for="senha">
+
+Senha
+
+</label>
+
+
+<input
+type="password"
+id="senha"
+name="senha"
+placeholder="Digite sua senha"
+autocomplete="current-password"
+required>
+
+</div>
+
+
+
+<button
+type="submit"
+class="btn-login">
+
+ENTRAR
+
+</button>
+
+
+</form>
+
+
+
+<div class="aviso-login">
+
+🔒 Área exclusiva para treinadores cadastrados.
+
+</div>
+
+
+
+<a
+href="index.html"
+class="voltar">
+
+← Voltar para o site
+
+</a>
+
+
+</div>
+
+</div>
+
+</main>
+
+
+
+<!-- ================= RODAPÉ ================= -->
+
+<footer>
+
+<p>
+
+<strong>
+⚽ SELEÇÃO DE BAIXA GRANDE
+</strong>
+
+</p>
+
+
+<p>
+Baixa Grande - Bahia
+</p>
+
+
+<p>
+© 2026 Seleção de Baixa Grande
+</p>
+
+</footer>
+
+
+</body>
+
+  </html>
