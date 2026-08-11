@@ -4,12 +4,17 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Seleção de Baixa Grande | Site Oficial</title>
 
+<meta name="description" content="Site oficial da Seleção de Baixa Grande - Bahia. Notícias, jogos, resultados, categorias, elenco e novidades.">
+
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
 
 *{
 margin:0;
@@ -28,30 +33,53 @@ color:#fff;
 line-height:1.6;
 }
 
-/* ================= HEADER ================= */
+a{
+text-decoration:none;
+color:inherit;
+}
+
+img{
+max-width:100%;
+}
+
+
+/* =========================================================
+   CORES
+========================================================= */
+
+:root{
+--vermelho:#b5121b;
+--vermelho-claro:#e32632;
+--vermelho-escuro:#4d0007;
+--preto:#080808;
+--card:#151515;
+--card-2:#1b1b1b;
+--cinza:#999;
+--branco:#fff;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 header{
 position:sticky;
 top:0;
-z-index:1000;
-background:rgba(5,5,5,.97);
-border-bottom:2px solid #b5121b;
-padding:13px 20px;
+z-index:9999;
+background:rgba(5,5,5,.96);
+backdrop-filter:blur(12px);
+border-bottom:1px solid rgba(181,18,27,.6);
 }
 
 .header{
-max-width:1200px;
+max-width:1250px;
 margin:auto;
+padding:12px 20px;
 display:flex;
 align-items:center;
 justify-content:space-between;
-gap:20px;
-}
-
-.logo-header{
-width:55px;
-height:55px;
-object-fit:contain;
+gap:25px;
 }
 
 .marca{
@@ -60,116 +88,145 @@ align-items:center;
 gap:12px;
 }
 
+.logo-header{
+width:52px;
+height:52px;
+object-fit:contain;
+}
+
 .marca h1{
-font-size:18px;
+font-size:17px;
 font-weight:900;
+letter-spacing:.5px;
 }
 
 .marca span{
-color:#e32632;
+color:var(--vermelho-claro);
 }
 
 nav{
 display:flex;
+align-items:center;
+gap:5px;
 flex-wrap:wrap;
-justify-content:center;
-gap:4px;
 }
 
 nav a{
-color:#fff;
-text-decoration:none;
-font-size:13px;
-font-weight:bold;
-padding:8px 10px;
+padding:9px 11px;
 border-radius:7px;
+font-size:12px;
+font-weight:bold;
+transition:.2s;
 }
 
 nav a:hover{
-background:#b5121b;
+background:var(--vermelho);
 }
 
-/* ================= HERO ================= */
+
+/* =========================================================
+   HERO
+========================================================= */
 
 .hero{
-min-height:680px;
+min-height:700px;
 display:flex;
 align-items:center;
 justify-content:center;
 text-align:center;
 padding:70px 20px;
+position:relative;
+overflow:hidden;
 
 background:
 radial-gradient(circle at center,
-rgba(181,18,27,.45),
-transparent 48%),
-linear-gradient(135deg,#100000,#b5121b);
+rgba(227,38,50,.35),
+transparent 40%),
+linear-gradient(135deg,#100000,#8d0912 55%,#130000);
+}
+
+.hero::before{
+content:"";
+position:absolute;
+width:500px;
+height:500px;
+border-radius:50%;
+background:rgba(255,255,255,.025);
+top:-180px;
+left:-180px;
 }
 
 .hero-content{
-max-width:850px;
+max-width:900px;
+position:relative;
+z-index:2;
 }
 
 .logo-principal{
-width:205px;
-height:205px;
+width:210px;
+height:210px;
 object-fit:contain;
-filter:drop-shadow(0 12px 20px rgba(0,0,0,.7));
+filter:drop-shadow(0 15px 30px rgba(0,0,0,.8));
 margin-bottom:25px;
 }
 
 .hero h2{
-font-size:58px;
+font-size:62px;
 line-height:1;
-font-weight:900;
+font-weight:950;
+letter-spacing:-2px;
 }
 
 .hero h3{
-margin-top:18px;
+margin-top:20px;
 font-size:21px;
-color:#eee;
 font-weight:normal;
+color:#eee;
 }
 
 .hero p{
-margin-top:12px;
+margin-top:10px;
 color:#ddd;
-font-size:16px;
 }
 
 .botoes{
-margin-top:28px;
 display:flex;
 justify-content:center;
 flex-wrap:wrap;
 gap:12px;
+margin-top:30px;
 }
 
 .botao{
-padding:14px 24px;
+padding:14px 25px;
 border-radius:9px;
-text-decoration:none;
 font-weight:bold;
-display:inline-block;
+transition:.2s;
+}
+
+.botao:hover{
+transform:translateY(-2px);
 }
 
 .botao-branco{
 background:#fff;
-color:#b5121b;
+color:var(--vermelho);
 }
 
 .botao-vermelho{
-background:#b5121b;
-color:#fff;
+background:var(--vermelho);
 border:1px solid #fff;
 }
 
-/* ================= SEÇÕES ================= */
+
+/* =========================================================
+   SEÇÕES
+========================================================= */
 
 section{
-max-width:1200px;
+max-width:1250px;
 margin:auto;
-padding:65px 20px;
+padding:70px 20px;
 }
 
 .titulo{
@@ -177,17 +234,87 @@ margin-bottom:30px;
 }
 
 .titulo small{
-color:#e32632;
+color:var(--vermelho-claro);
+font-weight:bold;
+text-transform:uppercase;
+letter-spacing:1px;
+}
+
+.titulo h2{
+font-size:34px;
+margin-top:4px;
+}
+
+
+/* =========================================================
+   PRÓXIMO JOGO
+========================================================= */
+
+.jogo-card{
+background:
+linear-gradient(145deg,#1b1b1b,#101010);
+border:1px solid #292929;
+border-top:4px solid var(--vermelho);
+border-radius:20px;
+padding:38px;
+text-align:center;
+box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.jogo-label{
+color:var(--vermelho-claro);
+font-size:12px;
 font-weight:bold;
 text-transform:uppercase;
 }
 
-.titulo h2{
-font-size:32px;
-margin-top:5px;
+.jogo-data{
+margin-top:8px;
+font-size:14px;
+color:#aaa;
 }
 
-/* ================= CATEGORIAS ================= */
+.times{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:60px;
+margin-top:30px;
+}
+
+.time-box{
+width:180px;
+}
+
+.time-box img{
+width:85px;
+height:85px;
+object-fit:contain;
+margin-bottom:10px;
+}
+
+.time{
+font-size:19px;
+font-weight:900;
+}
+
+.vs{
+font-size:30px;
+font-weight:900;
+color:var(--vermelho-claro);
+}
+
+.jogo-info{
+margin-top:30px;
+padding-top:20px;
+border-top:1px solid #292929;
+color:#aaa;
+}
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
 
 .categorias{
 display:grid;
@@ -198,142 +325,50 @@ gap:18px;
 .categoria{
 background:linear-gradient(145deg,#1c1c1c,#111);
 border:1px solid #303030;
-border-top:4px solid #b5121b;
-border-radius:15px;
+border-top:4px solid var(--vermelho);
+border-radius:16px;
 padding:30px 15px;
 text-align:center;
 transition:.25s;
 }
 
 .categoria:hover{
-transform:translateY(-6px);
-border-color:#e32632;
+transform:translateY(-7px);
+border-color:var(--vermelho-claro);
+box-shadow:0 15px 35px rgba(181,18,27,.15);
 }
 
 .categoria .icone{
-font-size:38px;
+font-size:40px;
 }
 
 .categoria h3{
-font-size:28px;
+font-size:27px;
 margin-top:8px;
 }
 
 .categoria p{
 color:#999;
 font-size:13px;
-margin-top:7px;
+margin-top:5px;
 }
 
-/* ================= DESTAQUE ================= */
 
-.destaque{
-background:linear-gradient(135deg,#b5121b,#480006);
-border:1px solid #e32632;
-border-radius:18px;
-padding:35px;
-}
+/* =========================================================
+   RESULTADOS
+========================================================= */
 
-.data{
-font-size:12px;
-font-weight:bold;
-color:#ffd3d3;
-}
-
-.destaque h3{
-font-size:28px;
-margin-top:10px;
-}
-
-.destaque p{
-color:#eee;
-margin-top:12px;
-}
-
-/* ================= JOGO ================= */
-
-.jogo-card{
-background:#171717;
-border:1px solid #292929;
-border-radius:18px;
-padding:35px;
-text-align:center;
-}
-
-.jogo-label{
-color:#e32632;
-font-weight:bold;
-text-transform:uppercase;
-font-size:13px;
-}
-
-.times{
-margin-top:25px;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:50px;
-}
-
-.time{
-font-size:22px;
-font-weight:900;
-}
-
-.vs{
-font-size:32px;
-font-weight:900;
-color:#e32632;
-}
-
-.jogo-info{
-margin-top:25px;
-color:#aaa;
-}
-
-/* ================= ESTÁDIO ================= */
-
-.estadio{
+.resultados{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:18px;
 }
 
-.info-card{
-background:#171717;
-border:1px solid #292929;
-border-radius:14px;
-padding:25px;
-text-align:center;
-}
-
-.info-card .icone{
-font-size:35px;
-}
-
-.info-card h3{
-margin-top:8px;
-}
-
-.info-card p{
-color:#999;
-font-size:14px;
-margin-top:5px;
-}
-
-/* ================= RESULTADOS ================= */
-
-.resultados{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:16px;
-}
-
 .resultado{
-background:#171717;
+background:#151515;
 border:1px solid #292929;
-border-radius:14px;
-padding:23px;
+border-radius:16px;
+padding:25px;
 text-align:center;
 }
 
@@ -342,20 +377,117 @@ color:#888;
 }
 
 .placar{
-font-size:22px;
+font-size:23px;
 font-weight:900;
 margin:12px 0;
 }
 
-.resultado p{
-color:#aaa;
+.status{
+font-size:12px;
+font-weight:bold;
 }
 
 .vitoria{
-color:#35d35b;
+color:#39d353;
 }
 
-/* ================= NOTÍCIAS ================= */
+.empate{
+color:#f1c40f;
+}
+
+.derrota{
+color:#e32632;
+}
+
+
+/* =========================================================
+   ESTATÍSTICAS
+========================================================= */
+
+.estatisticas{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+}
+
+.stat{
+background:linear-gradient(145deg,#1b1b1b,#111);
+border:1px solid #292929;
+border-radius:15px;
+padding:25px;
+text-align:center;
+}
+
+.stat-numero{
+font-size:35px;
+font-weight:900;
+color:var(--vermelho-claro);
+}
+
+.stat p{
+color:#999;
+font-size:13px;
+margin-top:4px;
+}
+
+
+/* =========================================================
+   ELENCO
+========================================================= */
+
+.elenco{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+}
+
+.jogador{
+background:#151515;
+border:1px solid #292929;
+border-radius:16px;
+overflow:hidden;
+transition:.25s;
+}
+
+.jogador:hover{
+transform:translateY(-5px);
+border-color:var(--vermelho);
+}
+
+.jogador-foto{
+height:230px;
+background:
+linear-gradient(145deg,#250000,#111);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:60px;
+color:#555;
+}
+
+.jogador-info{
+padding:18px;
+}
+
+.jogador-info small{
+color:var(--vermelho-claro);
+font-weight:bold;
+}
+
+.jogador-info h3{
+font-size:20px;
+margin-top:3px;
+}
+
+.jogador-info p{
+color:#999;
+font-size:13px;
+}
+
+
+/* =========================================================
+   NOTÍCIAS
+========================================================= */
 
 .noticias{
 display:grid;
@@ -364,32 +496,79 @@ gap:18px;
 }
 
 .noticia{
-background:#171717;
+background:#151515;
 border:1px solid #292929;
-border-radius:15px;
+border-radius:16px;
 padding:25px;
+transition:.25s;
+}
+
+.noticia:hover{
+transform:translateY(-5px);
+border-color:var(--vermelho);
+}
+
+.noticia .data{
+font-size:11px;
+font-weight:bold;
+color:var(--vermelho-claro);
 }
 
 .noticia h3{
-font-size:19px;
+font-size:20px;
 margin-top:10px;
 }
 
 .noticia p{
 color:#aaa;
 margin-top:10px;
+font-size:14px;
 }
 
-/* ================= IDENTIDADE ================= */
+
+/* =========================================================
+   DESTAQUE
+========================================================= */
+
+.destaque{
+background:
+linear-gradient(135deg,#b5121b,#480006);
+border:1px solid var(--vermelho-claro);
+border-radius:20px;
+padding:38px;
+box-shadow:0 15px 45px rgba(181,18,27,.15);
+}
+
+.destaque .data{
+font-size:11px;
+font-weight:bold;
+color:#ffd3d3;
+}
+
+.destaque h3{
+font-size:29px;
+margin-top:8px;
+}
+
+.destaque p{
+color:#eee;
+margin-top:12px;
+}
+
+
+/* =========================================================
+   IDENTIDADE
+========================================================= */
 
 .identidade{
 display:grid;
 grid-template-columns:300px 1fr;
-gap:30px;
+gap:40px;
 align-items:center;
 background:linear-gradient(135deg,#160000,#2b0000);
-border-radius:18px;
-padding:35px;
+border:1px solid #3b0000;
+border-radius:20px;
+padding:40px;
 }
 
 .identidade img{
@@ -401,7 +580,7 @@ margin:auto;
 }
 
 .identidade h2{
-font-size:30px;
+font-size:32px;
 }
 
 .identidade p{
@@ -409,37 +588,51 @@ color:#ccc;
 margin-top:12px;
 }
 
-/* ================= GALERIA ================= */
+
+/* =========================================================
+   GALERIA
+========================================================= */
 
 .galeria{
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:15px;
+gap:16px;
 }
 
 .foto{
-height:220px;
-border-radius:14px;
-background:linear-gradient(135deg,#250000,#171717);
+height:230px;
+border-radius:16px;
+background:
+linear-gradient(135deg,#250000,#171717);
 border:1px solid #292929;
 display:flex;
 align-items:center;
 justify-content:center;
 text-align:center;
 color:#888;
+transition:.25s;
 }
 
-/* ================= REDES ================= */
+.foto:hover{
+transform:scale(1.02);
+border-color:var(--vermelho);
+}
+
+
+/* =========================================================
+   INSTAGRAM
+========================================================= */
 
 .social{
 text-align:center;
-background:linear-gradient(135deg,#180000,#8c0b14);
-border-radius:20px;
-padding:50px 20px;
+background:
+linear-gradient(135deg,#180000,#8c0b14);
+border-radius:22px;
+padding:55px 20px;
 }
 
 .social h2{
-font-size:32px;
+font-size:34px;
 }
 
 .social p{
@@ -449,47 +642,98 @@ margin-top:8px;
 
 .instagram{
 display:inline-block;
-margin-top:22px;
-padding:14px 25px;
+margin-top:25px;
+padding:15px 28px;
 background:#fff;
-color:#b5121b;
-border-radius:9px;
-text-decoration:none;
+color:var(--vermelho);
+border-radius:10px;
 font-weight:bold;
+transition:.2s;
 }
 
-/* ================= FOOTER ================= */
+.instagram:hover{
+transform:translateY(-3px);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
 
 footer{
 background:#030303;
 border-top:1px solid #222;
 text-align:center;
-padding:35px 20px;
-color:#888;
+padding:40px 20px;
+color:#777;
 }
 
 footer strong{
 color:#fff;
+font-size:17px;
 }
 
-/* ================= CELULAR ================= */
+footer p{
+margin-top:6px;
+}
 
-@media(max-width:900px){
 
-.categorias{
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media(max-width:1000px){
+
+.categorias,
+.elenco{
 grid-template-columns:repeat(2,1fr);
 }
 
-.noticias{
-grid-template-columns:1fr;
+.estatisticas{
+grid-template-columns:repeat(2,1fr);
 }
 
+.noticias,
 .resultados{
 grid-template-columns:1fr;
 }
 
-.estadio{
-grid-template-columns:1fr;
+}
+
+@media(max-width:700px){
+
+.header{
+flex-direction:column;
+}
+
+nav{
+justify-content:center;
+}
+
+.hero{
+min-height:620px;
+}
+
+.hero h2{
+font-size:42px;
+}
+
+.logo-principal{
+width:160px;
+height:160px;
+}
+
+.times{
+gap:20px;
+}
+
+.time-box{
+width:130px;
+}
+
+.time-box img{
+width:65px;
+height:65px;
 }
 
 .identidade{
@@ -498,37 +742,38 @@ text-align:center;
 }
 
 .galeria{
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr;
 }
 
 }
 
-@media(max-width:600px){
+@media(max-width:500px){
+
+section{
+padding:55px 15px;
+}
 
 .header{
-flex-direction:column;
+padding:10px 12px;
 }
 
-.hero{
-min-height:600px;
-padding:50px 15px;
-}
-
-.logo-principal{
-width:150px;
-height:150px;
+nav a{
+font-size:11px;
+padding:7px 6px;
 }
 
 .hero h2{
-font-size:38px;
+font-size:35px;
 }
 
 .hero h3{
 font-size:17px;
 }
 
-.categorias{
-grid-template-columns:repeat(2,1fr);
+.categorias,
+.elenco,
+.estatisticas{
+grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
@@ -537,34 +782,51 @@ padding:22px 8px;
 }
 
 .categoria h3{
-font-size:23px;
+font-size:22px;
+}
+
+.jogo-card{
+padding:25px 12px;
 }
 
 .times{
-flex-direction:column;
-gap:15px;
+gap:8px;
 }
 
-.galeria{
-grid-template-columns:1fr;
+.time{
+font-size:15px;
 }
 
-.foto{
-height:190px;
+.vs{
+font-size:22px;
+}
+
+.destaque{
+padding:25px;
+}
+
+.destaque h3{
+font-size:23px;
 }
 
 }
 
-/* ================= FIM ================= */
+
+/* =========================================================
+   FIM
+========================================================= */
 
 </style>
 
 </head>
 
+
 <body>
 
 
-<!-- ================= CABEÇALHO ================= -->
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header>
 
@@ -573,7 +835,7 @@ height:190px;
 <div class="marca">
 
 <img
-src="file_00000000a444822f8622fb2b86fe60e1.png"
+src="Gemini_Generated_Image_icz50micz50micz5.png"
 alt="Escudo da Seleção de Baixa Grande"
 class="logo-header">
 
@@ -583,18 +845,15 @@ SELEÇÃO DE <span>BAIXA GRANDE</span>
 
 </div>
 
+
 <nav>
 
 <a href="#inicio">Início</a>
-
-<a href="#categorias">Categorias</a>
-
 <a href="#jogos">Jogos</a>
-
 <a href="#resultados">Resultados</a>
-
+<a href="#categorias">Categorias</a>
+<a href="#elenco">Elenco</a>
 <a href="#noticias">Notícias</a>
-
 <a href="#galeria">Galeria</a>
 
 </nav>
@@ -604,14 +863,17 @@ SELEÇÃO DE <span>BAIXA GRANDE</span>
 </header>
 
 
-<!-- ================= INÍCIO ================= -->
+
+<!-- =====================================================
+     HERO
+===================================================== -->
 
 <div class="hero" id="inicio">
 
 <div class="hero-content">
 
 <img
-src="file_00000000a444822f8622fb2b86fe60e1.png"
+src="Gemini_Generated_Image_icz50micz50micz5.png"
 alt="Escudo oficial da Seleção de Baixa Grande"
 class="logo-principal">
 
@@ -635,9 +897,9 @@ Representando Baixa Grande dentro e fora de campo.
 <div class="botoes">
 
 <a
-href="#categorias"
+href="#jogos"
 class="botao botao-branco">
-🏆 Nossas categorias
+⚽ Próximo jogo
 </a>
 
 
@@ -655,7 +917,167 @@ class="botao botao-vermelho">
 </div>
 
 
-<!-- ================= CATEGORIAS ================= -->
+
+<!-- =====================================================
+     PRÓXIMO JOGO
+===================================================== -->
+
+<section id="jogos">
+
+<div class="titulo">
+
+<small>Agenda oficial</small>
+
+<h2>⚽ Próximo Jogo</h2>
+
+</div>
+
+
+<div class="jogo-card">
+
+<div class="jogo-label">
+Próxima partida
+</div>
+
+<div class="jogo-data">
+Data e horário serão divulgados oficialmente
+</div>
+
+
+<div class="times">
+
+<div class="time-box">
+
+<img
+src="Gemini_Generated_Image_icz50micz50micz5.png"
+alt="Baixa Grande">
+
+<div class="time">
+BAIXA GRANDE
+</div>
+
+</div>
+
+
+<div class="vs">
+VS
+</div>
+
+
+<div class="time-box">
+
+<div style="font-size:60px;margin-bottom:10px;">
+⚽
+</div>
+
+<div class="time">
+ADVERSÁRIO
+</div>
+
+</div>
+
+</div>
+
+
+<div class="jogo-info">
+
+📅 Data: Em breve<br>
+🕐 Horário: Em breve<br>
+🏟️ Local: Em breve<br>
+🏆 Competição: Em breve
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     RESULTADOS
+===================================================== -->
+
+<section id="resultados">
+
+<div class="titulo">
+
+<small>Histórico</small>
+
+<h2>📊 Últimos Resultados</h2>
+
+</div>
+
+
+<div class="resultados">
+
+
+<div class="resultado">
+
+<small>Partida</small>
+
+<div class="placar">
+BAIXA GRANDE
+</div>
+
+<p>
+Resultado em breve
+</p>
+
+<div class="status vitoria">
+AGUARDANDO ATUALIZAÇÃO
+</div>
+
+</div>
+
+
+<div class="resultado">
+
+<small>Partida</small>
+
+<div class="placar">
+BAIXA GRANDE
+</div>
+
+<p>
+Resultado em breve
+</p>
+
+<div class="status">
+AGUARDANDO ATUALIZAÇÃO
+</div>
+
+</div>
+
+
+<div class="resultado">
+
+<small>Partida</small>
+
+<div class="placar">
+BAIXA GRANDE
+</div>
+
+<p>
+Resultado em breve
+</p>
+
+<div class="status">
+AGUARDANDO ATUALIZAÇÃO
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CATEGORIAS
+===================================================== -->
 
 <section id="categorias">
 
@@ -728,15 +1150,18 @@ Nova categoria da Seleção
 </section>
 
 
-<!-- ================= SUB-20 ================= -->
+
+<!-- =====================================================
+     ANÚNCIO SUB-20
+===================================================== -->
 
 <section>
 
 <div class="titulo">
 
-<small>Novidade</small>
+<small>Comunicado oficial</small>
 
-<h2>📢 Anúncio Oficial</h2>
+<h2>📢 Novidade</h2>
 
 </div>
 
@@ -770,176 +1195,72 @@ do futebol de Baixa Grande.
 </section>
 
 
-<!-- ================= PRÓXIMO JOGO ================= -->
 
-<section id="jogos">
-
-<div class="titulo">
-
-<small>Agenda</small>
-
-<h2>⚽ Próximo Jogo</h2>
-
-</div>
-
-
-<div class="jogo-card">
-
-<div class="jogo-label">
-Próxima partida
-</div>
-
-
-<div class="times">
-
-<div class="time">
-BAIXA GRANDE
-</div>
-
-
-<div class="vs">
-VS
-</div>
-
-
-<div class="time">
-ADVERSÁRIO
-</div>
-
-</div>
-
-
-<div class="jogo-info">
-
-📅 Data: Em breve<br>
-
-🕐 Horário: Em breve<br>
-
-🏟️ Local: Em breve
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= RESULTADOS ================= -->
-
-<section id="resultados">
-
-<div class="titulo">
-
-<small>Partidas</small>
-
-<h2>📊 Últimos Resultados</h2>
-
-</div>
-
-
-<div class="resultados">
-
-
-<div class="resultado">
-
-<small>Resultado</small>
-
-<div class="placar">
-BAIXA GRANDE
-</div>
-
-<p>
-Resultado em breve
-</p>
-
-</div>
-
-
-<div class="resultado">
-
-<small>Resultado</small>
-
-<div class="placar">
-BAIXA GRANDE
-</div>
-
-<p>
-Resultado em breve
-</p>
-
-</div>
-
-
-<div class="resultado">
-
-<small>Resultado</small>
-
-<div class="placar">
-BAIXA GRANDE
-</div>
-
-<p>
-Resultado em breve
-</p>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-<!-- ================= INFORMAÇÕES ================= -->
+<!-- =====================================================
+     ESTATÍSTICAS
+===================================================== -->
 
 <section>
 
 <div class="titulo">
 
-<small>Conheça o projeto</small>
+<small>Números</small>
 
-<h2>🏟️ Seleção de Baixa Grande</h2>
+<h2>📈 Estatísticas</h2>
 
 </div>
 
 
-<div class="estadio">
+<div class="estatisticas">
 
 
-<div class="info-card">
+<div class="stat">
 
-<div class="icone">⚽</div>
-
-<h3>Futebol de Base</h3>
+<div class="stat-numero">
+—
+</div>
 
 <p>
-Desenvolvimento e formação de jovens atletas.
+Jogos
 </p>
 
 </div>
 
 
-<div class="info-card">
+<div class="stat">
 
-<div class="icone">🏆</div>
-
-<h3>Competições</h3>
+<div class="stat-numero">
+—
+</div>
 
 <p>
-Participação em competições e eventos esportivos.
+Vitórias
 </p>
 
 </div>
 
 
-<div class="info-card">
+<div class="stat">
 
-<div class="icone">🔴</div>
-
-<h3>Baixa Grande</h3>
+<div class="stat-numero">
+—
+</div>
 
 <p>
-Representando nossa cidade dentro e fora de campo.
+Gols
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-numero">
+—
+</div>
+
+<p>
+Artilheiro
 </p>
 
 </div>
@@ -950,7 +1271,118 @@ Representando nossa cidade dentro e fora de campo.
 </section>
 
 
-<!-- ================= NOTÍCIAS ================= -->
+
+<!-- =====================================================
+     ELENCO
+===================================================== -->
+
+<section id="elenco">
+
+<div class="titulo">
+
+<small>Jogadores</small>
+
+<h2>👥 Elenco</h2>
+
+</div>
+
+
+<div class="elenco">
+
+
+<div class="jogador">
+
+<div class="jogador-foto">
+⚽
+</div>
+
+<div class="jogador-info">
+
+<small>SUB-17</small>
+
+<h3>Jogador</h3>
+
+<p>
+Posição • Nº
+</p>
+
+</div>
+
+</div>
+
+
+<div class="jogador">
+
+<div class="jogador-foto">
+⚽
+</div>
+
+<div class="jogador-info">
+
+<small>SUB-17</small>
+
+<h3>Jogador</h3>
+
+<p>
+Posição • Nº
+</p>
+
+</div>
+
+</div>
+
+
+<div class="jogador">
+
+<div class="jogador-foto">
+⚽
+</div>
+
+<div class="jogador-info">
+
+<small>SUB-17</small>
+
+<h3>Jogador</h3>
+
+<p>
+Posição • Nº
+</p>
+
+</div>
+
+</div>
+
+
+<div class="jogador">
+
+<div class="jogador-foto">
+⚽
+</div>
+
+<div class="jogador-info">
+
+<small>SUB-17</small>
+
+<h3>Jogador</h3>
+
+<p>
+Posição • Nº
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     NOTÍCIAS
+===================================================== -->
 
 <section id="noticias">
 
@@ -1025,7 +1457,10 @@ e desenvolver jovens atletas.
 </section>
 
 
-<!-- ================= IDENTIDADE ================= -->
+
+<!-- =====================================================
+     IDENTIDADE
+===================================================== -->
 
 <section>
 
@@ -1035,8 +1470,8 @@ e desenvolver jovens atletas.
 <div>
 
 <img
-src="file_00000000a444822f8622fb2b86fe60e1.png"
-alt="Escudo da Seleção de Baixa Grande">
+src="Gemini_Generated_Image_icz50micz50micz5.png"
+alt="Escudo oficial da Seleção de Baixa Grande">
 
 </div>
 
@@ -1068,7 +1503,10 @@ o esporte local.
 </section>
 
 
-<!-- ================= GALERIA ================= -->
+
+<!-- =====================================================
+     GALERIA
+===================================================== -->
 
 <section id="galeria">
 
@@ -1107,7 +1545,10 @@ Momentos da Seleção em breve
 </section>
 
 
-<!-- ================= INSTAGRAM ================= -->
+
+<!-- =====================================================
+     INSTAGRAM
+===================================================== -->
 
 <section>
 
@@ -1138,34 +1579,13 @@ class="instagram">
 </section>
 
 
-<!-- ================= RODAPÉ ================= -->
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
 <footer>
 
 <p>
 <strong>
-⚽ SELEÇÃO DE BAIXA GRANDE
-</strong>
-</p>
-
-
-<p>
-Baixa Grande - Bahia
-</p>
-
-
-<p>
-Sub-13 • Sub-15 • Sub-17 • Sub-20
-</p>
-
-
-<p>
-© 2026 Seleção de Baixa Grande
-</p>
-
-</footer>
-
-
-</body>
-
-  </html>
+⚽ S
