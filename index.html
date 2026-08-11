@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Seleção de Baixa Grande</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #b00000;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 14px;
+    }
+
+    nav {
+      background: #850000;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    nav a:hover {
+      background: #b00000;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #b00000, #550000);
+      color: white;
+      text-align: center;
+      padding: 55px 20px;
+    }
+
+    .hero h2 {
+      font-size: 34px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 17px;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1000px;
+      margin: 30px auto;
+    }
+
+    .titulo {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #a00000;
+      font-size: 26px;
+    }
+
+    .jogo {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 18px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .jogo .data {
+      color: #a00000;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .times {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .vs {
+      color: #999;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      color: #a00000;
+      margin-bottom: 10px;
+    }
+
+    .instagram {
+      display: inline-block;
+      background: #b00000;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: 40px;
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 23px;
+      }
+
+      .hero h2 {
+        font-size: 27px;
+      }
+
+      .times {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>SELEÇÃO DE BAIXA GRANDE</h1>
+    <p>Baixa Grande - Bahia</p>
+  </header>
+
+  <nav>
+    <a href="#inicio">Início</a>
+    <a href="#jogos">Jogos</a>
+    <a href="#noticias">Notícias</a>
+    <a href="#elenco">Elenco</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <section class="hero" id="inicio">
+    <h2>SELEÇÃO DE BAIXA GRANDE</h2>
+    <p>Paixão, futebol e orgulho de representar nossa cidade.</p>
+  </section>
+
+  <main class="container">
+
+    <section id="jogos">
+      <h2 class="titulo">⚽ Próximo Jogo</h2>
+
+      <div class="jogo">
+        <div class="data">PRÓXIMO JOGO</div>
+
+        <div class="times">
+          <span>BAIXA GRANDE</span>
+          <span class="vs">X</span>
+          <span>ADVERSÁRIO</span>
+        </div>
+
+        <p style="margin-top: 15px;">
+          📅 Data: Em breve<br>
+          🕐 Horário: Em breve<br>
+          🏟️ Local: Em breve
+        </p>
+      </div>
+    </section>
+
+    <section id="noticias">
+      <h2 class="titulo">📰 Notícias</h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Seleção de Baixa Grande</h3>
+          <p>
+            Acompanhe aqui as principais notícias, resultados
+            e informações da nossa seleção.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Resultados</h3>
+          <p>
+            Em breve você poderá acompanhar os resultados
+            dos jogos da Seleção de Baixa Grande.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Novidades</h3>
+          <p>
+            Fique ligado para não perder nenhuma novidade
+            da equipe.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="elenco" style="margin-top: 35px;">
+      <h2 class="titulo">👥 Elenco</h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Goleiros</h3>
+          <p>Pedro</p>
+        </div>
+
+        <div class="card">
+          <h3>Jogadores</h3>
+          <p>Igor</p>
+          <p>Arthur</p>
+          <p>Dudu</p>
+          <p>Hélio</p>
+          <p>Átila</p>
+          <p>Júnior</p>
+          <p>Iago</p>
+          <p>Hugo</p>
+          <p>Felipinho</p>
+          <p>Reginaldo</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="contato" style="margin-top: 35px; text-align: center;">
+      <h2 class="titulo">📱 Redes Sociais</h2>
+
+      <p>Acompanhe a Seleção de Baixa Grande no Instagram.</p>
+
+      <a
+        class="instagram"
+        href="https://www.instagram.com/selecaobaixagrande/"
+        target="_blank">
+        Instagram Oficial
+      </a>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Seleção de Baixa Grande</p>
+    <p>Baixa Grande - Bahia</p>
+  </footer>
+
+</body>
+  </html>
