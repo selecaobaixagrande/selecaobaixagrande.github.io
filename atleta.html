@@ -2,9 +2,7 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Área do Atleta | Seleção de Baixa Grande</title>
@@ -20,11 +18,9 @@
     justify-content:center;
     padding:50px 20px;
     background:
-    radial-gradient(
-        circle at center,
-        rgba(181,18,27,.30),
-        transparent 55%
-    ),
+    radial-gradient(circle at center,
+    rgba(181,18,27,.30),
+    transparent 55%),
     #080808;
 }
 
@@ -52,7 +48,7 @@
     font-size:28px;
 }
 
-.login-box .subtitulo{
+.subtitulo{
     text-align:center;
     color:#999;
     font-size:14px;
@@ -74,6 +70,7 @@
 .campo input{
     width:100%;
     padding:14px;
+    box-sizing:border-box;
     border-radius:9px;
     border:1px solid #333;
     background:#080808;
@@ -105,6 +102,12 @@
     transform:translateY(-2px);
 }
 
+.btn-login:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+    transform:none;
+}
+
 .voltar{
     display:block;
     text-align:center;
@@ -128,15 +131,34 @@
     text-align:center;
 }
 
+.mensagem{
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    border-radius:8px;
+    text-align:center;
+    font-size:13px;
+}
+
+.mensagem.erro{
+    display:block;
+    background:#2a0d0f;
+    border:1px solid #7d1d25;
+    color:#ff9da3;
+}
+
+.mensagem.sucesso{
+    display:block;
+    background:#0d2415;
+    border:1px solid #236b38;
+    color:#8ee6a6;
+}
+
 </style>
 
 </head>
 
-
 <body>
-
-
-<!-- CABEÇALHO -->
 
 <header>
 
@@ -155,36 +177,15 @@ SELEÇÃO DE <span>BAIXA GRANDE</span>
 
 </a>
 
-
 <nav>
 
-<a href="index.html">
-Início
-</a>
-
-<a href="jogos.html">
-Jogos
-</a>
-
-<a href="resultados.html">
-Resultados
-</a>
-
-<a href="categorias.html">
-Categorias
-</a>
-
-<a href="elenco.html">
-Elenco
-</a>
-
-<a href="noticias.html">
-Notícias
-</a>
-
-<a href="galeria.html">
-Galeria
-</a>
+<a href="index.html">Início</a>
+<a href="jogos.html">Jogos</a>
+<a href="resultados.html">Resultados</a>
+<a href="categorias.html">Categorias</a>
+<a href="elenco.html">Elenco</a>
+<a href="noticias.html">Notícias</a>
+<a href="galeria.html">Galeria</a>
 
 <a href="atleta.html" class="ativo">
 👤 Atleta
@@ -200,54 +201,42 @@ Galeria
 
 </header>
 
-
-
-<!-- LOGIN -->
-
 <main>
 
 <div class="login-area">
 
 <div class="login-box">
 
-
 <img
 src="1000001685.png"
 alt="Escudo da Seleção de Baixa Grande"
 class="login-logo">
 
-
 <h2>
 👤 Área do Atleta
 </h2>
-
 
 <p class="subtitulo">
 Acesse sua área exclusiva da Seleção de Baixa Grande.
 </p>
 
-
-
-<form>
-
+<form id="loginForm">
 
 <div class="campo">
 
-<label for="nome">
-Nome
+<label for="email">
+E-mail
 </label>
 
 <input
-type="text"
-id="nome"
-name="nome"
-placeholder="Digite seu nome"
+type="email"
+id="email"
+name="email"
+placeholder="Digite seu e-mail"
 autocomplete="username"
 required>
 
 </div>
-
-
 
 <div class="campo">
 
@@ -265,20 +254,18 @@ required>
 
 </div>
 
-
-
 <button
 type="submit"
-class="btn-login">
+class="btn-login"
+id="btnLogin">
 
 ENTRAR
 
 </button>
 
-
 </form>
 
-
+<div id="mensagem" class="mensagem"></div>
 
 <div class="aviso-login">
 
@@ -286,16 +273,9 @@ ENTRAR
 
 </div>
 
-
-
-<a
-href="index.html"
-class="voltar">
-
+<a href="index.html" class="voltar">
 ← Voltar para o site
-
 </a>
-
 
 </div>
 
@@ -303,16 +283,10 @@ class="voltar">
 
 </main>
 
-
-
 <footer>
 
 <p>
-
-<strong>
-⚽ SELEÇÃO DE BAIXA GRANDE
-</strong>
-
+<strong>⚽ SELEÇÃO DE BAIXA GRANDE</strong>
 </p>
 
 <p>
@@ -325,7 +299,184 @@ Baixa Grande - Bahia
 
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+"https://lvxwziztdngntoqypzga.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+const form =
+document.getElementById("loginForm");
+
+const mensagem =
+document.getElementById("mensagem");
+
+const botao =
+document.getElementById("btnLogin");
+
+function mostrarMensagem(texto, tipo){
+
+    mensagem.textContent = texto;
+
+    mensagem.className =
+    "mensagem " + tipo;
+
+}
+
+form.addEventListener("submit", async function(event){
+
+    event.preventDefault();
+
+    const email =
+    document.getElementById("email")
+    .value
+    .trim();
+
+    const senha =
+    document.getElementById("senha")
+    .value;
+
+    if(!email || !senha){
+
+        mostrarMensagem(
+            "Digite seu e-mail e sua senha.",
+            "erro"
+        );
+
+        return;
+    }
+
+    botao.disabled = true;
+
+    botao.textContent =
+    "ENTRANDO...";
+
+    mostrarMensagem(
+        "Verificando seus dados...",
+        "sucesso"
+    );
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient.auth.signInWithPassword({
+
+        email: email,
+        password: senha
+
+    });
+
+    if(error){
+
+        console.error(error);
+
+        mostrarMensagem(
+            "E-mail ou senha incorretos.",
+            "erro"
+        );
+
+        botao.disabled = false;
+
+        botao.textContent =
+        "ENTRAR";
+
+        return;
+    }
+
+    const user = data.user;
+
+    const {
+        data: perfil,
+        error: erroPerfil
+    } =
+    await supabaseClient
+    .from("Perfis")
+    .select("*")
+    .eq("Email", user.email)
+    .maybeSingle();
+
+    if(erroPerfil){
+
+        console.error(erroPerfil);
+
+        mostrarMensagem(
+            "Login realizado, mas não foi possível carregar seu perfil.",
+            "erro"
+        );
+
+        botao.disabled = false;
+
+        botao.textContent =
+        "ENTRAR";
+
+        return;
+    }
+
+    if(!perfil){
+
+        mostrarMensagem(
+            "Sua conta está ativa, mas ainda não possui um perfil cadastrado.",
+            "erro"
+        );
+
+        await supabaseClient.auth.signOut();
+
+        botao.disabled = false;
+
+        botao.textContent =
+        "ENTRAR";
+
+        return;
+    }
+
+    const tipo =
+    String(perfil.Tipo || perfil.tipo || "")
+    .toLowerCase();
+
+    if(tipo !== "atleta"){
+
+        mostrarMensagem(
+            "Esta conta não está cadastrada como atleta.",
+            "erro"
+        );
+
+        await supabaseClient.auth.signOut();
+
+        botao.disabled = false;
+
+        botao.textContent =
+        "ENTRAR";
+
+        return;
+    }
+
+    mostrarMensagem(
+        "Login realizado! Abrindo sua área...",
+        "sucesso"
+    );
+
+    setTimeout(function(){
+
+        window.location.href =
+        "painel-atleta.html";
+
+    }, 800);
+
+});
+
+</script>
 
 </body>
 
-  </html>
+    </html>
