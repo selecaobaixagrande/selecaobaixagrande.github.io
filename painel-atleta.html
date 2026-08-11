@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel do Atleta | Seleção de Baixa Grande</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    background:#080808;
+    color:#fff;
+}
+
+.painel{
+    max-width:1100px;
+    margin:auto;
+    padding:45px 20px;
+}
+
+.cabecalho-painel{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.cabecalho-painel h2{
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.cabecalho-painel p{
+    color:#999;
+}
+
+.perfil{
+    display:flex;
+    align-items:center;
+    gap:25px;
+
+    background:linear-gradient(
+        145deg,
+        #1c1c1c,
+        #101010
+    );
+
+    border:1px solid #333;
+    border-left:4px solid #b5121b;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+}
+
+.foto{
+    width:120px;
+    height:120px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid #b5121b;
+
+    background:#151515;
+}
+
+.info h3{
+    margin:0 0 8px;
+
+    font-size:28px;
+}
+
+.info p{
+    margin:6px 0;
+
+    color:#bbb;
+}
+
+.info strong{
+    color:#fff;
+}
+
+.estatisticas{
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:15px;
+
+    margin-bottom:30px;
+}
+
+.card{
+    background:#151515;
+
+    border:1px solid #292929;
+
+    border-radius:15px;
+
+    padding:22px;
+
+    text-align:center;
+
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+
+    border-color:#b5121b;
+}
+
+.card .numero{
+    display:block;
+
+    font-size:32px;
+
+    font-weight:bold;
+
+    color:#fff;
+
+    margin-bottom:7px;
+}
+
+.card .titulo{
+    color:#999;
+
+    font-size:13px;
+}
+
+.secao{
+    background:#121212;
+
+    border:1px solid #292929;
+
+    border-radius:16px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+}
+
+.secao h3{
+    margin-top:0;
+
+    border-bottom:1px solid #292929;
+
+    padding-bottom:12px;
+}
+
+.informacoes{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:15px;
+}
+
+.informacao{
+    background:#0b0b0b;
+
+    border-radius:10px;
+
+    padding:15px;
+}
+
+.informacao span{
+    display:block;
+
+    color:#777;
+
+    font-size:12px;
+
+    margin-bottom:5px;
+}
+
+.informacao strong{
+    font-size:16px;
+}
+
+.botoes{
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin-top:30px;
+
+    flex-wrap:wrap;
+}
+
+.btn-sair{
+    border:none;
+
+    background:#b5121b;
+
+    color:#fff;
+
+    padding:13px 25px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    font-size:14px;
+}
+
+.btn-sair:hover{
+    background:#e32632;
+}
+
+.carregando{
+    text-align:center;
+
+    padding:80px 20px;
+
+    color:#aaa;
+}
+
+.erro{
+    max-width:500px;
+
+    margin:80px auto;
+
+    text-align:center;
+
+    padding:30px;
+
+    background:#1b0b0d;
+
+    border:1px solid #7d1d25;
+
+    border-radius:15px;
+
+    color:#ff9da3;
+}
+
+@media(max-width:700px){
+
+    .perfil{
+        flex-direction:column;
+
+        text-align:center;
+    }
+
+    .estatisticas{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+    .informacoes{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:450px){
+
+    .estatisticas{
+        grid-template-columns:1fr;
+    }
+
+    .cabecalho-painel h2{
+        font-size:26px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="header">
+
+<a href="index.html" class="marca">
+
+<img
+src="1000001685.png"
+alt="Escudo da Seleção de Baixa Grande"
+class="logo-header">
+
+<h1>
+SELEÇÃO DE <span>BAIXA GRANDE</span>
+</h1>
+
+</a>
+
+
+<nav>
+
+<a href="index.html">
+Início
+</a>
+
+<a href="jogos.html">
+Jogos
+</a>
+
+<a href="resultados.html">
+Resultados
+</a>
+
+<a href="categorias.html">
+Categorias
+</a>
+
+<a href="elenco.html">
+Elenco
+</a>
+
+<a href="noticias.html">
+Notícias
+</a>
+
+<a href="galeria.html">
+Galeria
+</a>
+
+<a href="atleta.html" class="ativo">
+👤 Atleta
+</a>
+
+<a href="treinador.html">
+🎓 Treinador
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+<main>
+
+<div class="painel" id="conteudo">
+
+<div class="carregando">
+
+<h2>
+Carregando seu perfil...
+</h2>
+
+<p>
+Aguarde um momento.
+</p>
+
+</div>
+
+</div>
+
+</main>
+
+
+<footer>
+
+<p>
+
+<strong>
+⚽ SELEÇÃO DE BAIXA GRANDE
+</strong>
+
+</p>
+
+<p>
+Baixa Grande - Bahia
+</p>
+
+<p>
+© 2026 Seleção de Baixa Grande
+</p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://lvxwziztdngntoqypzga.supabase.co";
+
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
+
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+const conteudo =
+document.getElementById("conteudo");
+
+
+async function carregarPainel(){
+
+    const {
+        data: sessaoData,
+        error: sessaoErro
+    } =
+    await supabaseClient.auth.getSession();
+
+
+    if(
+        sessaoErro ||
+        !sessaoData.session
+    ){
+
+        window.location.href =
+        "atleta.html";
+
+        return;
+    }
+
+
+    const usuario =
+    sessaoData.session.user;
+
+
+    const {
+        data: perfil,
+        error
+    } =
+    await supabaseClient
+    .from("Perfis")
+    .select("*")
+    .eq("Email", usuario.email)
+    .maybeSingle();
+
+
+    if(error){
+
+        console.error(error);
+
+        conteudo.innerHTML = `
+
+        <div class="erro">
+
+        <h2>
+        Erro ao carregar o perfil
+        </h2>
+
+        <p>
+        Não foi possível buscar seus dados.
+        </p>
+
+        <p>
+        Verifique as políticas RLS da tabela Perfis.
+        </p>
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    if(!perfil){
+
+        conteudo.innerHTML = `
+
+        <div class="erro">
+
+        <h2>
+        Perfil não encontrado
+        </h2>
+
+        <p>
+        Sua conta está autenticada, mas não encontramos um perfil associado ao seu e-mail.
+        </p>
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    const nome =
+    perfil.Nome ||
+    perfil.nome ||
+    "Atleta";
+
+
+    const categoria =
+    perfil.Categoria ||
+    perfil.categoria ||
+    "Não informado";
+
+
+    const posicao =
+    perfil.Posição ||
+    perfil.posicao ||
+    "Não informado";
+
+
+    const numero =
+    perfil.Número ??
+    perfil.numero ??
+    "-";
+
+
+    const foto =
+    perfil.foto ||
+    perfil.Foto ||
+    "1000001685.png";
+
+
+    const jogos =
+    perfil.jogos ??
+    perfil.Jogos ??
+    0;
+
+
+    const gols =
+    perfil.gols ??
+    perfil.Gols ??
+    0;
+
+
+    const assistencias =
+    perfil.assistencias ??
+    perfil.Assistencias ??
+    0;
+
+
+    const amarelos =
+    perfil.cartoes_amarelos ??
+    perfil.Cartoes_Amarelos ??
+    0;
+
+
+    const presencas =
+    perfil.presencas ??
+    perfil.Presencas ??
+    0;
+
+
+    conteudo.innerHTML = `
+
+    <div class="cabecalho-painel">
+
+        <h2>
+        👤 Área do Atleta
+        </h2>
+
+        <p>
+        Bem-vindo à sua área exclusiva.
+        </p>
+
+    </div>
+
+
+    <section class="perfil">
+
+        <img
+        src="${foto}"
+        alt="Foto de ${nome}"
+        class="foto"
+        onerror="this.src='1000001685.png'">
+
+
+        <div class="info">
+
+            <h3>
+            ${nome}
+            </h3>
+
+            <p>
+            ⚽ <strong>Categoria:</strong>
+            ${categoria}
+            </p>
+
+            <p>
+            📍 <strong>Posição:</strong>
+            ${posicao}
+            </p>
+
+            <p>
+            🔢 <strong>Camisa:</strong>
+            ${numero}
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="estatisticas">
+
+
+        <div class="card">
+
+            <span class="numero">
+            ${jogos}
+            </span>
+
+            <span class="titulo">
+            Jogos
+            </span>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="numero">
+            ${gols}
+            </span>
+
+            <span class="titulo">
+            Gols
+            </span>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="numero">
+            ${assistencias}
+            </span>
+
+            <span class="titulo">
+            Assistências
+            </span>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="numero">
+            ${amarelos}
+            </span>
+
+            <span class="titulo">
+            Cartões amarelos
+            </span>
+
+        </div>
+
+
+        <div class="card">
+
+            <span class="numero">
+            ${presencas}
+            </span>
+
+            <span class="titulo">
+            Presenças
+            </span>
+
+        </div>
+
+
+    </section>
+
+
+    <section class="secao">
+
+        <h3>
+        📋 Informações do atleta
+        </h3>
+
+
+        <div class="informacoes">
+
+
+            <div class="informacao">
+
+                <span>
+                Nome
+                </span>
+
+                <strong>
+                ${nome}
+                </strong>
+
+            </div>
+
+
+            <div class="informacao">
+
+                <span>
+                E-mail
+                </span>
+
+                <strong>
+                ${usuario.email}
+                </strong>
+
+            </div>
+
+
+            <div class="informacao">
+
+                <span>
+                Categoria
+                </span>
+
+                <strong>
+                ${categoria}
+                </strong>
+
+            </div>
+
+
+            <div class="informacao">
+
+                <span>
+                Posição
+                </span>
+
+                <strong>
+                ${posicao}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <div class="botoes">
+
+        <button
+        class="btn-sair"
+        onclick="sair()">
+
+        🚪 Sair da conta
+
+        </button>
+
+    </div>
+
+    `;
+
+}
+
+
+async function sair(){
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href =
+    "atleta.html";
+
+}
+
+
+carregarPainel();
+
+</script>
+
+
+</body>
+
+  </html>
