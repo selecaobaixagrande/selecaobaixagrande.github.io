@@ -8,7 +8,7 @@
 
 <title>Seleção de Baixa Grande | Site Oficial</title>
 
-<meta name="description" content="Site oficial da Seleção de Baixa Grande - Bahia. Notícias, jogos, resultados, categorias, elenco e novidades.">
+<meta name="description" content="Site oficial da Seleção de Baixa Grande - Bahia. Jogos, resultados, elenco, categorias, notícias e galeria.">
 
 <style>
 
@@ -20,6 +20,7 @@ box-sizing:border-box;
 
 html{
 scroll-behavior:smooth;
+scroll-padding-top:90px;
 }
 
 body{
@@ -41,33 +42,33 @@ max-width:100%;
 :root{
 --vermelho:#b5121b;
 --vermelho-claro:#e32632;
---vermelho-escuro:#4d0007;
+--vermelho-escuro:#500006;
 --preto:#080808;
 --card:#151515;
---card-2:#1b1b1b;
 --cinza:#999;
---branco:#fff;
 }
 
-/* ================= HEADER ================= */
+/* =====================================================
+HEADER
+===================================================== */
 
 header{
 position:sticky;
 top:0;
 z-index:9999;
-background:rgba(5,5,5,.96);
+background:rgba(5,5,5,.97);
 backdrop-filter:blur(12px);
-border-bottom:1px solid rgba(181,18,27,.6);
+border-bottom:2px solid var(--vermelho);
 }
 
 .header{
 max-width:1250px;
 margin:auto;
-padding:12px 20px;
+padding:11px 20px;
 display:flex;
 align-items:center;
 justify-content:space-between;
-gap:25px;
+gap:20px;
 }
 
 .marca{
@@ -85,7 +86,6 @@ object-fit:contain;
 .marca h1{
 font-size:17px;
 font-weight:900;
-letter-spacing:.5px;
 }
 
 .marca span{
@@ -94,16 +94,16 @@ color:var(--vermelho-claro);
 
 nav{
 display:flex;
-align-items:center;
-gap:5px;
 flex-wrap:wrap;
+justify-content:center;
+gap:4px;
 }
 
 nav a{
-padding:9px 11px;
-border-radius:7px;
 font-size:12px;
 font-weight:bold;
+padding:8px 10px;
+border-radius:7px;
 transition:.2s;
 }
 
@@ -111,52 +111,39 @@ nav a:hover{
 background:var(--vermelho);
 }
 
-/* ================= HERO ================= */
+/* =====================================================
+HERO
+===================================================== */
 
 .hero{
-min-height:700px;
+min-height:680px;
 display:flex;
 align-items:center;
 justify-content:center;
 text-align:center;
 padding:70px 20px;
-position:relative;
-overflow:hidden;
 
 background:
 radial-gradient(circle at center,
-rgba(227,38,50,.35),
-transparent 40%),
-linear-gradient(135deg,#100000,#8d0912 55%,#130000);
-}
-
-.hero::before{
-content:"";
-position:absolute;
-width:500px;
-height:500px;
-border-radius:50%;
-background:rgba(255,255,255,.025);
-top:-180px;
-left:-180px;
+rgba(227,38,50,.38),
+transparent 42%),
+linear-gradient(135deg,#100000,#8f0913 55%,#110000);
 }
 
 .hero-content{
 max-width:900px;
-position:relative;
-z-index:2;
 }
 
 .logo-principal{
-width:210px;
-height:210px;
+width:205px;
+height:205px;
 object-fit:contain;
 filter:drop-shadow(0 15px 30px rgba(0,0,0,.8));
 margin-bottom:25px;
 }
 
 .hero h2{
-font-size:62px;
+font-size:60px;
 line-height:1;
 font-weight:950;
 letter-spacing:-2px;
@@ -175,22 +162,23 @@ color:#ddd;
 }
 
 .botoes{
+margin-top:30px;
 display:flex;
 justify-content:center;
 flex-wrap:wrap;
 gap:12px;
-margin-top:30px;
 }
 
 .botao{
-padding:14px 25px;
+display:inline-block;
+padding:14px 24px;
 border-radius:9px;
 font-weight:bold;
 transition:.2s;
 }
 
 .botao:hover{
-transform:translateY(-2px);
+transform:translateY(-3px);
 }
 
 .botao-branco{
@@ -203,7 +191,75 @@ background:var(--vermelho);
 border:1px solid #fff;
 }
 
-/* ================= SEÇÕES ================= */
+/* =====================================================
+ACESSO RÁPIDO
+===================================================== */
+
+.acesso{
+max-width:1150px;
+margin:-35px auto 0;
+padding:0 20px;
+position:relative;
+z-index:5;
+}
+
+.acesso-box{
+background:#111;
+border:1px solid #292929;
+border-top:4px solid var(--vermelho);
+border-radius:18px;
+padding:25px;
+box-shadow:0 15px 40px rgba(0,0,0,.4);
+}
+
+.acesso-titulo{
+text-align:center;
+margin-bottom:20px;
+}
+
+.acesso-titulo small{
+color:var(--vermelho-claro);
+font-weight:bold;
+text-transform:uppercase;
+}
+
+.acesso-titulo h2{
+font-size:25px;
+margin-top:4px;
+}
+
+.acesso-grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:10px;
+}
+
+.acesso-btn{
+background:#1b1b1b;
+border:1px solid #303030;
+border-radius:10px;
+padding:15px 8px;
+text-align:center;
+font-size:13px;
+font-weight:bold;
+transition:.2s;
+}
+
+.acesso-btn:hover{
+background:var(--vermelho);
+border-color:var(--vermelho-claro);
+transform:translateY(-3px);
+}
+
+.acesso-btn .icone{
+display:block;
+font-size:25px;
+margin-bottom:5px;
+}
+
+/* =====================================================
+SEÇÕES
+===================================================== */
 
 section{
 max-width:1250px;
@@ -224,10 +280,33 @@ letter-spacing:1px;
 
 .titulo h2{
 font-size:34px;
-margin-top:4px;
+margin-top:5px;
 }
 
-/* ================= PRÓXIMO JOGO ================= */
+/* =====================================================
+BOTÃO DE SEÇÃO
+===================================================== */
+
+.btn-secao{
+display:inline-block;
+margin-top:18px;
+background:var(--vermelho);
+border:1px solid var(--vermelho-claro);
+padding:11px 18px;
+border-radius:8px;
+font-size:13px;
+font-weight:bold;
+transition:.2s;
+}
+
+.btn-secao:hover{
+background:#e32632;
+transform:translateY(-2px);
+}
+
+/* =====================================================
+PRÓXIMO JOGO
+===================================================== */
 
 .jogo-card{
 background:linear-gradient(145deg,#1b1b1b,#101010);
@@ -236,7 +315,6 @@ border-top:4px solid var(--vermelho);
 border-radius:20px;
 padding:38px;
 text-align:center;
-box-shadow:0 15px 40px rgba(0,0,0,.25);
 }
 
 .jogo-label{
@@ -248,15 +326,15 @@ text-transform:uppercase;
 
 .jogo-data{
 margin-top:8px;
-font-size:14px;
 color:#aaa;
+font-size:14px;
 }
 
 .times{
 display:flex;
 align-items:center;
 justify-content:center;
-gap:60px;
+gap:55px;
 margin-top:30px;
 }
 
@@ -268,7 +346,7 @@ width:180px;
 width:85px;
 height:85px;
 object-fit:contain;
-margin-bottom:10px;
+margin-bottom:8px;
 }
 
 .time{
@@ -289,7 +367,9 @@ border-top:1px solid #292929;
 color:#aaa;
 }
 
-/* ================= CATEGORIAS ================= */
+/* =====================================================
+CATEGORIAS
+===================================================== */
 
 .categorias{
 display:grid;
@@ -308,9 +388,8 @@ transition:.25s;
 }
 
 .categoria:hover{
-transform:translateY(-7px);
+transform:translateY(-6px);
 border-color:var(--vermelho-claro);
-box-shadow:0 15px 35px rgba(181,18,27,.15);
 }
 
 .categoria .icone{
@@ -328,7 +407,9 @@ font-size:13px;
 margin-top:5px;
 }
 
-/* ================= RESULTADOS ================= */
+/* =====================================================
+RESULTADOS
+===================================================== */
 
 .resultados{
 display:grid;
@@ -349,21 +430,20 @@ color:#888;
 }
 
 .placar{
-font-size:23px;
+font-size:22px;
 font-weight:900;
 margin:12px 0;
 }
 
 .status{
-font-size:12px;
+font-size:11px;
 font-weight:bold;
+color:#aaa;
 }
 
-.vitoria{
-color:#39d353;
-}
-
-/* ================= ESTATÍSTICAS ================= */
+/* =====================================================
+ESTATÍSTICAS
+===================================================== */
 
 .estatisticas{
 display:grid;
@@ -372,7 +452,7 @@ gap:15px;
 }
 
 .stat{
-background:linear-gradient(145deg,#1b1b1b,#111);
+background:#151515;
 border:1px solid #292929;
 border-radius:15px;
 padding:25px;
@@ -388,10 +468,11 @@ color:var(--vermelho-claro);
 .stat p{
 color:#999;
 font-size:13px;
-margin-top:4px;
 }
 
-/* ================= ELENCO ================= */
+/* =====================================================
+ELENCO
+===================================================== */
 
 .elenco{
 display:grid;
@@ -433,7 +514,6 @@ font-weight:bold;
 
 .jogador-info h3{
 font-size:20px;
-margin-top:3px;
 }
 
 .jogador-info p{
@@ -441,7 +521,9 @@ color:#999;
 font-size:13px;
 }
 
-/* ================= NOTÍCIAS ================= */
+/* =====================================================
+NOTÍCIAS
+===================================================== */
 
 .noticias{
 display:grid;
@@ -454,12 +536,6 @@ background:#151515;
 border:1px solid #292929;
 border-radius:16px;
 padding:25px;
-transition:.25s;
-}
-
-.noticia:hover{
-transform:translateY(-5px);
-border-color:var(--vermelho);
 }
 
 .noticia .data{
@@ -479,14 +555,15 @@ margin-top:10px;
 font-size:14px;
 }
 
-/* ================= DESTAQUE ================= */
+/* =====================================================
+DESTAQUE
+===================================================== */
 
 .destaque{
 background:linear-gradient(135deg,#b5121b,#480006);
 border:1px solid var(--vermelho-claro);
 border-radius:20px;
 padding:38px;
-box-shadow:0 15px 45px rgba(181,18,27,.15);
 }
 
 .destaque .data{
@@ -505,7 +582,9 @@ color:#eee;
 margin-top:12px;
 }
 
-/* ================= IDENTIDADE ================= */
+/* =====================================================
+IDENTIDADE
+===================================================== */
 
 .identidade{
 display:grid;
@@ -513,7 +592,6 @@ grid-template-columns:300px 1fr;
 gap:40px;
 align-items:center;
 background:linear-gradient(135deg,#160000,#2b0000);
-border:1px solid #3b0000;
 border-radius:20px;
 padding:40px;
 }
@@ -535,7 +613,9 @@ color:#ccc;
 margin-top:12px;
 }
 
-/* ================= GALERIA ================= */
+/* =====================================================
+GALERIA
+===================================================== */
 
 .galeria{
 display:grid;
@@ -553,15 +633,11 @@ align-items:center;
 justify-content:center;
 text-align:center;
 color:#888;
-transition:.25s;
 }
 
-.foto:hover{
-transform:scale(1.02);
-border-color:var(--vermelho);
-}
-
-/* ================= INSTAGRAM ================= */
+/* =====================================================
+INSTAGRAM
+===================================================== */
 
 .social{
 text-align:center;
@@ -587,14 +663,11 @@ background:#fff;
 color:var(--vermelho);
 border-radius:10px;
 font-weight:bold;
-transition:.2s;
 }
 
-.instagram:hover{
-transform:translateY(-3px);
-}
-
-/* ================= FOOTER ================= */
+/* =====================================================
+FOOTER
+===================================================== */
 
 footer{
 background:#030303;
@@ -613,9 +686,15 @@ footer p{
 margin-top:6px;
 }
 
-/* ================= RESPONSIVO ================= */
+/* =====================================================
+RESPONSIVO
+===================================================== */
 
 @media(max-width:1000px){
+
+.acesso-grid{
+grid-template-columns:repeat(3,1fr);
+}
 
 .categorias,
 .elenco{
@@ -656,8 +735,12 @@ width:160px;
 height:160px;
 }
 
+.acesso-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
 .times{
-gap:20px;
+gap:15px;
 }
 
 .time-box{
@@ -687,12 +770,12 @@ padding:55px 15px;
 }
 
 .header{
-padding:10px 12px;
+padding:10px;
 }
 
 nav a{
-font-size:11px;
-padding:7px 6px;
+font-size:10px;
+padding:6px;
 }
 
 .hero h2{
@@ -701,6 +784,22 @@ font-size:35px;
 
 .hero h3{
 font-size:17px;
+}
+
+.acesso{
+padding:0 12px;
+}
+
+.acesso-box{
+padding:18px 10px;
+}
+
+.acesso-btn{
+font-size:11px;
+}
+
+.acesso-btn .icone{
+font-size:21px;
 }
 
 .categorias,
@@ -719,19 +818,19 @@ font-size:22px;
 }
 
 .jogo-card{
-padding:25px 12px;
+padding:25px 10px;
 }
 
 .times{
-gap:8px;
+gap:5px;
 }
 
 .time{
-font-size:15px;
+font-size:14px;
 }
 
 .vs{
-font-size:22px;
+font-size:21px;
 }
 
 .destaque{
@@ -744,6 +843,10 @@ font-size:23px;
 
 }
 
+/* =====================================================
+FIM
+===================================================== */
+
 </style>
 
 </head>
@@ -751,7 +854,9 @@ font-size:23px;
 <body>
 
 
-<!-- ================= HEADER ================= -->
+<!-- =====================================================
+HEADER
+===================================================== -->
 
 <header>
 
@@ -788,7 +893,9 @@ SELEÇÃO DE <span>BAIXA GRANDE</span>
 </header>
 
 
-<!-- ================= HERO ================= -->
+<!-- =====================================================
+HERO
+===================================================== -->
 
 <div class="hero" id="inicio">
 
@@ -799,31 +906,24 @@ src="1000001685.png"
 alt="Escudo oficial da Seleção de Baixa Grande"
 class="logo-principal">
 
-
 <h2>
 SELEÇÃO DE<br>
 BAIXA GRANDE
 </h2>
 
-
 <h3>
 Futebol de base, formação e paixão
 </h3>
-
 
 <p>
 Representando Baixa Grande dentro e fora de campo.
 </p>
 
-
 <div class="botoes">
 
-<a
-href="#jogos"
-class="botao botao-branco">
+<a href="#jogos" class="botao botao-branco">
 ⚽ Próximo jogo
 </a>
-
 
 <a
 href="https://www.instagram.com/selecaobaixagrande/"
@@ -839,7 +939,65 @@ class="botao botao-vermelho">
 </div>
 
 
-<!-- ================= PRÓXIMO JOGO ================= -->
+<!-- =====================================================
+ACESSO RÁPIDO
+===================================================== -->
+
+<div class="acesso">
+
+<div class="acesso-box">
+
+<div class="acesso-titulo">
+
+<small>Acesso rápido</small>
+
+<h2>Explore a Seleção</h2>
+
+</div>
+
+
+<div class="acesso-grid">
+
+<a href="#jogos" class="acesso-btn">
+<span class="icone">⚽</span>
+Próximo jogo
+</a>
+
+<a href="#elenco" class="acesso-btn">
+<span class="icone">👥</span>
+Ver elenco
+</a>
+
+<a href="#categorias" class="acesso-btn">
+<span class="icone">🏆</span>
+Categorias
+</a>
+
+<a href="#resultados" class="acesso-btn">
+<span class="icone">📊</span>
+Resultados
+</a>
+
+<a href="#noticias" class="acesso-btn">
+<span class="icone">📰</span>
+Notícias
+</a>
+
+<a href="#galeria" class="acesso-btn">
+<span class="icone">📸</span>
+Galeria
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+PRÓXIMO JOGO
+===================================================== -->
 
 <section id="jogos">
 
@@ -869,7 +1027,7 @@ Data e horário serão divulgados oficialmente
 
 <img
 src="1000001685.png"
-alt="Baixa Grande">
+alt="Escudo da Seleção de Baixa Grande">
 
 <div class="time">
 BAIXA GRANDE
@@ -885,7 +1043,7 @@ VS
 
 <div class="time-box">
 
-<div style="font-size:60px;margin-bottom:10px;">
+<div style="font-size:60px;margin-bottom:8px;">
 ⚽
 </div>
 
@@ -912,7 +1070,9 @@ ADVERSÁRIO
 </section>
 
 
-<!-- ================= RESULTADOS ================= -->
+<!-- =====================================================
+RESULTADOS
+===================================================== -->
 
 <section id="resultados">
 
@@ -927,7 +1087,6 @@ ADVERSÁRIO
 
 <div class="resultados">
 
-
 <div class="resultado">
 
 <small>Partida</small>
@@ -936,28 +1095,7 @@ ADVERSÁRIO
 BAIXA GRANDE
 </div>
 
-<p>
-Resultado em breve
-</p>
-
-<div class="status vitoria">
-AGUARDANDO ATUALIZAÇÃO
-</div>
-
-</div>
-
-
-<div class="resultado">
-
-<small>Partida</small>
-
-<div class="placar">
-BAIXA GRANDE
-</div>
-
-<p>
-Resultado em breve
-</p>
+<p>Resultado em breve</p>
 
 <div class="status">
 AGUARDANDO ATUALIZAÇÃO
@@ -974,9 +1112,7 @@ AGUARDANDO ATUALIZAÇÃO
 BAIXA GRANDE
 </div>
 
-<p>
-Resultado em breve
-</p>
+<p>Resultado em breve</p>
 
 <div class="status">
 AGUARDANDO ATUALIZAÇÃO
@@ -985,12 +1121,35 @@ AGUARDANDO ATUALIZAÇÃO
 </div>
 
 
+<div class="resultado">
+
+<small>Partida</small>
+
+<div class="placar">
+BAIXA GRANDE
 </div>
+
+<p>Resultado em breve</p>
+
+<div class="status">
+AGUARDANDO ATUALIZAÇÃO
+</div>
+
+</div>
+
+</div>
+
+
+<a href="#jogos" class="btn-secao">
+⚽ Ver agenda
+</a>
 
 </section>
 
 
-<!-- ================= CATEGORIAS ================= -->
+<!-- =====================================================
+CATEGORIAS
+===================================================== -->
 
 <section id="categorias">
 
@@ -1012,9 +1171,11 @@ AGUARDANDO ATUALIZAÇÃO
 
 <h3>SUB-13</h3>
 
-<p>
-Formação de jovens atletas
-</p>
+<p>Formação de jovens atletas</p>
+
+<a href="#elenco" class="btn-secao">
+Ver Sub-13
+</a>
 
 </div>
 
@@ -1025,9 +1186,11 @@ Formação de jovens atletas
 
 <h3>SUB-15</h3>
 
-<p>
-Formação de jovens atletas
-</p>
+<p>Formação de jovens atletas</p>
+
+<a href="#elenco" class="btn-secao">
+Ver Sub-15
+</a>
 
 </div>
 
@@ -1038,9 +1201,11 @@ Formação de jovens atletas
 
 <h3>SUB-17</h3>
 
-<p>
-Formação e desenvolvimento
-</p>
+<p>Formação e desenvolvimento</p>
+
+<a href="#elenco" class="btn-secao">
+Ver Sub-17
+</a>
 
 </div>
 
@@ -1051,9 +1216,11 @@ Formação e desenvolvimento
 
 <h3>SUB-20</h3>
 
-<p>
-Nova categoria da Seleção
-</p>
+<p>Nova categoria da Seleção</p>
+
+<a href="#noticias" class="btn-secao">
+Ver Sub-20
+</a>
 
 </div>
 
@@ -1063,7 +1230,9 @@ Nova categoria da Seleção
 </section>
 
 
-<!-- ================= SUB-20 ================= -->
+<!-- =====================================================
+SUB-20
+===================================================== -->
 
 <section>
 
@@ -1082,17 +1251,14 @@ Nova categoria da Seleção
 11 DE AGOSTO DE 2026
 </div>
 
-
 <h3>
 🚀 Categoria Sub-20 é lançada
 </h3>
-
 
 <p>
 A Seleção de Baixa Grande amplia seu projeto de
 futebol de base com o lançamento da categoria Sub-20.
 </p>
-
 
 <p>
 A nova categoria se junta ao Sub-13, Sub-15 e Sub-17,
@@ -1100,12 +1266,18 @@ fortalecendo o trabalho de formação e desenvolvimento
 do futebol de Baixa Grande.
 </p>
 
+<a href="#categorias" class="btn-secao">
+🏆 Ver categorias
+</a>
+
 </div>
 
 </section>
 
 
-<!-- ================= ESTATÍSTICAS ================= -->
+<!-- =====================================================
+ESTATÍSTICAS
+===================================================== -->
 
 <section>
 
@@ -1120,65 +1292,54 @@ do futebol de Baixa Grande.
 
 <div class="estatisticas">
 
-
 <div class="stat">
 
-<div class="stat-numero">
-—
-</div>
+<div class="stat-numero">—</div>
 
-<p>
-Jogos
-</p>
+<p>Jogos</p>
 
 </div>
 
 
 <div class="stat">
 
-<div class="stat-numero">
-—
-</div>
+<div class="stat-numero">—</div>
 
-<p>
-Vitórias
-</p>
+<p>Vitórias</p>
 
 </div>
 
 
 <div class="stat">
 
-<div class="stat-numero">
-—
-</div>
+<div class="stat-numero">—</div>
 
-<p>
-Gols
-</p>
+<p>Gols</p>
 
 </div>
 
 
 <div class="stat">
 
-<div class="stat-numero">
-—
-</div>
+<div class="stat-numero">—</div>
 
-<p>
-Artilheiro
-</p>
+<p>Artilheiro</p>
 
 </div>
 
-
 </div>
+
+
+<a href="#resultados" class="btn-secao">
+📊 Ver resultados
+</a>
 
 </section>
 
 
-<!-- ================= ELENCO ================= -->
+<!-- =====================================================
+ELENCO
+===================================================== -->
 
 <section id="elenco">
 
@@ -1206,9 +1367,7 @@ Artilheiro
 
 <h3>Jogador</h3>
 
-<p>
-Posição • Nº
-</p>
+<p>Posição • Nº</p>
 
 </div>
 
@@ -1227,9 +1386,7 @@ Posição • Nº
 
 <h3>Jogador</h3>
 
-<p>
-Posição • Nº
-</p>
+<p>Posição • Nº</p>
 
 </div>
 
@@ -1248,9 +1405,7 @@ Posição • Nº
 
 <h3>Jogador</h3>
 
-<p>
-Posição • Nº
-</p>
+<p>Posição • Nº</p>
 
 </div>
 
@@ -1269,9 +1424,7 @@ Posição • Nº
 
 <h3>Jogador</h3>
 
-<p>
-Posição • Nº
-</p>
+<p>Posição • Nº</p>
 
 </div>
 
@@ -1279,11 +1432,18 @@ Posição • Nº
 
 
 </div>
+
+
+<a href="#categorias" class="btn-secao">
+🏆 Ver categorias
+</a>
 
 </section>
 
 
-<!-- ================= NOTÍCIAS ================= -->
+<!-- =====================================================
+NOTÍCIAS
+===================================================== -->
 
 <section id="noticias">
 
@@ -1314,6 +1474,10 @@ A Seleção de Baixa Grande anuncia oficialmente
 a chegada da categoria Sub-20 ao projeto.
 </p>
 
+<a href="#categorias" class="btn-secao">
+Ver categorias
+</a>
+
 </article>
 
 
@@ -1332,6 +1496,10 @@ O projeto conta agora com Sub-13, Sub-15,
 Sub-17 e Sub-20.
 </p>
 
+<a href="#categorias" class="btn-secao">
+Ver categorias
+</a>
+
 </article>
 
 
@@ -1347,155 +1515,4 @@ FUTEBOL DE BASE
 
 <p>
 O trabalho de base busca fortalecer o futebol
-e desenvolver jovens atletas.
-</p>
-
-</article>
-
-
-</div>
-
-</section>
-
-
-<!-- ================= IDENTIDADE ================= -->
-
-<section>
-
-<div class="identidade">
-
-
-<div>
-
-<img
-src="1000001685.png"
-alt="Escudo oficial da Seleção de Baixa Grande">
-
-</div>
-
-
-<div>
-
-<h2>
-🔴 Nossa Identidade
-</h2>
-
-
-<p>
-A Seleção de Baixa Grande representa a força,
-a paixão e o orgulho do futebol da nossa cidade.
-</p>
-
-
-<p>
-Com categorias de base do Sub-13 ao Sub-20,
-o projeto busca criar oportunidades e fortalecer
-o esporte local.
-</p>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-<!-- ================= GALERIA ================= -->
-
-<section id="galeria">
-
-<div class="titulo">
-
-<small>Momentos</small>
-
-<h2>📸 Galeria</h2>
-
-</div>
-
-
-<div class="galeria">
-
-
-<div class="foto">
-📷<br>
-Fotos dos jogos em breve
-</div>
-
-
-<div class="foto">
-📷<br>
-Fotos das categorias em breve
-</div>
-
-
-<div class="foto">
-📷<br>
-Momentos da Seleção em breve
-</div>
-
-
-</div>
-
-</section>
-
-
-<!-- ================= INSTAGRAM ================= -->
-
-<section>
-
-<div class="social">
-
-<h2>
-📱 Siga a Seleção de Baixa Grande
-</h2>
-
-
-<p>
-Acompanhe notícias, jogos, resultados e novidades
-no Instagram oficial.
-</p>
-
-
-<a
-href="https://www.instagram.com/selecaobaixagrande/"
-target="_blank"
-class="instagram">
-
-📸 @selecaobaixagrande
-
-</a>
-
-</div>
-
-</section>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-<p>
-<strong>
-⚽ SELEÇÃO DE BAIXA GRANDE
-</strong>
-</p>
-
-<p>
-Baixa Grande - Bahia
-</p>
-
-<p>
-Sub-13 • Sub-15 • Sub-17 • Sub-20
-</p>
-
-<p>
-© 2026 Seleção de Baixa Grande
-</p>
-
-</footer>
-
-
-</body>
-
-   </html>
+e desenvolver jov
