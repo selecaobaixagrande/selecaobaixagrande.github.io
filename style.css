@@ -551,3 +551,48 @@ footer p{
     }
 
   }
+/* ================= ÁREA RESTRITA ================= */
+
+.acesso-restrito{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-left:10px;
+}
+
+.acesso-btn{
+    display:inline-block;
+    padding:8px 11px;
+    border:1px solid #b5121b;
+    border-radius:7px;
+    color:#fff;
+    font-size:11px;
+    font-weight:bold;
+    background:#111;
+    transition:.2s;
+    white-space:nowrap;
+}
+
+.acesso-btn:hover{
+    background:#b5121b;
+    border-color:#e32632;
+    transform:translateY(-2px);
+}
+
+
+/* CELULAR */
+
+@media(max-width:900px){
+
+    .acesso-restrito{
+        margin-left:0;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+
+    .acesso-btn{
+        font-size:10px;
+        padding:7px 9px;
+    }
+
+    }
