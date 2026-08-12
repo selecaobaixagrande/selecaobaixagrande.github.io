@@ -1,11 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Login do Atleta | Seleção de Baixa Grande</title>
 
@@ -32,6 +33,7 @@ header{
     max-width:1200px;
     margin:auto;
     padding:15px 20px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -42,6 +44,7 @@ header{
     display:flex;
     align-items:center;
     gap:12px;
+
     text-decoration:none;
     color:#fff;
 }
@@ -78,10 +81,16 @@ nav a:hover{
 }
 
 .area-login{
-    min-height:calc(100vh - 160px);
+
+    min-height:
+    calc(100vh - 160px);
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     padding:50px 20px;
 
     background:
@@ -94,8 +103,11 @@ nav a:hover{
 }
 
 .caixa-login{
+
     width:100%;
+
     max-width:430px;
+
     padding:35px;
 
     background:
@@ -106,7 +118,9 @@ nav a:hover{
     );
 
     border:1px solid #333;
+
     border-top:4px solid #b5121b;
+
     border-radius:20px;
 
     box-shadow:
@@ -115,23 +129,34 @@ nav a:hover{
 }
 
 .logo-login{
+
     width:100px;
     height:100px;
+
     object-fit:contain;
+
     display:block;
+
     margin:0 auto 20px;
 }
 
 h2{
+
     text-align:center;
+
     font-size:27px;
+
     margin:0 0 8px;
 }
 
 .subtitulo{
+
     text-align:center;
+
     color:#999;
+
     font-size:14px;
+
     margin:0 0 30px;
 }
 
@@ -140,24 +165,37 @@ h2{
 }
 
 .campo label{
+
     display:block;
+
     font-size:13px;
+
     font-weight:bold;
+
     margin-bottom:7px;
 }
 
 .campo input{
+
     width:100%;
+
     padding:14px;
+
     border-radius:9px;
+
     border:1px solid #333;
+
     background:#080808;
+
     color:#fff;
+
     outline:none;
+
     font-size:15px;
 }
 
 .campo input:focus{
+
     border-color:#b5121b;
 
     box-shadow:
@@ -166,58 +204,93 @@ h2{
 }
 
 .btn{
+
     width:100%;
+
     min-height:50px;
+
     border:none;
+
     border-radius:9px;
+
     background:#b5121b;
+
     color:#fff;
+
     font-weight:bold;
+
     font-size:15px;
+
     cursor:pointer;
+
     transition:.2s;
 }
 
 .btn:hover{
+
     background:#e32632;
+
     transform:translateY(-2px);
 }
 
 .btn:disabled{
+
     opacity:.6;
+
     cursor:not-allowed;
+
     transform:none;
 }
 
 .mensagem{
+
     display:none;
+
     margin-top:15px;
+
     padding:12px;
+
     border-radius:8px;
+
     text-align:center;
+
     font-size:13px;
 }
 
 .mensagem.erro{
+
     display:block;
+
     background:#2a0d0f;
+
     border:1px solid #7d1d25;
+
     color:#ff9da3;
 }
 
 .mensagem.sucesso{
+
     display:block;
+
     background:#0d2415;
+
     border:1px solid #236b38;
+
     color:#8ee6a6;
 }
 
 .link{
+
     display:block;
+
     text-align:center;
+
     margin-top:18px;
+
     color:#aaa;
+
     text-decoration:none;
+
     font-size:13px;
 }
 
@@ -226,11 +299,17 @@ h2{
 }
 
 footer{
+
     text-align:center;
+
     padding:25px 20px;
+
     background:#0d0d0d;
+
     border-top:1px solid #292929;
+
     color:#999;
+
     font-size:13px;
 }
 
@@ -268,7 +347,8 @@ footer strong{
 
 <div class="header">
 
-<a href="index.html" class="marca">
+<a href="index.html"
+class="marca">
 
 <img
 src="1000001685.png"
@@ -276,22 +356,47 @@ alt="Escudo da Seleção de Baixa Grande"
 class="logo-header">
 
 <h1>
+
 SELEÇÃO DE
 <span>BAIXA GRANDE</span>
+
 </h1>
 
 </a>
 
 <nav>
 
-<a href="index.html">Início</a>
-<a href="jogos.html">Jogos</a>
-<a href="resultados.html">Resultados</a>
-<a href="categorias.html">Categorias</a>
-<a href="elenco.html">Elenco</a>
-<a href="noticias.html">Notícias</a>
-<a href="galeria.html">Galeria</a>
-<a href="atleta.html">👤 Acesso</a>
+<a href="index.html">
+Início
+</a>
+
+<a href="jogos.html">
+Jogos
+</a>
+
+<a href="resultados.html">
+Resultados
+</a>
+
+<a href="categorias.html">
+Categorias
+</a>
+
+<a href="elenco.html">
+Elenco
+</a>
+
+<a href="noticias.html">
+Notícias
+</a>
+
+<a href="galeria.html">
+Galeria
+</a>
+
+<a href="atleta.html">
+👤 Acesso
+</a>
 
 </nav>
 
@@ -383,9 +488,11 @@ class="link">
 <footer>
 
 <p>
+
 <strong>
 ⚽ SELEÇÃO DE BAIXA GRANDE
 </strong>
+
 </p>
 
 <p>
@@ -424,9 +531,13 @@ const botao =
 document.getElementById("btnLogin");
 
 
-function mostrarMensagem(texto,tipo){
+function mostrarMensagem(
+    texto,
+    tipo
+){
 
-    mensagem.textContent = texto;
+    mensagem.textContent =
+    texto;
 
     mensagem.className =
     "mensagem " + tipo;
@@ -477,26 +588,34 @@ async function(event){
 
 
     /*
-    LOGIN NO SUPABASE
+    LOGIN
     */
 
     const {
         data,
         error
     } =
-    await supabaseClient.auth
+    await supabaseClient
+    .auth
     .signInWithPassword({
 
-        email:email,
+        email: email,
 
-        password:senha
+        password: senha
 
     });
 
 
+    /*
+    ERRO DE LOGIN
+    */
+
     if(error){
 
-        console.error(error);
+        console.error(
+            "Erro de login:",
+            error
+        );
 
         mostrarMensagem(
             "E-mail ou senha incorretos.",
@@ -535,64 +654,28 @@ async function(event){
 
 
     /*
-    PRIMEIRA TENTATIVA:
-    PROCURAR PELO ID DO USUÁRIO
+    BUSCAR PERFIL PELO E-MAIL
     */
 
-    let perfil = null;
-
-    let erroPerfil = null;
-
-
-    const resultadoPorId =
+    const {
+        data: perfil,
+        error: erroPerfil
+    } =
     await supabaseClient
     .from("Perfis")
     .select("*")
-    .eq("Id",user.id)
+    .eq("Email", user.email)
     .maybeSingle();
 
 
-    perfil =
-    resultadoPorId.data;
-
-
-    erroPerfil =
-    resultadoPorId.error;
-
-
     /*
-    SEGUNDA TENTATIVA:
-    PROCURAR PELO EMAIL
-    */
-
-    if(!perfil){
-
-        const resultadoPorEmail =
-        await supabaseClient
-        .from("Perfis")
-        .select("*")
-        .eq("Email",user.email)
-        .maybeSingle();
-
-
-        perfil =
-        resultadoPorEmail.data;
-
-
-        erroPerfil =
-        resultadoPorEmail.error;
-
-    }
-
-
-    /*
-    ERRO NA CONSULTA
+    ERRO AO BUSCAR PERFIL
     */
 
     if(erroPerfil){
 
         console.error(
-            "Erro ao consultar perfil:",
+            "Erro ao carregar perfil:",
             erroPerfil
         );
 
