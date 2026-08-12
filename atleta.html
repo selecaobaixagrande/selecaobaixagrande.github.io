@@ -10,9 +10,6 @@ content="width=device-width, initial-scale=1.0">
 
 <title>Acesso | Seleção de Baixa Grande</title>
 
-<link rel="stylesheet"
-href="style.css">
-
 <style>
 
 *{
@@ -21,20 +18,82 @@ href="style.css">
 
 body{
     margin:0;
+    font-family:Arial,Helvetica,sans-serif;
     background:#080808;
     color:#fff;
 }
 
-/* ÁREA PRINCIPAL */
+/* CABEÇALHO */
 
-.acesso{
-    min-height:calc(100vh - 130px);
+header{
+    background:#0d0d0d;
+    border-bottom:1px solid #292929;
+}
+
+.header{
+    max-width:1200px;
+    margin:auto;
+    padding:15px 20px;
 
     display:flex;
     align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.marca{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+    text-decoration:none;
+}
+
+.logo-header{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+}
+
+.marca h1{
+    margin:0;
+    font-size:18px;
+}
+
+.marca h1 span{
+    color:#b5121b;
+}
+
+nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+nav a{
+    color:#aaa;
+    text-decoration:none;
+    font-size:13px;
+}
+
+nav a:hover{
+    color:#fff;
+}
+
+/* ÁREA */
+
+.area{
+
+    min-height:
+    calc(100vh - 160px);
+
+    padding:60px 20px;
+
+    display:flex;
+
     justify-content:center;
 
-    padding:50px 20px;
+    align-items:center;
 
     background:
     radial-gradient(
@@ -45,12 +104,13 @@ body{
     #080808;
 }
 
-/* CAIXA */
-
-.caixa-acesso{
+.caixa{
 
     width:100%;
-    max-width:850px;
+
+    max-width:800px;
+
+    padding:40px 30px;
 
     background:
     linear-gradient(
@@ -63,41 +123,33 @@ body{
 
     border-top:4px solid #b5121b;
 
-    border-radius:22px;
-
-    padding:40px;
+    border-radius:20px;
 
     box-shadow:
-    0 20px 60px
-    rgba(0,0,0,.55);
+    0 20px 50px
+    rgba(0,0,0,.5);
 
 }
 
-/* LOGO */
+.logo{
 
-.logo-acesso{
-
-    width:110px;
-    height:110px;
+    width:100px;
+    height:100px;
 
     object-fit:contain;
 
     display:block;
 
     margin:0 auto 20px;
-
 }
 
-/* TÍTULO */
-
-.caixa-acesso h2{
+h2{
 
     text-align:center;
 
     font-size:30px;
 
-    margin:0 0 8px;
-
+    margin:0 0 10px;
 }
 
 .subtitulo{
@@ -106,9 +158,7 @@ body{
 
     color:#999;
 
-    font-size:14px;
-
-    margin-bottom:35px;
+    margin:0 0 35px;
 
 }
 
@@ -121,88 +171,88 @@ body{
     grid-template-columns:
     repeat(2,1fr);
 
-    gap:20px;
+    gap:25px;
 
 }
 
-/* CARD */
-
 .opcao{
 
-    background:#0c0c0c;
+    display:flex;
 
-    border:1px solid #303030;
+    flex-direction:column;
 
-    border-radius:16px;
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    min-height:230px;
 
     padding:30px 20px;
 
-    text-align:center;
+    background:#0d0d0d;
+
+    border:1px solid #333;
+
+    border-radius:15px;
 
     text-decoration:none;
 
     color:#fff;
 
-    transition:.25s;
+    transition:.2s;
 
 }
 
 .opcao:hover{
 
-    transform:
-    translateY(-5px);
-
     border-color:#b5121b;
 
-    box-shadow:
-    0 10px 30px
-    rgba(181,18,27,.20);
+    background:#151515;
+
+    transform:translateY(-4px);
 
 }
 
 .icone{
 
-    font-size:45px;
+    font-size:55px;
 
     margin-bottom:15px;
-
 }
 
 .opcao h3{
 
     margin:0 0 8px;
 
-    font-size:21px;
+    font-size:22px;
 
 }
 
 .opcao p{
 
-    margin:0 0 20px;
+    margin:0;
 
-    color:#999;
+    color:#888;
 
     font-size:13px;
 
 }
 
-/* BOTÃO */
-
 .botao{
 
-    display:inline-block;
+    margin-top:20px;
 
-    padding:12px 25px;
-
-    border-radius:8px;
+    padding:11px 20px;
 
     background:#b5121b;
 
-    color:#fff;
+    border-radius:8px;
+
+    font-size:13px;
 
     font-weight:bold;
-
-    font-size:14px;
 
 }
 
@@ -222,7 +272,7 @@ body{
 
     margin-top:30px;
 
-    color:#999;
+    color:#aaa;
 
     text-decoration:none;
 
@@ -236,26 +286,50 @@ body{
 
 }
 
-/* MOBILE */
+/* RODAPÉ */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0d0d0d;
+
+    border-top:1px solid #292929;
+
+    color:#999;
+
+    font-size:13px;
+
+}
+
+footer p{
+    margin:5px;
+}
+
+footer strong{
+    color:#fff;
+}
+
+/* CELULAR */
 
 @media(max-width:650px){
 
-    .caixa-acesso{
+    .header{
+        flex-direction:column;
+    }
 
-        padding:30px 20px;
-
+    nav{
+        justify-content:center;
     }
 
     .opcoes{
-
         grid-template-columns:1fr;
-
     }
 
-    .caixa-acesso h2{
-
-        font-size:25px;
-
+    .caixa{
+        padding:30px 20px;
     }
 
 }
@@ -263,7 +337,6 @@ body{
 </style>
 
 </head>
-
 
 <body>
 
@@ -273,7 +346,8 @@ body{
 <div class="header">
 
 
-<a href="index.html"
+<a
+href="index.html"
 class="marca">
 
 
@@ -324,17 +398,8 @@ Notícias
 Galeria
 </a>
 
-<a href="atleta.html"
-class="ativo">
-
-👤 Atleta
-
-</a>
-
-<a href="treinador.html">
-
-🎓 Treinador
-
+<a href="atleta.html">
+👤 Acesso
 </a>
 
 </nav>
@@ -348,29 +413,25 @@ class="ativo">
 <main>
 
 
-<section class="acesso">
+<section class="area">
 
 
-<div class="caixa-acesso">
+<div class="caixa">
 
 
 <img
 src="1000001685.png"
 alt="Escudo da Seleção de Baixa Grande"
-class="logo-acesso">
+class="logo">
 
 
 <h2>
-
-Área de Acesso
-
+🔐 Área de Acesso
 </h2>
 
 
 <p class="subtitulo">
-
-Selecione o tipo de acesso para continuar.
-
+Escolha o tipo de acesso para continuar.
 </p>
 
 
@@ -395,22 +456,17 @@ Você é atleta?
 
 
 <p>
-
-Acesse sua área exclusiva,
-estatísticas e informações.
-
+Acesse sua área exclusiva
+como atleta.
 </p>
 
 
 <span class="botao">
-
 ENTRAR COMO ATLETA
-
 </span>
 
 
 </a>
-
 
 
 <!-- TREINADOR -->
@@ -431,17 +487,13 @@ Você é treinador?
 
 
 <p>
-
-Acesse o painel da comissão
-técnica e seus jogadores.
-
+Acesse o painel exclusivo
+da comissão técnica.
 </p>
 
 
 <span class="botao">
-
 ENTRAR COMO TREINADOR
-
 </span>
 
 
