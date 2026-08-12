@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerenciar Atletas | Seleção de Baixa Grande</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#080808;
+    color:#fff;
+}
+
+header{
+    background:#0d0d0d;
+    border-bottom:1px solid #292929;
+}
+
+.header{
+    max-width:1200px;
+    margin:auto;
+    padding:15px 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.marca{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    color:#fff;
+    text-decoration:none;
+}
+
+.logo{
+    width:50px;
+    height:50px;
+    object-fit:contain;
+}
+
+.marca h1{
+    margin:0;
+    font-size:18px;
+}
+
+.marca span{
+    color:#b5121b;
+}
+
+.voltar{
+    color:#aaa;
+    text-decoration:none;
+    font-size:13px;
+}
+
+.voltar:hover{
+    color:#fff;
+}
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px 70px;
+}
+
+.titulo{
+    margin-bottom:30px;
+}
+
+.titulo small{
+    color:#b5121b;
+    font-weight:bold;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+.titulo h2{
+    margin:8px 0;
+    font-size:30px;
+}
+
+.titulo p{
+    margin:0;
+    color:#999;
+}
+
+/* FORMULÁRIO */
+
+.formulario{
+    padding:25px;
+
+    background:#111;
+
+    border:1px solid #292929;
+
+    border-radius:15px;
+
+    margin-bottom:30px;
+}
+
+.formulario h3{
+    margin-top:0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:15px;
+}
+
+.campo label{
+    display:block;
+
+    margin-bottom:7px;
+
+    font-size:13px;
+    font-weight:bold;
+}
+
+.campo input,
+.campo select{
+    width:100%;
+
+    padding:13px;
+
+    border-radius:8px;
+
+    border:1px solid #333;
+
+    background:#080808;
+
+    color:#fff;
+
+    outline:none;
+}
+
+.campo input:focus,
+.campo select:focus{
+    border-color:#b5121b;
+}
+
+.acoes{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+
+    margin-top:20px;
+}
+
+button{
+    border:0;
+    border-radius:8px;
+
+    padding:12px 18px;
+
+    background:#b5121b;
+    color:#fff;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+button:hover{
+    background:#e32632;
+}
+
+.btn-sec{
+    background:#292929;
+}
+
+.btn-sec:hover{
+    background:#3a3a3a;
+}
+
+/* LISTA */
+
+.lista{
+    background:#111;
+
+    border:1px solid #292929;
+
+    border-radius:15px;
+
+    overflow:hidden;
+}
+
+.lista-topo{
+    padding:20px;
+
+    border-bottom:1px solid #292929;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+}
+
+.lista-topo h3{
+    margin:0;
+}
+
+.pesquisa{
+    width:280px;
+
+    padding:11px;
+
+    border-radius:8px;
+
+    border:1px solid #333;
+
+    background:#080808;
+
+    color:#fff;
+}
+
+.tabela{
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+.tabela th,
+.tabela td{
+    padding:14px;
+
+    text-align:left;
+
+    border-bottom:1px solid #242424;
+
+    font-size:13px;
+}
+
+.tabela th{
+    color:#aaa;
+    background:#151515;
+}
+
+.tabela td{
+    color:#ddd;
+}
+
+.btn-editar{
+    background:#333;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.btn-excluir{
+    background:#7d1d25;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.mensagem{
+    display:none;
+
+    margin-bottom:20px;
+
+    padding:13px;
+
+    border-radius:8px;
+
+    font-size:13px;
+}
+
+.mensagem.sucesso{
+    display:block;
+
+    background:#0d2415;
+
+    border:1px solid #236b38;
+
+    color:#8ee6a6;
+}
+
+.mensagem.erro{
+    display:block;
+
+    background:#2a0d0f;
+
+    border:1px solid #7d1d25;
+
+    color:#ff9da3;
+}
+
+.vazio{
+    padding:30px;
+
+    text-align:center;
+
+    color:#777;
+}
+
+/* CELULAR */
+
+@media(max-width:700px){
+
+    .header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .lista{
+        overflow-x:auto;
+    }
+
+    .tabela{
+        min-width:750px;
+    }
+
+    .lista-topo{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .pesquisa{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="header">
+
+<a href="painel-treinador.html" class="marca">
+
+<img
+src="1000001685.png"
+alt="Escudo da Seleção de Baixa Grande"
+class="logo">
+
+<h1>
+SELEÇÃO DE <span>BAIXA GRANDE</span>
+</h1>
+
+</a>
+
+<a
+href="painel-treinador.html"
+class="voltar">
+
+← Voltar ao painel
+
+</a>
+
+</div>
+
+</header>
+
+
+<main>
+
+<div class="titulo">
+
+<small>Área exclusiva</small>
+
+<h2>👥 Gerenciar Atletas</h2>
+
+<p>
+Cadastre e organize os atletas da Seleção de Baixa Grande.
+</p>
+
+</div>
+
+
+<div
+id="mensagem"
+class="mensagem">
+</div>
+
+
+<!-- FORMULÁRIO -->
+
+<div class="formulario">
+
+<h3 id="tituloFormulario">
+➕ Cadastrar atleta
+</h3>
+
+<div class="form-grid">
+
+
+<div class="campo">
+
+<label>
+Nome
+</label>
+
+<input
+type="text"
+id="nome"
+placeholder="Nome completo">
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Categoria
+</label>
+
+<select id="categoria">
+
+<option value="">
+Selecione
+</option>
+
+<option value="Sub-13">
+Sub-13
+</option>
+
+<option value="Sub-15">
+Sub-15
+</option>
+
+<option value="Sub-17">
+Sub-17
+</option>
+
+<option value="Sub-20">
+Sub-20
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Posição
+</label>
+
+<select id="posicao">
+
+<option value="">
+Selecione
+</option>
+
+<option value="Goleiro">
+Goleiro
+</option>
+
+<option value="Zagueiro">
+Zagueiro
+</option>
+
+<option value="Lateral">
+Lateral
+</option>
+
+<option value="Volante">
+Volante
+</option>
+
+<option value="Meia">
+Meia
+</option>
+
+<option value="Atacante">
+Atacante
+</option>
+
+</select>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+E-mail
+</label>
+
+<input
+type="email"
+id="email"
+placeholder="E-mail do atleta">
+
+</div>
+
+
+</div>
+
+
+<div class="acoes">
+
+<button
+id="btnSalvar">
+
+CADASTRAR ATLETA
+
+</button>
+
+<button
+id="btnCancelar"
+class="btn-sec"
+style="display:none;">
+
+CANCELAR EDIÇÃO
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- LISTA -->
+
+<div class="lista">
+
+<div class="lista-topo">
+
+<h3>
+👥 Atletas cadastrados
+</h3>
+
+<input
+type="search"
+id="pesquisa"
+class="pesquisa"
+placeholder="🔎 Pesquisar atleta...">
+
+</div>
+
+
+<table class="tabela">
+
+<thead>
+
+<tr>
+
+<th>Nome</th>
+
+<th>Categoria</th>
+
+<th>Posição</th>
+
+<th>E-mail</th>
+
+<th>Ações</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listaAtletas">
+
+</tbody>
+
+</table>
+
+<div
+id="semAtletas"
+class="vazio"
+style="display:none;">
+
+Nenhum atleta cadastrado.
+
+</div>
+
+</div>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+/* SUPABASE */
+
+const SUPABASE_URL =
+"https://lvxwziztdngntoqypzga.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* ELEMENTOS */
+
+const nome =
+document.getElementById("nome");
+
+const categoria =
+document.getElementById("categoria");
+
+const posicao =
+document.getElementById("posicao");
+
+const email =
+document.getElementById("email");
+
+const btnSalvar =
+document.getElementById("btnSalvar");
+
+const btnCancelar =
+document.getElementById("btnCancelar");
+
+const lista =
+document.getElementById("listaAtletas");
+
+const pesquisa =
+document.getElementById("pesquisa");
+
+const mensagem =
+document.getElementById("mensagem");
+
+let atletaEditando = null;
+
+let atletas = [];
+
+
+/* MENSAGEM */
+
+function mostrarMensagem(texto,tipo){
+
+    mensagem.textContent = texto;
+
+    mensagem.className =
+    "mensagem " + tipo;
+
+}
+
+
+/* VERIFICAR TREINADOR */
+
+async function verificarTreinador(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+    .auth
+    .getUser();
+
+
+    if(error || !data.user){
+
+        window.location.href =
+        "login-treinador.html";
+
+        return false;
+
+    }
+
+
+    const {
+        data:perfil,
+        error:erroPerfil
+    } =
+    await supabaseClient
+    .from("Perfis")
+    .select("*")
+    .eq("Email",data.user.email)
+    .maybeSingle();
+
+
+    if(erroPerfil || !perfil){
+
+        await supabaseClient
+        .auth
+        .signOut();
+
+        window.location.href =
+        "login-treinador.html";
+
+        return false;
+
+    }
+
+
+    const tipo =
+    String(
+        perfil.Tipo ||
+        perfil.tipo ||
+        ""
+    )
+    .toLowerCase()
+    .trim();
+
+
+    if(tipo !== "treinador"){
+
+        await supabaseClient
+        .auth
+        .signOut();
+
+        window.location.href =
+        "login-treinador.html";
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* CARREGAR ATLETAS */
+
+async function carregarAtletas(){
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient
+    .from("Atletas")
+    .select("*")
+    .order("Nome",{ascending:true});
+
+
+    if(error){
+
+        console.error(error);
+
+        mostrarMensagem(
+            "Não foi possível carregar os atletas.",
+            "erro"
+        );
+
+        return;
+
+    }
+
+
+    atletas = data || [];
+
+    renderizarAtletas(atletas);
+
+}
+
+
+/* MOSTRAR LISTA */
+
+function renderizarAtletas(listaAtletas){
+
+    lista.innerHTML = "";
+
+
+    if(listaAtletas.length === 0){
+
+        document
+        .getElementById("semAtletas")
+        .style.display = "block";
+
+        return;
+
+    }
+
+
+    document
+    .getElementById("semAtletas")
+    .style.display = "none";
+
+
+    listaAtletas.forEach(function(atleta){
+
+        const tr =
+        document.createElement("tr");
+
+
+        tr.innerHTML = `
+
+        <td>
+        ${atleta.Nome || atleta.nome || "-"}
+        </td>
+
+        <td>
+        ${atleta.Categoria || atleta.categoria || "-"}
+        </td>
+
+        <td>
+        ${atleta.Posicao || atleta.posicao || "-"}
+        </td>
+
+        <td>
+        ${atleta.Email || atleta.email || "-"}
+        </td>
+
+        <td>
+
+        <button
+        class="btn-editar"
+        onclick="editarAtleta('${atleta.Id}')">
+
+        Editar
+
+        </button>
+
+        <button
+        class="btn-excluir"
+        onclick="excluirAtleta('${atleta.Id}')">
+
+        Excluir
+
+        </button>
+
+        </td>
+
+        `;
+
+
+        lista.appendChild(tr);
+
+    });
+
+}
+
+
+/* CADASTRAR / EDITAR */
+
+btnSalvar.addEventListener(
+"click",
+async function(){
+
+    const nomeValor =
+    nome.value.trim();
+
+    const categoriaValor =
+    categoria.value;
+
+    const posicaoValor =
+    posicao.value;
+
+    const emailValor =
+    email.value.trim();
+
+
+    if(
+        !nomeValor ||
+        !categoriaValor ||
+        !posicaoValor
+    ){
+
+        mostrarMensagem(
+            "Preencha nome, categoria e posição.",
+            "erro"
+        );
+
+        return;
+
+    }
+
+
+    btnSalvar.disabled = true;
+
+
+    if(atletaEditando){
+
+        const {
+            error
+        } =
+        await supabaseClient
+        .from("Atletas")
+        .update({
+
+            Nome:nomeValor,
+
+            Categoria:categoriaValor,
+
+            Posicao:posicaoValor,
+
+            Email:emailValor
+
+        })
+        .eq("Id",atletaEditando);
+
+
+        if(error){
+
+            console.error(error);
+
+            mostrarMensagem(
+                "Não foi possível atualizar o atleta.",
+                "erro"
+            );
+
+        }else{
+
+            mostrarMensagem(
+                "Atleta atualizado com sucesso!",
+                "sucesso"
+            );
+
+            limparFormulario();
+
+            carregarAtletas();
+
+        }
+
+    }else{
+
+        const {
+            error
+        } =
+        await supabaseClient
+        .from("Atletas")
+        .insert({
+
+            Nome:nomeValor,
+
+            Categoria:categoriaValor,
+
+            Posicao:posicaoValor,
+
+            Email:emailValor
+
+        });
+
+
+        if(error){
+
+            console.error(error);
+
+            mostrarMensagem(
+                "Não foi possível cadastrar o atleta.",
+                "erro"
+            );
+
+        }else{
+
+            mostrarMensagem(
+                "Atleta cadastrado com sucesso!",
+                "sucesso"
+            );
+
+            limparFormulario();
+
+            carregarAtletas();
+
+        }
+
+    }
+
+
+    btnSalvar.disabled = false;
+
+});
+
+
+/* EDITAR */
+
+window.editarAtleta =
+async function(id){
+
+    const atleta =
+    atletas.find(function(item){
+
+        return String(item.Id) === String(id);
+
+    });
+
+
+    if(!atleta){
+        return;
+    }
+
+
+    atletaEditando =
+    atleta.Id;
+
+
+    nome.value =
+    atleta.Nome ||
+    atleta.nome ||
+    "";
+
+    categoria.value =
+    atleta.Categoria ||
+    atleta.categoria ||
+    "";
+
+    posicao.value =
+    atleta.Posicao ||
+    atleta.posicao ||
+    "";
+
+    email.value =
+    atleta.Email ||
+    atleta.email ||
+    "";
+
+
+    document
+    .getElementById("tituloFormulario")
+    .textContent =
+    "✏️ Editar atleta";
+
+
+    btnSalvar.textContent =
+    "SALVAR ALTERAÇÕES";
+
+
+    btnCancelar.style.display =
+    "inline-block";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+};
+
+
+/* EXCLUIR */
+
+window.excluirAtleta =
+async function(id){
+
+    const confirmar =
+    confirm(
+        "Tem certeza que deseja excluir este atleta?"
+    );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    const {
+        error
+    } =
+    await supabaseClient
+    .from("Atletas")
+    .delete()
+    .eq("Id",id);
+
+
+    if(error){
+
+        console.error(error);
+
+        mostrarMensagem(
+            "Não foi possível excluir o atleta.",
+            "erro"
+        );
+
+        return;
+
+    }
+
+
+    mostrarMensagem(
+        "Atleta excluído com sucesso.",
+        "sucesso"
+    );
+
+
+    carregarAtletas();
+
+};
+
+
+/* CANCELAR */
+
+btnCancelar.addEventListener(
+"click",
+function(){
+
+    limparFormulario();
+
+});
+
+
+/* LIMPAR */
+
+function limparFormulario(){
+
+    atletaEditando = null;
+
+    nome.value = "";
+
+    categoria.value = "";
+
+    posicao.value = "";
+
+    email.value = "";
+
+
+    document
+    .getElementById("tituloFormulario")
+    .textContent =
+    "➕ Cadastrar atleta";
+
+
+    btnSalvar.textContent =
+    "CADASTRAR ATLETA";
+
+
+    btnCancelar.style.display =
+    "none";
+
+}
+
+
+/* PESQUISA */
+
+pesquisa.addEventListener(
+"input",
+function(){
+
+    const termo =
+    pesquisa.value
+    .toLowerCase()
+    .trim();
+
+
+    const filtrados =
+    atletas.filter(function(atleta){
+
+        const nomeAtleta =
+        String(
+            atleta.Nome ||
+            atleta.nome ||
+            ""
+        ).toLowerCase();
+
+
+        const categoriaAtleta =
+        String(
+            atleta.Categoria ||
+            atleta.categoria ||
+            ""
+        ).toLowerCase();
+
+
+        return(
+            nomeAtleta.includes(termo) ||
+            categoriaAtleta.includes(termo)
+        );
+
+    });
+
+
+    renderizarAtletas(filtrados);
+
+});
+
+
+/* INICIAR */
+
+async function iniciar(){
+
+    const autorizado =
+    await verificarTreinador();
+
+
+    if(autorizado){
+
+        carregarAtletas();
+
+    }
+
+}
+
+
+iniciar();
+
+</script>
+
+</body>
+
+  </html>
