@@ -2,8 +2,11 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Gerenciar Atletas | Seleção de Baixa Grande</title>
 
@@ -40,7 +43,6 @@ header{
     display:flex;
     align-items:center;
     gap:12px;
-
     color:#fff;
     text-decoration:none;
 }
@@ -97,17 +99,11 @@ main{
     color:#999;
 }
 
-/* FORMULÁRIO */
-
 .formulario{
     padding:25px;
-
     background:#111;
-
     border:1px solid #292929;
-
     border-radius:15px;
-
     margin-bottom:30px;
 }
 
@@ -117,17 +113,13 @@ main{
 
 .form-grid{
     display:grid;
-    grid-template-columns:
-    repeat(2,1fr);
-
+    grid-template-columns:repeat(2,1fr);
     gap:15px;
 }
 
 .campo label{
     display:block;
-
     margin-bottom:7px;
-
     font-size:13px;
     font-weight:bold;
 }
@@ -135,17 +127,11 @@ main{
 .campo input,
 .campo select{
     width:100%;
-
     padding:13px;
-
     border-radius:8px;
-
     border:1px solid #333;
-
     background:#080808;
-
     color:#fff;
-
     outline:none;
 }
 
@@ -154,30 +140,37 @@ main{
     border-color:#b5121b;
 }
 
+.aviso-senha{
+    margin-top:8px;
+    color:#888;
+    font-size:11px;
+    line-height:1.4;
+}
+
 .acoes{
     display:flex;
     gap:10px;
     flex-wrap:wrap;
-
     margin-top:20px;
 }
 
 button{
     border:0;
     border-radius:8px;
-
     padding:12px 18px;
-
     background:#b5121b;
     color:#fff;
-
     font-weight:bold;
-
     cursor:pointer;
 }
 
 button:hover{
     background:#e32632;
+}
+
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
 }
 
 .btn-sec{
@@ -188,29 +181,19 @@ button:hover{
     background:#3a3a3a;
 }
 
-/* LISTA */
-
 .lista{
     background:#111;
-
     border:1px solid #292929;
-
     border-radius:15px;
-
     overflow:hidden;
 }
 
 .lista-topo{
     padding:20px;
-
     border-bottom:1px solid #292929;
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     gap:15px;
 }
 
@@ -220,32 +203,23 @@ button:hover{
 
 .pesquisa{
     width:280px;
-
     padding:11px;
-
     border-radius:8px;
-
     border:1px solid #333;
-
     background:#080808;
-
     color:#fff;
 }
 
 .tabela{
     width:100%;
-
     border-collapse:collapse;
 }
 
 .tabela th,
 .tabela td{
     padding:14px;
-
     text-align:left;
-
     border-bottom:1px solid #242424;
-
     font-size:13px;
 }
 
@@ -272,45 +246,31 @@ button:hover{
 
 .mensagem{
     display:none;
-
     margin-bottom:20px;
-
     padding:13px;
-
     border-radius:8px;
-
     font-size:13px;
 }
 
 .mensagem.sucesso{
     display:block;
-
     background:#0d2415;
-
     border:1px solid #236b38;
-
     color:#8ee6a6;
 }
 
 .mensagem.erro{
     display:block;
-
     background:#2a0d0f;
-
     border:1px solid #7d1d25;
-
     color:#ff9da3;
 }
 
 .vazio{
     padding:30px;
-
     text-align:center;
-
     color:#777;
 }
-
-/* CELULAR */
 
 @media(max-width:700px){
 
@@ -343,6 +303,7 @@ button:hover{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -351,7 +312,8 @@ button:hover{
 
 <div class="header">
 
-<a href="painel-treinador.html" class="marca">
+<a href="painel-treinador.html"
+class="marca">
 
 <img
 src="1000001685.png"
@@ -392,13 +354,10 @@ Cadastre e organize os atletas da Seleção de Baixa Grande.
 </div>
 
 
-<div
-id="mensagem"
+<div id="mensagem"
 class="mensagem">
 </div>
 
-
-<!-- FORMULÁRIO -->
 
 <div class="formulario">
 
@@ -411,21 +370,22 @@ class="mensagem">
 
 <div class="campo">
 
-<label>
+<label for="nome">
 Nome
 </label>
 
 <input
 type="text"
 id="nome"
-placeholder="Nome completo">
+placeholder="Nome completo"
+autocomplete="off">
 
 </div>
 
 
 <div class="campo">
 
-<label>
+<label for="categoria">
 Categoria
 </label>
 
@@ -458,7 +418,7 @@ Sub-20
 
 <div class="campo">
 
-<label>
+<label for="posicao">
 Posição
 </label>
 
@@ -499,14 +459,36 @@ Atacante
 
 <div class="campo">
 
-<label>
+<label for="email">
 E-mail
 </label>
 
 <input
 type="email"
 id="email"
-placeholder="E-mail do atleta">
+placeholder="E-mail do atleta"
+autocomplete="off">
+
+</div>
+
+
+<div class="campo">
+
+<label for="senha">
+Senha
+</label>
+
+<input
+type="password"
+id="senha"
+placeholder="Senha do atleta"
+autocomplete="new-password"
+minlength="6">
+
+<div class="aviso-senha">
+A senha precisa ter pelo menos 6 caracteres.
+O treinador define a senha inicial do atleta.
+</div>
 
 </div>
 
@@ -537,8 +519,6 @@ CANCELAR EDIÇÃO
 </div>
 
 
-<!-- LISTA -->
-
 <div class="lista">
 
 <div class="lista-topo">
@@ -563,13 +543,9 @@ placeholder="🔎 Pesquisar atleta...">
 <tr>
 
 <th>Nome</th>
-
 <th>Categoria</th>
-
 <th>Posição</th>
-
 <th>E-mail</th>
-
 <th>Ações</th>
 
 </tr>
@@ -577,10 +553,10 @@ placeholder="🔎 Pesquisar atleta...">
 </thead>
 
 <tbody id="listaAtletas">
-
 </tbody>
 
 </table>
+
 
 <div
 id="semAtletas"
@@ -600,8 +576,6 @@ Nenhum atleta cadastrado.
 
 <script>
 
-/* SUPABASE */
-
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
@@ -615,7 +589,12 @@ window.supabase.createClient(
 );
 
 
-/* ELEMENTOS */
+/*
+ * Nome da Edge Function
+ */
+const EDGE_FUNCTION =
+"criar-atleta";
+
 
 const nome =
 document.getElementById("nome");
@@ -628,6 +607,9 @@ document.getElementById("posicao");
 
 const email =
 document.getElementById("email");
+
+const senha =
+document.getElementById("senha");
 
 const btnSalvar =
 document.getElementById("btnSalvar");
@@ -644,9 +626,9 @@ document.getElementById("pesquisa");
 const mensagem =
 document.getElementById("mensagem");
 
-let atletaEditando = null;
-
 let atletas = [];
+
+let atletaEditando = null;
 
 
 /* MENSAGEM */
@@ -669,9 +651,7 @@ async function verificarTreinador(){
         data,
         error
     } =
-    await supabaseClient
-    .auth
-    .getUser();
+    await supabaseClient.auth.getUser();
 
 
     if(error || !data.user){
@@ -697,9 +677,7 @@ async function verificarTreinador(){
 
     if(erroPerfil || !perfil){
 
-        await supabaseClient
-        .auth
-        .signOut();
+        await supabaseClient.auth.signOut();
 
         window.location.href =
         "login-treinador.html";
@@ -715,15 +693,13 @@ async function verificarTreinador(){
         perfil.tipo ||
         ""
     )
-    .toLowerCase()
-    .trim();
+    .trim()
+    .toLowerCase();
 
 
     if(tipo !== "treinador"){
 
-        await supabaseClient
-        .auth
-        .signOut();
+        await supabaseClient.auth.signOut();
 
         window.location.href =
         "login-treinador.html";
@@ -798,6 +774,11 @@ function renderizarAtletas(listaAtletas){
 
     listaAtletas.forEach(function(atleta){
 
+        const id =
+        atleta.Id ||
+        atleta.id;
+
+
         const tr =
         document.createElement("tr");
 
@@ -805,26 +786,42 @@ function renderizarAtletas(listaAtletas){
         tr.innerHTML = `
 
         <td>
-        ${atleta.Nome || atleta.nome || "-"}
+        ${escapeHTML(
+            atleta.Nome ||
+            atleta.nome ||
+            "-"
+        )}
         </td>
 
         <td>
-        ${atleta.Categoria || atleta.categoria || "-"}
+        ${escapeHTML(
+            atleta.Categoria ||
+            atleta.categoria ||
+            "-"
+        )}
         </td>
 
         <td>
-        ${atleta.Posicao || atleta.posicao || "-"}
+        ${escapeHTML(
+            atleta.Posicao ||
+            atleta.posicao ||
+            "-"
+        )}
         </td>
 
         <td>
-        ${atleta.Email || atleta.email || "-"}
+        ${escapeHTML(
+            atleta.Email ||
+            atleta.email ||
+            "-"
+        )}
         </td>
 
         <td>
 
         <button
         class="btn-editar"
-        onclick="editarAtleta('${atleta.Id}')">
+        onclick="editarAtleta('${id}')">
 
         Editar
 
@@ -832,7 +829,7 @@ function renderizarAtletas(listaAtletas){
 
         <button
         class="btn-excluir"
-        onclick="excluirAtleta('${atleta.Id}')">
+        onclick="excluirAtleta('${id}')">
 
         Excluir
 
@@ -850,7 +847,21 @@ function renderizarAtletas(listaAtletas){
 }
 
 
-/* CADASTRAR / EDITAR */
+/* PROTEGER HTML */
+
+function escapeHTML(valor){
+
+    return String(valor)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* CADASTRAR */
 
 btnSalvar.addEventListener(
 "click",
@@ -866,17 +877,35 @@ async function(){
     posicao.value;
 
     const emailValor =
-    email.value.trim();
+    email.value.trim()
+    .toLowerCase();
+
+    const senhaValor =
+    senha.value;
 
 
     if(
         !nomeValor ||
         !categoriaValor ||
-        !posicaoValor
+        !posicaoValor ||
+        !emailValor ||
+        !senhaValor
     ){
 
         mostrarMensagem(
-            "Preencha nome, categoria e posição.",
+            "Preencha todos os campos.",
+            "erro"
+        );
+
+        return;
+
+    }
+
+
+    if(senhaValor.length < 6){
+
+        mostrarMensagem(
+            "A senha precisa ter pelo menos 6 caracteres.",
             "erro"
         );
 
@@ -887,6 +916,13 @@ async function(){
 
     btnSalvar.disabled = true;
 
+    btnSalvar.textContent =
+    "CRIANDO CONTA...";
+
+
+    /*
+     * EDIÇÃO
+     */
 
     if(atletaEditando){
 
@@ -898,11 +934,8 @@ async function(){
         .update({
 
             Nome:nomeValor,
-
             Categoria:categoriaValor,
-
             Posicao:posicaoValor,
-
             Email:emailValor
 
         })
@@ -927,56 +960,97 @@ async function(){
 
             limparFormulario();
 
-            carregarAtletas();
+            await carregarAtletas();
 
         }
 
-    }else{
 
-        const {
-            error
-        } =
-        await supabaseClient
-        .from("Atletas")
-        .insert({
+        btnSalvar.disabled = false;
 
-            Nome:nomeValor,
+        btnSalvar.textContent =
+        "CADASTRAR ATLETA";
 
-            Categoria:categoriaValor,
-
-            Posicao:posicaoValor,
-
-            Email:emailValor
-
-        });
-
-
-        if(error){
-
-            console.error(error);
-
-            mostrarMensagem(
-                "Não foi possível cadastrar o atleta.",
-                "erro"
-            );
-
-        }else{
-
-            mostrarMensagem(
-                "Atleta cadastrado com sucesso!",
-                "sucesso"
-            );
-
-            limparFormulario();
-
-            carregarAtletas();
-
-        }
+        return;
 
     }
 
 
+    /*
+     * NOVO ATLETA
+     *
+     * A conta Auth + Perfil + Atleta
+     * serão criados pela Edge Function.
+     */
+
+    const {
+        data,
+        error
+    } =
+    await supabaseClient.functions.invoke(
+        EDGE_FUNCTION,
+        {
+            body:{
+                nome:nomeValor,
+                email:emailValor,
+                senha:senhaValor,
+                categoria:categoriaValor,
+                posicao:posicaoValor
+            }
+        }
+    );
+
+
+    if(error){
+
+        console.error(error);
+
+        mostrarMensagem(
+            "Não foi possível criar a conta do atleta. Verifique a Edge Function.",
+            "erro"
+        );
+
+        btnSalvar.disabled = false;
+
+        btnSalvar.textContent =
+        "CADASTRAR ATLETA";
+
+        return;
+
+    }
+
+
+    if(data && data.error){
+
+        mostrarMensagem(
+            data.error,
+            "erro"
+        );
+
+        btnSalvar.disabled = false;
+
+        btnSalvar.textContent =
+        "CADASTRAR ATLETA";
+
+        return;
+
+    }
+
+
+    mostrarMensagem(
+        "Atleta cadastrado e conta criada com sucesso!",
+        "sucesso"
+    );
+
+
+    limparFormulario();
+
+    await carregarAtletas();
+
+
     btnSalvar.disabled = false;
+
+    btnSalvar.textContent =
+    "CADASTRAR ATLETA";
 
 });
 
@@ -984,12 +1058,15 @@ async function(){
 /* EDITAR */
 
 window.editarAtleta =
-async function(id){
+function(id){
 
     const atleta =
     atletas.find(function(item){
 
-        return String(item.Id) === String(id);
+        return String(
+            item.Id ||
+            item.id
+        ) === String(id);
 
     });
 
@@ -1000,7 +1077,8 @@ async function(id){
 
 
     atletaEditando =
-    atleta.Id;
+    atleta.Id ||
+    atleta.id;
 
 
     nome.value =
@@ -1022,6 +1100,16 @@ async function(id){
     atleta.Email ||
     atleta.email ||
     "";
+
+
+    /*
+     * Não mostramos nem alteramos a senha
+     * durante a edição.
+     */
+
+    senha.value = "";
+
+    senha.disabled = true;
 
 
     document
@@ -1053,7 +1141,7 @@ async function(id){
 
     const confirmar =
     confirm(
-        "Tem certeza que deseja excluir este atleta?"
+        "Tem certeza que deseja excluir este atleta do elenco?"
     );
 
 
@@ -1086,7 +1174,7 @@ async function(id){
 
 
     mostrarMensagem(
-        "Atleta excluído com sucesso.",
+        "Atleta removido do elenco.",
         "sucesso"
     );
 
@@ -1114,12 +1202,12 @@ function limparFormulario(){
     atletaEditando = null;
 
     nome.value = "";
-
     categoria.value = "";
-
     posicao.value = "";
-
     email.value = "";
+    senha.value = "";
+
+    senha.disabled = false;
 
 
     document
@@ -1158,7 +1246,8 @@ function(){
             atleta.Nome ||
             atleta.nome ||
             ""
-        ).toLowerCase();
+        )
+        .toLowerCase();
 
 
         const categoriaAtleta =
@@ -1166,7 +1255,8 @@ function(){
             atleta.Categoria ||
             atleta.categoria ||
             ""
-        ).toLowerCase();
+        )
+        .toLowerCase();
 
 
         return(
@@ -1192,7 +1282,7 @@ async function iniciar(){
 
     if(autorizado){
 
-        carregarAtletas();
+        await carregarAtletas();
 
     }
 
@@ -1205,4 +1295,4 @@ iniciar();
 
 </body>
 
-  </html>
+    </html>
