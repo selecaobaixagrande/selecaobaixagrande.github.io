@@ -44,7 +44,6 @@ header{
     display:flex;
     align-items:center;
     gap:12px;
-
     text-decoration:none;
     color:#fff;
 }
@@ -82,8 +81,7 @@ nav a:hover{
 
 .area-login{
 
-    min-height:
-    calc(100vh - 160px);
+    min-height:calc(100vh - 160px);
 
     display:flex;
 
@@ -404,6 +402,7 @@ Galeria
 
 </header>
 
+
 <main>
 
 <section class="area-login">
@@ -423,7 +422,9 @@ class="logo-login">
 Entre na sua área exclusiva.
 </p>
 
+
 <form id="loginForm">
+
 
 <div class="campo">
 
@@ -440,6 +441,7 @@ required>
 
 </div>
 
+
 <div class="campo">
 
 <label for="senha">
@@ -455,6 +457,7 @@ required>
 
 </div>
 
+
 <button
 type="submit"
 class="btn"
@@ -466,10 +469,12 @@ ENTRAR
 
 </form>
 
+
 <div
 id="mensagem"
 class="mensagem">
 </div>
+
 
 <a
 href="atleta.html"
@@ -484,6 +489,7 @@ class="link">
 </section>
 
 </main>
+
 
 <footer>
 
@@ -505,15 +511,19 @@ Baixa Grande - Bahia
 
 </footer>
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
+
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -521,11 +531,14 @@ window.supabase.createClient(
     SUPABASE_PUBLISHABLE_KEY
 );
 
+
 const form =
 document.getElementById("loginForm");
 
+
 const mensagem =
 document.getElementById("mensagem");
+
 
 const botao =
 document.getElementById("btnLogin");
@@ -551,11 +564,14 @@ async function(event){
 
     event.preventDefault();
 
+
     const email =
     document
     .getElementById("email")
     .value
-    .trim();
+    .trim()
+    .toLowerCase();
+
 
     const senha =
     document
@@ -588,8 +604,8 @@ async function(event){
 
 
     /*
-    LOGIN
-    */
+     * LOGIN PELO SUPABASE AUTH
+     */
 
     const {
         data,
@@ -599,16 +615,16 @@ async function(event){
     .auth
     .signInWithPassword({
 
-        email: email,
+        email:email,
 
-        password: senha
+        password:senha
 
     });
 
 
     /*
-    ERRO DE LOGIN
-    */
+     * ERRO DE LOGIN
+     */
 
     if(error){
 
@@ -654,33 +670,36 @@ async function(event){
 
 
     /*
-    BUSCAR PERFIL PELO E-MAIL
-    */
+     * VERIFICAR SE É ATLETA
+     *
+     * Agora usamos a tabela Atletas,
+     * e não a tabela Perfis.
+     */
 
     const {
-        data: perfil,
-        error: erroPerfil
+        data:atleta,
+        error:erroAtleta
     } =
     await supabaseClient
-    .from("Perfis")
+    .from("Atletas")
     .select("*")
-    .eq("Email", user.email)
+    .eq("email",user.email)
     .maybeSingle();
 
 
     /*
-    ERRO AO BUSCAR PERFIL
-    */
+     * ERRO AO BUSCAR ATLETA
+     */
 
-    if(erroPerfil){
+    if(erroAtleta){
 
         console.error(
-            "Erro ao carregar perfil:",
-            erroPerfil
+            "Erro ao carregar atleta:",
+            erroAtleta
         );
 
         mostrarMensagem(
-            "Não foi possível carregar seu perfil.",
+            "Não foi possível verificar o cadastro do atleta.",
             "erro"
         );
 
@@ -699,45 +718,10 @@ async function(event){
 
 
     /*
-    PERFIL NÃO ENCONTRADO
-    */
+     * ATLETA NÃO ENCONTRADO
+     */
 
-    if(!perfil){
-
-        mostrarMensagem(
-            "Sua conta não possui um perfil de atleta cadastrado.",
-            "erro"
-        );
-
-        await supabaseClient
-        .auth
-        .signOut();
-
-        botao.disabled = false;
-
-        botao.textContent =
-        "ENTRAR";
-
-        return;
-
-    }
-
-
-    /*
-    VERIFICAR TIPO
-    */
-
-    const tipo =
-    String(
-        perfil.Tipo ||
-        perfil.tipo ||
-        ""
-    )
-    .trim()
-    .toLowerCase();
-
-
-    if(tipo !== "atleta"){
+    if(!atleta){
 
         mostrarMensagem(
             "Esta conta não está cadastrada como atleta.",
@@ -759,8 +743,56 @@ async function(event){
 
 
     /*
-    LOGIN APROVADO
-    */
+     * SALVAR DADOS DO ATLETA
+     * PARA O PAINEL
+     */
+
+    try{
+
+        localStorage.setItem(
+            "atleta_id",
+            String(
+                atleta.id || ""
+            )
+        );
+
+
+        localStorage.setItem(
+            "atleta_nome",
+            atleta.nome || ""
+        );
+
+
+        localStorage.setItem(
+            "atleta_email",
+            atleta.email || ""
+        );
+
+
+        localStorage.setItem(
+            "atleta_categoria",
+            atleta.categoria || ""
+        );
+
+
+        localStorage.setItem(
+            "atleta_posicao",
+            atleta.posicao || ""
+        );
+
+    }catch(e){
+
+        console.error(
+            "Erro ao salvar dados:",
+            e
+        );
+
+    }
+
+
+    /*
+     * LOGIN APROVADO
+     */
 
     mostrarMensagem(
         "Login realizado! Abrindo seu painel...",
