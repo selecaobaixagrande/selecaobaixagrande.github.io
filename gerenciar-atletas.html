@@ -589,9 +589,6 @@ window.supabase.createClient(
 );
 
 
-/*
- * Nome da Edge Function
- */
 const EDGE_FUNCTION =
 "criar-atleta";
 
@@ -725,15 +722,16 @@ async function carregarAtletas(){
     await supabaseClient
     .from("Atletas")
     .select("*")
-    .order("Nome",{ascending:true});
+    .order("nome",{ascending:true});
 
 
     if(error){
 
-        console.error(error);
+        console.error("ERRO AO CARREGAR ATLETAS:",error);
 
         mostrarMensagem(
-            "Não foi possível carregar os atletas.",
+            "Não foi possível carregar os atletas: " +
+            error.message,
             "erro"
         );
 
@@ -775,7 +773,6 @@ function renderizarAtletas(listaAtletas){
     listaAtletas.forEach(function(atleta){
 
         const id =
-        atleta.Id ||
         atleta.id;
 
 
@@ -787,7 +784,6 @@ function renderizarAtletas(listaAtletas){
 
         <td>
         ${escapeHTML(
-            atleta.Nome ||
             atleta.nome ||
             "-"
         )}
@@ -795,7 +791,6 @@ function renderizarAtletas(listaAtletas){
 
         <td>
         ${escapeHTML(
-            atleta.Categoria ||
             atleta.categoria ||
             "-"
         )}
@@ -803,7 +798,6 @@ function renderizarAtletas(listaAtletas){
 
         <td>
         ${escapeHTML(
-            atleta.Posicao ||
             atleta.posicao ||
             "-"
         )}
@@ -811,7 +805,6 @@ function renderizarAtletas(listaAtletas){
 
         <td>
         ${escapeHTML(
-            atleta.Email ||
             atleta.email ||
             "-"
         )}
@@ -920,9 +913,7 @@ async function(){
     "CRIANDO CONTA...";
 
 
-    /*
-     * EDIÇÃO
-     */
+    /* EDIÇÃO */
 
     if(atletaEditando){
 
@@ -933,13 +924,13 @@ async function(){
         .from("Atletas")
         .update({
 
-            Nome:nomeValor,
-            Categoria:categoriaValor,
-            Posicao:posicaoValor,
-            Email:emailValor
+            nome:nomeValor,
+            categoria:categoriaValor,
+            posicao:posicaoValor,
+            email:emailValor
 
         })
-        .eq("Id",atletaEditando);
+        .eq("id",atletaEditando);
 
 
         if(error){
@@ -947,7 +938,8 @@ async function(){
             console.error(error);
 
             mostrarMensagem(
-                "Não foi possível atualizar o atleta.",
+                "Não foi possível atualizar o atleta: " +
+                error.message,
                 "erro"
             );
 
@@ -975,12 +967,7 @@ async function(){
     }
 
 
-    /*
-     * NOVO ATLETA
-     *
-     * A conta Auth + Perfil + Atleta
-     * serão criados pela Edge Function.
-     */
+    /* NOVO ATLETA */
 
     const {
         data,
@@ -1002,10 +989,14 @@ async function(){
 
     if(error){
 
-        console.error(error);
+        console.error(
+            "ERRO NA EDGE FUNCTION:",
+            error
+        );
 
         mostrarMensagem(
-            "Não foi possível criar a conta do atleta. Verifique a Edge Function.",
+            "Não foi possível criar a conta do atleta: " +
+            error.message,
             "erro"
         );
 
@@ -1063,10 +1054,7 @@ function(id){
     const atleta =
     atletas.find(function(item){
 
-        return String(
-            item.Id ||
-            item.id
-        ) === String(id);
+        return String(item.id) === String(id);
 
     });
 
@@ -1077,35 +1065,25 @@ function(id){
 
 
     atletaEditando =
-    atleta.Id ||
     atleta.id;
 
 
     nome.value =
-    atleta.Nome ||
     atleta.nome ||
     "";
 
     categoria.value =
-    atleta.Categoria ||
     atleta.categoria ||
     "";
 
     posicao.value =
-    atleta.Posicao ||
     atleta.posicao ||
     "";
 
     email.value =
-    atleta.Email ||
     atleta.email ||
     "";
 
-
-    /*
-     * Não mostramos nem alteramos a senha
-     * durante a edição.
-     */
 
     senha.value = "";
 
@@ -1156,7 +1134,7 @@ async function(id){
     await supabaseClient
     .from("Atletas")
     .delete()
-    .eq("Id",id);
+    .eq("id",id);
 
 
     if(error){
@@ -1164,7 +1142,8 @@ async function(id){
         console.error(error);
 
         mostrarMensagem(
-            "Não foi possível excluir o atleta.",
+            "Não foi possível excluir o atleta: " +
+            error.message,
             "erro"
         );
 
@@ -1243,7 +1222,6 @@ function(){
 
         const nomeAtleta =
         String(
-            atleta.Nome ||
             atleta.nome ||
             ""
         )
@@ -1252,7 +1230,6 @@ function(){
 
         const categoriaAtleta =
         String(
-            atleta.Categoria ||
             atleta.categoria ||
             ""
         )
