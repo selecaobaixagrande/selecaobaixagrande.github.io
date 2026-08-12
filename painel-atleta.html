@@ -5,7 +5,8 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Painel do Atleta | Seleção de Baixa Grande</title>
 
@@ -76,13 +77,11 @@ body{
 
 .info h3{
     margin:0 0 8px;
-
     font-size:28px;
 }
 
 .info p{
     margin:6px 0;
-
     color:#bbb;
 }
 
@@ -117,7 +116,6 @@ body{
 
 .card:hover{
     transform:translateY(-3px);
-
     border-color:#b5121b;
 }
 
@@ -188,6 +186,7 @@ body{
 
 .informacao strong{
     font-size:16px;
+    word-break:break-word;
 }
 
 .botoes{
@@ -254,7 +253,6 @@ body{
 
     .perfil{
         flex-direction:column;
-
         text-align:center;
     }
 
@@ -418,13 +416,31 @@ const conteudo =
 document.getElementById("conteudo");
 
 
+function escapar(valor){
+
+    return String(valor ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
 async function carregarPainel(){
 
+    /*
+     * VERIFICAR LOGIN
+     */
+
     const {
-        data: sessaoData,
-        error: sessaoErro
+        data:sessaoData,
+        error:sessaoErro
     } =
-    await supabaseClient.auth.getSession();
+    await supabaseClient
+    .auth
+    .getSession();
 
 
     if(
@@ -436,6 +452,7 @@ async function carregarPainel(){
         "atleta.html";
 
         return;
+
     }
 
 
@@ -443,126 +460,165 @@ async function carregarPainel(){
     sessaoData.session.user;
 
 
+    /*
+     * BUSCAR ATLETA
+     *
+     * A tabela correta agora é:
+     * Atletas
+     */
+
     const {
-        data: perfil,
-        error
+        data:atleta,
+        error:erroAtleta
     } =
     await supabaseClient
-    .from("Perfis")
+    .from("Atletas")
     .select("*")
-    .eq("Email", usuario.email)
+    .eq("email",usuario.email)
     .maybeSingle();
 
 
-    if(error){
+    /*
+     * ERRO AO BUSCAR
+     */
 
-        console.error(error);
+    if(erroAtleta){
+
+        console.error(
+            "Erro ao carregar atleta:",
+            erroAtleta
+        );
+
 
         conteudo.innerHTML = `
 
         <div class="erro">
 
-        <h2>
-        Erro ao carregar o perfil
-        </h2>
+            <h2>
+            Erro ao carregar seu cadastro
+            </h2>
 
-        <p>
-        Não foi possível buscar seus dados.
-        </p>
+            <p>
+            Não foi possível buscar seus dados na tabela Atletas.
+            </p>
 
-        <p>
-        Verifique as políticas RLS da tabela Perfis.
-        </p>
+            <p>
+            ${escapar(erroAtleta.message)}
+            </p>
 
         </div>
 
         `;
 
         return;
+
     }
 
 
-    if(!perfil){
+    /*
+     * ATLETA NÃO ENCONTRADO
+     */
+
+    if(!atleta){
 
         conteudo.innerHTML = `
 
         <div class="erro">
 
-        <h2>
-        Perfil não encontrado
-        </h2>
+            <h2>
+            Atleta não encontrado
+            </h2>
 
-        <p>
-        Sua conta está autenticada, mas não encontramos um perfil associado ao seu e-mail.
-        </p>
+            <p>
+            Sua conta está autenticada, mas não encontramos um atleta cadastrado com este e-mail.
+            </p>
+
+            <p>
+            <strong>
+            ${escapar(usuario.email)}
+            </strong>
+            </p>
 
         </div>
 
         `;
 
         return;
+
     }
 
+
+    /*
+     * DADOS DO ATLETA
+     */
 
     const nome =
-    perfil.Nome ||
-    perfil.nome ||
+    atleta.nome ||
     "Atleta";
 
 
     const categoria =
-    perfil.Categoria ||
-    perfil.categoria ||
+    atleta.categoria ||
     "Não informado";
 
 
     const posicao =
-    perfil.Posição ||
-    perfil.posicao ||
+    atleta.posicao ||
     "Não informado";
 
 
-    const numero =
-    perfil.Número ??
-    perfil.numero ??
-    "-";
+    const email =
+    atleta.email ||
+    usuario.email ||
+    "";
 
 
-    const foto =
-    perfil.foto ||
-    perfil.Foto ||
-    "1000001685.png";
-
+    /*
+     * Esses campos ainda não existem
+     * na tabela Atletas que você mostrou.
+     *
+     * Por isso começam em 0.
+     */
 
     const jogos =
-    perfil.jogos ??
-    perfil.Jogos ??
+    atleta.jogos ??
     0;
 
 
     const gols =
-    perfil.gols ??
-    perfil.Gols ??
+    atleta.gols ??
     0;
 
 
     const assistencias =
-    perfil.assistencias ??
-    perfil.Assistencias ??
+    atleta.assistencias ??
     0;
 
 
     const amarelos =
-    perfil.cartoes_amarelos ??
-    perfil.Cartoes_Amarelos ??
+    atleta.cartoes_amarelos ??
     0;
 
 
     const presencas =
-    perfil.presencas ??
-    perfil.Presencas ??
+    atleta.presencas ??
     0;
 
+
+    /*
+     * FOTO
+     *
+     * Como sua tabela atual não possui
+     * coluna de foto, usamos o escudo.
+     */
+
+    const foto =
+    "1000001685.png";
+
+
+    /*
+     * MOSTRAR PAINEL
+     */
 
     conteudo.innerHTML = `
 
@@ -583,30 +639,24 @@ async function carregarPainel(){
 
         <img
         src="${foto}"
-        alt="Foto de ${nome}"
-        class="foto"
-        onerror="this.src='1000001685.png'">
+        alt="Escudo da Seleção de Baixa Grande"
+        class="foto">
 
 
         <div class="info">
 
             <h3>
-            ${nome}
+            ${escapar(nome)}
             </h3>
 
             <p>
             ⚽ <strong>Categoria:</strong>
-            ${categoria}
+            ${escapar(categoria)}
             </p>
 
             <p>
             📍 <strong>Posição:</strong>
-            ${posicao}
-            </p>
-
-            <p>
-            🔢 <strong>Camisa:</strong>
-            ${numero}
+            ${escapar(posicao)}
             </p>
 
         </div>
@@ -702,7 +752,7 @@ async function carregarPainel(){
                 </span>
 
                 <strong>
-                ${nome}
+                ${escapar(nome)}
                 </strong>
 
             </div>
@@ -715,7 +765,7 @@ async function carregarPainel(){
                 </span>
 
                 <strong>
-                ${usuario.email}
+                ${escapar(email)}
                 </strong>
 
             </div>
@@ -728,7 +778,7 @@ async function carregarPainel(){
                 </span>
 
                 <strong>
-                ${categoria}
+                ${escapar(categoria)}
                 </strong>
 
             </div>
@@ -741,7 +791,20 @@ async function carregarPainel(){
                 </span>
 
                 <strong>
-                ${posicao}
+                ${escapar(posicao)}
+                </strong>
+
+            </div>
+
+
+            <div class="informacao">
+
+                <span>
+                Cadastro
+                </span>
+
+                <strong>
+                ${escapar(atleta.criado_em || "Não informado")}
                 </strong>
 
             </div>
@@ -769,15 +832,25 @@ async function carregarPainel(){
 }
 
 
+/*
+ * SAIR
+ */
+
 async function sair(){
 
-    await supabaseClient.auth.signOut();
+    await supabaseClient
+    .auth
+    .signOut();
 
     window.location.href =
     "atleta.html";
 
 }
 
+
+/*
+ * INICIAR
+ */
 
 carregarPainel();
 
@@ -786,4 +859,4 @@ carregarPainel();
 
 </body>
 
-  </html>
+    </html>
