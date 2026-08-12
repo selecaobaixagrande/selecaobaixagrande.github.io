@@ -45,13 +45,14 @@ header{
     display:flex;
     align-items:center;
     gap:12px;
+
     color:#fff;
     text-decoration:none;
 }
 
-.logo-header{
-    width:55px;
-    height:55px;
+.logo{
+    width:52px;
+    height:52px;
     object-fit:contain;
 }
 
@@ -64,347 +65,237 @@ header{
     color:#b5121b;
 }
 
-nav{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
+.usuario{
+    text-align:right;
 }
 
-nav a{
-    color:#aaa;
-    text-decoration:none;
-    font-size:13px;
+.usuario strong{
+    display:block;
+    font-size:14px;
 }
 
-nav a:hover{
-    color:#fff;
-}
-
-/* PAINEL */
-
-.painel{
-
-    max-width:1150px;
-
-    margin:auto;
-
-    padding:45px 20px 60px;
-
-}
-
-.topo{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    gap:20px;
-
-    margin-bottom:30px;
-
-}
-
-.topo h2{
-
-    margin:0 0 8px;
-
-    font-size:30px;
-
-}
-
-.topo p{
-
-    margin:0;
-
+.usuario span{
     color:#999;
-
+    font-size:12px;
 }
 
-.btn-sair{
+/* CONTEÚDO */
 
-    border:1px solid #7d1d25;
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px 70px;
+}
 
-    background:#2a0d0f;
+.titulo{
+    margin-bottom:30px;
+}
 
-    color:#ff9da3;
-
-    padding:11px 18px;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
+.titulo small{
+    color:#b5121b;
     font-weight:bold;
-
+    font-size:12px;
+    text-transform:uppercase;
 }
 
-.btn-sair:hover{
-
-    background:#b5121b;
-
-    color:#fff;
-
+.titulo h2{
+    margin:7px 0;
+    font-size:32px;
 }
 
-/* PERFIL */
+.titulo p{
+    margin:0;
+    color:#999;
+}
 
-.perfil{
+/* RESUMO */
 
+.resumo{
     display:grid;
+    grid-template-columns:
+    repeat(4,1fr);
 
-    grid-template-columns:150px 1fr;
+    gap:15px;
 
-    gap:25px;
+    margin-bottom:35px;
+}
 
-    align-items:center;
-
-    padding:30px;
+.numero{
+    padding:22px;
 
     background:
     linear-gradient(
         145deg,
-        #1c1c1c,
+        #1b1b1b,
         #101010
     );
 
-    border:1px solid #333;
-
-    border-top:4px solid #b5121b;
-
-    border-radius:18px;
-
-    margin-bottom:25px;
-
-}
-
-.perfil-logo{
-
-    width:130px;
-
-    height:130px;
-
-    object-fit:contain;
-
-    margin:auto;
-
-}
-
-.perfil h3{
-
-    margin:0 0 8px;
-
-    font-size:25px;
-
-}
-
-.perfil p{
-
-    margin:0 0 18px;
-
-    color:#999;
-
-}
-
-.info-email{
-
-    display:inline-block;
-
-    padding:10px 14px;
-
-    background:#0b0b0b;
-
     border:1px solid #292929;
 
-    border-radius:8px;
-
-    color:#bbb;
-
-    font-size:13px;
-
+    border-radius:14px;
 }
 
-/* CARDS */
+.numero .icone{
+    font-size:28px;
+}
 
-.cards{
+.numero strong{
+    display:block;
+    margin-top:12px;
+    font-size:27px;
+}
 
+.numero span{
+    color:#999;
+    font-size:13px;
+}
+
+/* MENU DO PAINEL */
+
+.grid{
     display:grid;
 
     grid-template-columns:
     repeat(3,1fr);
 
-    gap:20px;
-
-    margin-bottom:25px;
-
+    gap:18px;
 }
 
 .card{
+    padding:25px;
 
-    background:#111;
+    background:
+    linear-gradient(
+        145deg,
+        #1b1b1b,
+        #101010
+    );
 
     border:1px solid #292929;
 
     border-radius:15px;
 
-    padding:25px;
-
+    transition:.2s;
 }
 
-.icone{
+.card:hover{
+    border-color:#b5121b;
+    transform:translateY(-3px);
+}
 
-    font-size:32px;
-
-    margin-bottom:12px;
-
+.card .icone{
+    font-size:35px;
+    margin-bottom:15px;
 }
 
 .card h3{
-
-    margin:0 0 8px;
-
+    margin:0 0 9px;
+    font-size:19px;
 }
 
 .card p{
-
-    color:#888;
-
-    font-size:13px;
-
-    line-height:1.5;
-
     margin:0 0 18px;
-
+    color:#999;
+    font-size:13px;
+    line-height:1.5;
 }
 
-/* BOTÃO */
+/* BOTÕES */
 
-.botao{
+.btn{
+    display:inline-flex;
 
-    display:inline-block;
+    align-items:center;
+    justify-content:center;
 
-    padding:11px 15px;
+    padding:11px 16px;
 
+    border:0;
     border-radius:8px;
 
     background:#b5121b;
-
     color:#fff;
 
     text-decoration:none;
 
-    font-size:12px;
-
     font-weight:bold;
+    font-size:13px;
 
+    cursor:pointer;
+
+    transition:.2s;
 }
 
-.botao:hover{
-
+.btn:hover{
     background:#e32632;
-
 }
 
-/* ATLETAS */
+.btn-secundario{
+    background:#252525;
+}
 
-.secao{
+.btn-secundario:hover{
+    background:#333;
+}
 
-    background:#111;
+/* ÁREA DE AÇÕES */
+
+.acoes{
+    margin-top:35px;
+
+    padding:25px;
+
+    background:#101010;
 
     border:1px solid #292929;
 
     border-radius:15px;
-
-    padding:25px;
-
 }
 
-.secao h3{
-
-    margin:0 0 8px;
-
-    font-size:21px;
-
+.acoes h3{
+    margin-top:0;
 }
 
-.secao p{
-
-    color:#888;
-
-    font-size:13px;
-
-    margin:0 0 20px;
-
+.botoes{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-.tabela{
+/* MENSAGEM */
 
-    width:100%;
+.mensagem{
+    display:none;
 
-    border-collapse:collapse;
+    margin-bottom:20px;
 
-}
+    padding:14px;
 
-.tabela th,
-.tabela td{
+    border-radius:9px;
 
-    padding:13px;
+    background:#2a0d0f;
 
-    text-align:left;
-
-    border-bottom:1px solid #292929;
-
-    font-size:13px;
-
-}
-
-.tabela th{
-
-    color:#999;
-
-    font-size:11px;
-
-    text-transform:uppercase;
-
-}
-
-.carregando{
-
-    color:#777;
-
-    text-align:center;
-
-}
-
-.erro{
+    border:1px solid #7d1d25;
 
     color:#ff9da3;
 
-    text-align:center;
-
+    font-size:13px;
 }
 
 /* RODAPÉ */
 
 footer{
-
     text-align:center;
 
-    padding:25px 20px;
+    padding:30px 20px;
 
     background:#0d0d0d;
 
     border-top:1px solid #292929;
 
-    color:#999;
+    color:#888;
 
     font-size:13px;
-
-}
-
-footer p{
-    margin:5px;
 }
 
 footer strong{
@@ -413,52 +304,53 @@ footer strong{
 
 /* CELULAR */
 
-@media(max-width:750px){
+@media(max-width:850px){
+
+    .resumo{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+    .grid{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
 
     .header{
-
         flex-direction:column;
-
-    }
-
-    nav{
-
-        justify-content:center;
-
-    }
-
-    .topo{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
-    }
-
-    .perfil{
-
-        grid-template-columns:1fr;
-
         text-align:center;
-
     }
 
-    .cards{
+    .usuario{
+        text-align:center;
+    }
 
+    main{
+        padding:30px 15px 50px;
+    }
+
+    .titulo h2{
+        font-size:27px;
+    }
+
+    .resumo{
         grid-template-columns:1fr;
-
     }
 
-    .secao{
-
-        overflow-x:auto;
-
+    .grid{
+        grid-template-columns:1fr;
     }
 
-    .tabela{
+    .botoes{
+        flex-direction:column;
+    }
 
-        min-width:600px;
-
+    .btn{
+        width:100%;
     }
 
 }
@@ -467,7 +359,6 @@ footer strong{
 
 </head>
 
-
 <body>
 
 
@@ -475,65 +366,34 @@ footer strong{
 
 <div class="header">
 
-
 <a
 href="index.html"
 class="marca">
 
-
 <img
 src="1000001685.png"
 alt="Escudo da Seleção de Baixa Grande"
-class="logo-header">
-
+class="logo">
 
 <h1>
-
 SELEÇÃO DE
 <span>BAIXA GRANDE</span>
-
 </h1>
 
-
 </a>
 
 
-<nav>
+<div class="usuario">
 
-<a href="index.html">
-Início
-</a>
+<strong id="nomeTreinador">
+Treinador
+</strong>
 
-<a href="jogos.html">
-Jogos
-</a>
+<span id="emailTreinador">
+Carregando...
+</span>
 
-<a href="resultados.html">
-Resultados
-</a>
-
-<a href="categorias.html">
-Categorias
-</a>
-
-<a href="elenco.html">
-Elenco
-</a>
-
-<a href="noticias.html">
-Notícias
-</a>
-
-<a href="galeria.html">
-Galeria
-</a>
-
-<a href="atleta.html">
-👤 Acesso
-</a>
-
-</nav>
-
+</div>
 
 </div>
 
@@ -543,72 +403,98 @@ Galeria
 <main>
 
 
-<section class="painel">
+<div
+id="mensagem"
+class="mensagem">
+</div>
 
 
-<div class="topo">
+<div class="titulo">
 
-
-<div>
+<small>
+Área exclusiva
+</small>
 
 <h2>
 🎓 Painel do Treinador
 </h2>
 
 <p>
-Área exclusiva da comissão técnica.
+Gerencie as informações da Seleção de Baixa Grande.
 </p>
 
 </div>
 
 
-<button
-id="btnSair"
-class="btn-sair">
+<!-- RESUMO -->
 
-SAIR
-
-</button>
+<div class="resumo">
 
 
+<div class="numero">
+
+<div class="icone">
+👥
 </div>
 
+<strong id="totalAtletas">
+0
+</strong>
 
-<!-- PERFIL DO TREINADOR -->
-
-<div class="perfil">
-
-
-<img
-src="1000001685.png"
-alt="Escudo da Seleção de Baixa Grande"
-class="perfil-logo">
-
-
-<div>
-
-
-<h3
-id="nomeTreinador">
-
-Carregando...
-
-</h3>
-
-
-<p>
-Treinador da Seleção de Baixa Grande
-</p>
-
-
-<span
-class="info-email"
-id="emailTreinador">
-
-Carregando...
-
+<span>
+Atletas cadastrados
 </span>
 
+</div>
+
+
+<div class="numero">
+
+<div class="icone">
+⚽
+</div>
+
+<strong id="totalJogos">
+0
+</strong>
+
+<span>
+Jogos cadastrados
+</span>
+
+</div>
+
+
+<div class="numero">
+
+<div class="icone">
+📊
+</div>
+
+<strong id="totalResultados">
+0
+</strong>
+
+<span>
+Resultados
+</span>
+
+</div>
+
+
+<div class="numero">
+
+<div class="icone">
+🏆
+</div>
+
+<strong>
+4
+</strong>
+
+<span>
+Categorias
+</span>
 
 </div>
 
@@ -616,9 +502,9 @@ Carregando...
 </div>
 
 
-<!-- OPÇÕES -->
+<!-- OPÇÕES PRIVILEGIADAS -->
 
-<div class="cards">
+<div class="grid">
 
 
 <div class="card">
@@ -628,19 +514,18 @@ Carregando...
 </div>
 
 <h3>
-Elenco
+Gerenciar elenco
 </h3>
 
 <p>
-Consulte os atletas cadastrados
-na Seleção de Baixa Grande.
+Cadastre, edite, consulte e organize os atletas da Seleção.
 </p>
 
 <a
-href="elenco.html"
-class="botao">
+href="gerenciar-atletas.html"
+class="btn">
 
-VER ELENCO
+GERENCIAR ELENCO
 
 </a>
 
@@ -654,19 +539,18 @@ VER ELENCO
 </div>
 
 <h3>
-Jogos
+Gerenciar jogos
 </h3>
 
 <p>
-Acompanhe os próximos jogos
-e compromissos da equipe.
+Cadastre partidas, datas, horários, adversários e locais.
 </p>
 
 <a
-href="jogos.html"
-class="botao">
+href="gerenciar-jogos.html"
+class="btn">
 
-VER JOGOS
+GERENCIAR JOGOS
 
 </a>
 
@@ -680,19 +564,93 @@ VER JOGOS
 </div>
 
 <h3>
-Resultados
+Gerenciar resultados
 </h3>
 
 <p>
-Consulte os resultados das
-partidas da Seleção.
+Registre placares e atualize os resultados das partidas.
 </p>
 
 <a
-href="resultados.html"
-class="botao">
+href="gerenciar-resultados.html"
+class="btn">
 
-VER RESULTADOS
+GERENCIAR RESULTADOS
+
+</a>
+
+</div>
+
+
+<div class="card">
+
+<div class="icone">
+📰
+</div>
+
+<h3>
+Gerenciar notícias
+</h3>
+
+<p>
+Publique, edite e remova notícias da Seleção.
+</p>
+
+<a
+href="gerenciar-noticias.html"
+class="btn">
+
+GERENCIAR NOTÍCIAS
+
+</a>
+
+</div>
+
+
+<div class="card">
+
+<div class="icone">
+📸
+</div>
+
+<h3>
+Gerenciar galeria
+</h3>
+
+<p>
+Organize fotos e momentos da Seleção.
+</p>
+
+<a
+href="gerenciar-galeria.html"
+class="btn">
+
+GERENCIAR GALERIA
+
+</a>
+
+</div>
+
+
+<div class="card">
+
+<div class="icone">
+🏆
+</div>
+
+<h3>
+Gerenciar categorias
+</h3>
+
+<p>
+Administre as categorias Sub-13, Sub-15, Sub-17 e Sub-20.
+</p>
+
+<a
+href="gerenciar-categorias.html"
+class="btn">
+
+GERENCIAR CATEGORIAS
 
 </a>
 
@@ -702,82 +660,62 @@ VER RESULTADOS
 </div>
 
 
-<!-- LISTA DE ATLETAS -->
+<!-- AÇÕES -->
 
-<div class="secao">
-
+<div class="acoes">
 
 <h3>
-👥 Atletas cadastrados
+⚙️ Ações rápidas
 </h3>
 
-
-<p>
-Lista dos atletas registrados no sistema.
-</p>
+<div class="botoes">
 
 
-<table class="tabela">
+<a
+href="elenco.html"
+class="btn btn-secundario">
+
+👥 Ver elenco público
+
+</a>
 
 
-<thead>
+<a
+href="jogos.html"
+class="btn btn-secundario">
 
-<tr>
+⚽ Ver jogos públicos
 
-<th>
-Nome
-</th>
-
-<th>
-Categoria
-</th>
-
-<th>
-Posição
-</th>
-
-<th>
-E-mail
-</th>
-
-</tr>
-
-</thead>
+</a>
 
 
-<tbody id="listaAtletas">
+<a
+href="resultados.html"
+class="btn btn-secundario">
+
+📊 Ver resultados públicos
+
+</a>
 
 
-<tr>
+<button
+id="btnSair"
+class="btn">
 
-<td
-colspan="4"
-class="carregando">
+🚪 Sair da conta
 
-Carregando atletas...
-
-</td>
-
-</tr>
-
-
-</tbody>
-
-
-</table>
+</button>
 
 
 </div>
 
-
-</section>
+</div>
 
 
 </main>
 
 
 <footer>
-
 
 <p>
 
@@ -787,27 +725,24 @@ Carregando atletas...
 
 </p>
 
-
 <p>
-Baixa Grande - Bahia
+Área exclusiva da comissão técnica
 </p>
-
 
 <p>
 © 2026 Seleção de Baixa Grande
 </p>
 
-
 </footer>
 
 
-<script
-src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
+
+/* CONFIGURAÇÃO */
 
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
@@ -824,22 +759,32 @@ window.supabase.createClient(
 );
 
 
-/* VERIFICAR TREINADOR */
+/* ELEMENTOS */
 
-async function carregarTreinador(){
+const mensagem =
+document.getElementById("mensagem");
 
+const nomeTreinador =
+document.getElementById("nomeTreinador");
+
+const emailTreinador =
+document.getElementById("emailTreinador");
+
+
+/* INICIAR PAINEL */
+
+async function iniciarPainel(){
 
     const {
-        data:{
-            session
-        }
+        data,
+        error
     } =
     await supabaseClient
     .auth
-    .getSession();
+    .getUser();
 
 
-    if(!session){
+    if(error || !data.user){
 
         window.location.href =
         "login-treinador.html";
@@ -850,18 +795,16 @@ async function carregarTreinador(){
 
 
     const user =
-    session.user;
+    data.user;
 
 
-    document
-    .getElementById("emailTreinador")
-    .textContent =
-    user.email || "Não informado";
-
+    /*
+    BUSCAR PERFIL
+    */
 
     const {
         data:perfil,
-        error
+        error:erroPerfil
     } =
     await supabaseClient
     .from("Perfis")
@@ -870,14 +813,16 @@ async function carregarTreinador(){
     .maybeSingle();
 
 
-    if(error){
+    if(erroPerfil){
 
-        console.error(error);
+        console.error(
+            "Erro ao carregar perfil:",
+            erroPerfil
+        );
 
-        document
-        .getElementById("nomeTreinador")
-        .textContent =
-        "Treinador";
+        mostrarErro(
+            "Não foi possível carregar seu perfil."
+        );
 
         return;
 
@@ -886,22 +831,30 @@ async function carregarTreinador(){
 
     if(!perfil){
 
-        document
-        .getElementById("nomeTreinador")
-        .textContent =
-        "Treinador";
+        await supabaseClient
+        .auth
+        .signOut();
+
+        window.location.href =
+        "login-treinador.html";
 
         return;
 
     }
 
 
+    /*
+    VERIFICAR TIPO
+    */
+
     const tipo =
     String(
         perfil.Tipo ||
         perfil.tipo ||
         ""
-    ).toLowerCase();
+    )
+    .trim()
+    .toLowerCase();
 
 
     if(tipo !== "treinador"){
@@ -918,152 +871,111 @@ async function carregarTreinador(){
     }
 
 
-    const nome =
-    perfil.Nome ||
-    perfil.nome ||
+    /*
+    MOSTRAR DADOS
+    */
+
+    emailTreinador.textContent =
+    user.email;
+
+
+    nomeTreinador.textContent =
+    perfil.Text ||
+    perfil.text ||
     "Treinador";
 
 
-    document
-    .getElementById("nomeTreinador")
-    .textContent =
-    nome;
+    /*
+    CARREGAR CONTADORES
+    */
 
-
-    carregarAtletas();
+    carregarContadores();
 
 }
 
 
-/* CARREGAR ATLETAS */
+/* CONTADORES */
 
-async function carregarAtletas(){
-
-
-    const lista =
-    document
-    .getElementById("listaAtletas");
+async function carregarContadores(){
 
 
-    const {
-        data:atletas,
-        error
-    } =
+    const atletas =
     await supabaseClient
-    .from("Perfis")
-    .select("*")
-    .eq("Tipo","atleta")
-    .order("Nome");
-
-
-    if(error){
-
-        console.error(error);
-
-
-        lista.innerHTML = `
-
-        <tr>
-
-        <td
-        colspan="4"
-        class="erro">
-
-        Não foi possível carregar os atletas.
-
-        </td>
-
-        </tr>
-
-        `;
-
-        return;
-
-    }
-
-
-    if(!atletas || atletas.length === 0){
-
-        lista.innerHTML = `
-
-        <tr>
-
-        <td
-        colspan="4"
-        class="carregando">
-
-        Nenhum atleta cadastrado ainda.
-
-        </td>
-
-        </tr>
-
-        `;
-
-        return;
-
-    }
-
-
-    lista.innerHTML = "";
-
-
-    atletas.forEach(
-    function(atleta){
-
-        const nome =
-        atleta.Nome ||
-        atleta.nome ||
-        "Não informado";
-
-
-        const categoria =
-        atleta.Categoria ||
-        atleta.categoria ||
-        "Não informado";
-
-
-        const posicao =
-        atleta.Posição ||
-        atleta.Posicao ||
-        atleta.posicao ||
-        "Não informado";
-
-
-        const email =
-        atleta.Email ||
-        atleta.email ||
-        "Não informado";
-
-
-        const linha =
-        document.createElement("tr");
-
-
-        linha.innerHTML = `
-
-        <td>
-        ${nome}
-        </td>
-
-        <td>
-        ${categoria}
-        </td>
-
-        <td>
-        ${posicao}
-        </td>
-
-        <td>
-        ${email}
-        </td>
-
-        `;
-
-
-        lista.appendChild(linha);
-
+    .from("Atletas")
+    .select("*",{
+        count:"exact",
+        head:true
     });
+
+
+    if(
+        !atletas.error &&
+        atletas.count !== null
+    ){
+
+        document
+        .getElementById("totalAtletas")
+        .textContent =
+        atletas.count;
+
+    }
+
+
+    const jogos =
+    await supabaseClient
+    .from("Jogos")
+    .select("*",{
+        count:"exact",
+        head:true
+    });
+
+
+    if(
+        !jogos.error &&
+        jogos.count !== null
+    ){
+
+        document
+        .getElementById("totalJogos")
+        .textContent =
+        jogos.count;
+
+    }
+
+
+    const resultados =
+    await supabaseClient
+    .from("Resultados")
+    .select("*",{
+        count:"exact",
+        head:true
+    });
+
+
+    if(
+        !resultados.error &&
+        resultados.count !== null
+    ){
+
+        document
+        .getElementById("totalResultados")
+        .textContent =
+        resultados.count;
+
+    }
+
+}
+
+
+/* ERRO */
+
+function mostrarErro(texto){
+
+    mensagem.textContent =
+    texto;
+
+    mensagem.style.display =
+    "block";
 
 }
 
@@ -1086,11 +998,14 @@ async function(){
 });
 
 
-carregarTreinador();
+/* INICIAR */
+
+iniciarPainel();
+
 
 </script>
 
 
 </body>
 
-  </html>
+    </html>
