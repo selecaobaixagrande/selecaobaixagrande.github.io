@@ -67,10 +67,6 @@ header{
     font-size:13px;
 }
 
-.voltar:hover{
-    color:#fff;
-}
-
 main{
     max-width:1200px;
     margin:auto;
@@ -252,6 +248,10 @@ button:disabled{
     font-size:12px;
 }
 
+.btn-excluir:hover{
+    background:#a52a34;
+}
+
 .mensagem{
     display:none;
     margin-bottom:20px;
@@ -314,9 +314,7 @@ button:disabled{
 
 </head>
 
-
 <body>
-
 
 <header>
 
@@ -350,7 +348,6 @@ class="voltar">
 
 <main>
 
-
 <div class="titulo">
 
 <small>Área exclusiva</small>
@@ -370,6 +367,8 @@ class="mensagem">
 </div>
 
 
+<!-- FORMULÁRIO -->
+
 <div class="formulario">
 
 <h3 id="tituloFormulario">
@@ -379,8 +378,6 @@ class="mensagem">
 
 <div class="form-grid">
 
-
-<!-- NOME -->
 
 <div class="campo">
 
@@ -396,8 +393,6 @@ autocomplete="off">
 
 </div>
 
-
-<!-- CATEGORIA -->
 
 <div class="campo">
 
@@ -431,8 +426,6 @@ Sub-20
 
 </div>
 
-
-<!-- POSIÇÃO -->
 
 <div class="campo">
 
@@ -475,8 +468,6 @@ Atacante
 </div>
 
 
-<!-- DATA DE NASCIMENTO -->
-
 <div class="campo">
 
 <label for="data_nascimento">
@@ -489,8 +480,6 @@ id="data_nascimento">
 
 </div>
 
-
-<!-- E-MAIL -->
 
 <div class="campo">
 
@@ -506,8 +495,6 @@ autocomplete="off">
 
 </div>
 
-
-<!-- SENHA -->
 
 <div class="campo">
 
@@ -529,8 +516,6 @@ A senha precisa ter pelo menos 6 caracteres.
 </div>
 
 
-<!-- FOTO -->
-
 <div class="campo">
 
 <label for="foto">
@@ -543,13 +528,11 @@ id="foto"
 placeholder="https://...">
 
 <div class="aviso">
-Cole o link da foto do atleta.
+Cole o link da foto.
 </div>
 
 </div>
 
-
-<!-- INSTAGRAM -->
 
 <div class="campo">
 
@@ -561,10 +544,6 @@ Instagram
 type="text"
 id="instagram"
 placeholder="@instagram">
-
-<div class="aviso">
-Digite o Instagram do atleta.
-</div>
 
 </div>
 
@@ -601,7 +580,6 @@ CANCELAR EDIÇÃO
 <!-- LISTA -->
 
 <div class="lista">
-
 
 <div class="lista-topo">
 
@@ -653,9 +631,7 @@ Nenhum atleta cadastrado.
 
 </div>
 
-
 </div>
-
 
 </main>
 
@@ -664,7 +640,6 @@ Nenhum atleta cadastrado.
 
 
 <script>
-
 
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
@@ -770,7 +745,9 @@ async function verificarTreinador(){
         data,
         error
     } =
-    await supabaseClient.auth.getUser();
+    await supabaseClient
+    .auth
+    .getUser();
 
 
     if(error || !data.user){
@@ -806,10 +783,13 @@ async function carregarAtletas(){
 
     if(error){
 
-        console.error(error);
+        console.error(
+            "Erro ao carregar:",
+            error
+        );
 
         mostrarMensagem(
-            "Erro ao carregar os atletas: " +
+            "Não foi possível carregar os atletas: " +
             error.message,
             "erro"
         );
@@ -827,7 +807,7 @@ async function carregarAtletas(){
 
 
 /* =========================
-   RENDERIZAR
+   RENDERIZAR LISTA
 ========================= */
 
 function renderizarAtletas(listaAtletas){
@@ -835,7 +815,7 @@ function renderizarAtletas(listaAtletas){
     lista.innerHTML = "";
 
 
-    if(!listaAtletas.length){
+    if(listaAtletas.length === 0){
 
         document
         .getElementById("semAtletas")
@@ -872,6 +852,7 @@ function renderizarAtletas(listaAtletas){
 
         <img
         src="${escapeHTML(imagem)}"
+        alt="Foto"
         class="foto-atleta"
         onerror="this.src='1000001685.png'">
 
@@ -908,7 +889,9 @@ function renderizarAtletas(listaAtletas){
 
 
         <td>
-        ${escapeHTML(atleta.email || "-")}
+        ${escapeHTML(
+            atleta.email || "-"
+        )}
         </td>
 
 
@@ -917,7 +900,7 @@ function renderizarAtletas(listaAtletas){
         <button
         type="button"
         class="btn-editar"
-        onclick="editarAtleta('${escapeHTML(id)}')">
+        data-id="${escapeHTML(id)}">
 
         Editar
 
@@ -927,7 +910,7 @@ function renderizarAtletas(listaAtletas){
         <button
         type="button"
         class="btn-excluir"
-        onclick="excluirAtleta('${escapeHTML(id)}')">
+        data-id="${escapeHTML(id)}">
 
         Excluir
 
@@ -946,43 +929,92 @@ function renderizarAtletas(listaAtletas){
 
 
 /* =========================
-   CADASTRAR / EDITAR
+   BOTÕES DA LISTA
+========================= */
+
+lista.addEventListener(
+"click",
+async function(event){
+
+    const botao =
+    event.target.closest("button");
+
+
+    if(!botao){
+
+        return;
+
+    }
+
+
+    const id =
+    botao.dataset.id;
+
+
+    if(!id){
+
+        return;
+
+    }
+
+
+    if(
+        botao.classList.contains(
+            "btn-editar"
+        )
+    ){
+
+        editarAtleta(id);
+
+        return;
+
+    }
+
+
+    if(
+        botao.classList.contains(
+            "btn-excluir"
+        )
+    ){
+
+        await excluirAtleta(
+            id,
+            botao
+        );
+
+    }
+
+});
+
+
+/* =========================
+   CADASTRAR
 ========================= */
 
 btnSalvar.addEventListener(
 "click",
 async function(){
 
-
     const nomeValor =
     nome.value.trim();
-
 
     const categoriaValor =
     categoria.value;
 
-
     const posicaoValor =
     posicao.value;
-
 
     const dataNascimentoValor =
     dataNascimento.value;
 
-
     const emailValor =
-    email.value
-    .trim()
-    .toLowerCase();
-
+    email.value.trim().toLowerCase();
 
     const senhaValor =
     senha.value;
 
-
     const fotoValor =
     foto.value.trim();
-
 
     const instagramValor =
     instagram.value.trim();
@@ -1004,10 +1036,6 @@ async function(){
 
     }
 
-
-    /*
-     * NOVO ATLETA
-     */
 
     if(!atletaEditando){
 
@@ -1048,9 +1076,7 @@ async function(){
     try{
 
 
-        /*
-         * EDIÇÃO
-         */
+        /* EDIÇÃO */
 
         if(atletaEditando){
 
@@ -1061,11 +1087,14 @@ async function(){
             .from("Atletas")
             .update({
 
-                nome: nomeValor,
+                nome:
+                    nomeValor,
 
-                categoria: categoriaValor,
+                categoria:
+                    categoriaValor,
 
-                posicao: posicaoValor,
+                posicao:
+                    posicaoValor,
 
                 data_nascimento:
                     dataNascimentoValor || null,
@@ -1077,7 +1106,10 @@ async function(){
                     instagramValor || null
 
             })
-            .eq("id",atletaEditando);
+            .eq(
+                "id",
+                atletaEditando
+            );
 
 
             if(error){
@@ -1097,26 +1129,20 @@ async function(){
 
             await carregarAtletas();
 
-
             return;
 
         }
 
 
-        /*
-         * NOVO ATLETA
-         *
-         * A Edge Function cria:
-         *
-         * 1. conta Auth
-         * 2. registro Atletas
-         */
+        /* NOVO ATLETA */
 
         const {
             data,
             error
         } =
-        await supabaseClient.functions.invoke(
+        await supabaseClient
+        .functions
+        .invoke(
             EDGE_FUNCTION,
             {
 
@@ -1161,7 +1187,7 @@ async function(){
 
             throw new Error(
                 error.message ||
-                "Não foi possível chamar a Edge Function."
+                "Erro ao chamar a Edge Function."
             );
 
         }
@@ -1184,20 +1210,18 @@ async function(){
 
         limparFormulario();
 
-
         await carregarAtletas();
 
-
     }
+
 
     catch(error){
 
         console.error(error);
 
-
         mostrarMensagem(
             "Não foi possível cadastrar o atleta: " +
-            (error.message || error),
+            error.message,
             "erro"
         );
 
@@ -1222,8 +1246,7 @@ async function(){
    EDITAR
 ========================= */
 
-window.editarAtleta =
-function(id){
+function editarAtleta(id){
 
     const atleta =
     atletas.find(function(item){
@@ -1279,7 +1302,9 @@ function(id){
 
 
     document
-    .getElementById("tituloFormulario")
+    .getElementById(
+        "tituloFormulario"
+    )
     .textContent =
     "✏️ Editar atleta";
 
@@ -1300,15 +1325,17 @@ function(id){
 
     });
 
-};
+}
 
 
 /* =========================
    EXCLUIR
 ========================= */
 
-window.excluirAtleta =
-async function(id){
+async function excluirAtleta(
+    id,
+    botao
+){
 
     const confirmar =
     confirm(
@@ -1323,12 +1350,17 @@ async function(id){
     }
 
 
-    try{
+    if(botao){
 
-        /*
-         * Aqui excluímos o registro
-         * da tabela Atletas.
-         */
+        botao.disabled = true;
+
+        botao.textContent =
+        "Excluindo...";
+
+    }
+
+
+    try{
 
         const {
             error
@@ -1336,14 +1368,86 @@ async function(id){
         await supabaseClient
         .from("Atletas")
         .delete()
-        .eq("id",id);
+        .eq(
+            "id",
+            id
+        );
 
 
         if(error){
 
+            console.error(
+                "Erro ao excluir:",
+                error
+            );
+
             throw error;
 
         }
+
+
+        /*
+         * Remove imediatamente da memória
+         */
+
+        atletas =
+        atletas.filter(
+            function(atleta){
+
+                return String(atleta.id) !==
+                String(id);
+
+            }
+        );
+
+
+        /*
+         * Atualiza a tela
+         */
+
+        const termo =
+        pesquisa.value
+        .toLowerCase()
+        .trim();
+
+
+        const filtrados =
+        atletas.filter(
+            function(atleta){
+
+                return (
+
+                    String(
+                        atleta.nome || ""
+                    )
+                    .toLowerCase()
+                    .includes(termo)
+
+                    ||
+
+                    String(
+                        atleta.categoria || ""
+                    )
+                    .toLowerCase()
+                    .includes(termo)
+
+                    ||
+
+                    String(
+                        atleta.instagram || ""
+                    )
+                    .toLowerCase()
+                    .includes(termo)
+
+                );
+
+            }
+        );
+
+
+        renderizarAtletas(
+            filtrados
+        );
 
 
         mostrarMensagem(
@@ -1351,14 +1455,13 @@ async function(id){
             "sucesso"
         );
 
-
-        await carregarAtletas();
-
     }
+
 
     catch(error){
 
         console.error(error);
+
 
         mostrarMensagem(
             "Não foi possível excluir o atleta: " +
@@ -1366,9 +1469,19 @@ async function(id){
             "erro"
         );
 
+
+        if(botao){
+
+            botao.disabled = false;
+
+            botao.textContent =
+            "Excluir";
+
+        }
+
     }
 
-};
+}
 
 
 /* =========================
@@ -1385,7 +1498,7 @@ function(){
 
 
 /* =========================
-   LIMPAR FORMULÁRIO
+   LIMPAR
 ========================= */
 
 function limparFormulario(){
@@ -1399,117 +1512,4 @@ function limparFormulario(){
 
     posicao.value = "";
 
-    dataNascimento.value = "";
-
-    email.value = "";
-
-    senha.value = "";
-
-    foto.value = "";
-
-    instagram.value = "";
-
-
-    senha.disabled = false;
-
-
-    document
-    .getElementById("tituloFormulario")
-    .textContent =
-    "➕ Cadastrar atleta";
-
-
-    btnSalvar.textContent =
-    "CADASTRAR ATLETA";
-
-
-    btnCancelar.style.display =
-    "none";
-
-}
-
-
-/* =========================
-   PESQUISA
-========================= */
-
-pesquisa.addEventListener(
-"input",
-function(){
-
-    const termo =
-    pesquisa.value
-    .toLowerCase()
-    .trim();
-
-
-    const filtrados =
-    atletas.filter(function(atleta){
-
-        const nomeAtleta =
-        String(
-            atleta.nome || ""
-        )
-        .toLowerCase();
-
-
-        const categoriaAtleta =
-        String(
-            atleta.categoria || ""
-        )
-        .toLowerCase();
-
-
-        const instagramAtleta =
-        String(
-            atleta.instagram || ""
-        )
-        .toLowerCase();
-
-
-        return (
-
-            nomeAtleta.includes(termo) ||
-
-            categoriaAtleta.includes(termo) ||
-
-            instagramAtleta.includes(termo)
-
-        );
-
-    });
-
-
-    renderizarAtletas(filtrados);
-
-});
-
-
-/* =========================
-   INICIAR
-========================= */
-
-async function iniciar(){
-
-    const autorizado =
-    await verificarTreinador();
-
-
-    if(autorizado){
-
-        await carregarAtletas();
-
-    }
-
-}
-
-
-iniciar();
-
-
-</script>
-
-
-</body>
-
-    </html>
+   
