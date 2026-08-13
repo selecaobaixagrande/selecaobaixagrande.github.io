@@ -2,15 +2,12 @@
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Gerenciar Atletas | Seleção de Baixa Grande</title>
 
 <style>
-
 *{
     box-sizing:border-box;
 }
@@ -93,11 +90,15 @@ main{
     color:#999;
 }
 
-.formulario{
-    padding:25px;
+.formulario,
+.lista{
     background:#111;
     border:1px solid #292929;
     border-radius:15px;
+}
+
+.formulario{
+    padding:25px;
     margin-bottom:30px;
 }
 
@@ -181,14 +182,23 @@ button:disabled{
     background:#292929;
 }
 
-.btn-sec:hover{
-    background:#3a3a3a;
+.btn-editar{
+    background:#333;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.btn-excluir{
+    background:#7d1d25;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.btn-excluir:hover{
+    background:#a52a34;
 }
 
 .lista{
-    background:#111;
-    border:1px solid #292929;
-    border-radius:15px;
     overflow:hidden;
 }
 
@@ -243,22 +253,6 @@ button:disabled{
     object-fit:cover;
     border:2px solid #b5121b;
     background:#222;
-}
-
-.btn-editar{
-    background:#333;
-    padding:7px 10px;
-    font-size:12px;
-}
-
-.btn-excluir{
-    background:#7d1d25;
-    padding:7px 10px;
-    font-size:12px;
-}
-
-.btn-excluir:hover{
-    background:#a52a34;
 }
 
 .mensagem{
@@ -323,11 +317,8 @@ button:disabled{
     .pesquisa{
         width:100%;
     }
-
 }
-
 </style>
-
 </head>
 
 <body>
@@ -567,7 +558,6 @@ placeholder="@instagram">
 
 </div>
 
-
 </div>
 
 
@@ -619,7 +609,6 @@ placeholder="🔎 Pesquisar atleta...">
 <thead>
 
 <tr>
-
 <th>Foto</th>
 <th>Nome</th>
 <th>Categoria</th>
@@ -628,13 +617,11 @@ placeholder="🔎 Pesquisar atleta...">
 <th>Instagram</th>
 <th>E-mail</th>
 <th>Ações</th>
-
 </tr>
 
 </thead>
 
-<tbody id="listaAtletas">
-</tbody>
+<tbody id="listaAtletas"></tbody>
 
 </table>
 
@@ -655,16 +642,13 @@ Nenhum atleta cadastrado.
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
 
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -673,11 +657,7 @@ window.supabase.createClient(
 );
 
 
-/*
-========================================
-NOVA EDGE FUNCTION
-========================================
-*/
+/* NOME EXATO DA EDGE FUNCTION */
 
 const EDGE_FUNCTION =
 "criar-atleta-novo";
@@ -789,7 +769,6 @@ function(){
         fotoArquivo.value = "";
 
         return;
-
     }
 
     if(arquivo.size > 5 * 1024 * 1024){
@@ -802,7 +781,6 @@ function(){
         fotoArquivo.value = "";
 
         return;
-
     }
 
     const leitor =
@@ -821,7 +799,7 @@ function(){
 });
 
 
-/* UPLOAD DA FOTO */
+/* ENVIAR FOTO */
 
 async function enviarFoto(){
 
@@ -854,9 +832,7 @@ async function enviarFoto(){
     "fotos/" +
     nomeArquivo;
 
-    const {
-        error
-    } =
+    const resultado =
     await supabaseClient
     .storage
     .from("atletas")
@@ -870,32 +846,24 @@ async function enviarFoto(){
         }
     );
 
-    if(error){
+    if(resultado.error){
 
         throw new Error(
             "Erro ao enviar a foto: " +
-            error.message
+            resultado.error.message
         );
 
     }
 
-    const {
-        data
-    } =
+    const publicUrl =
     supabaseClient
     .storage
     .from("atletas")
-    .getPublicUrl(caminho);
+    .getPublicUrl(caminho)
+    .data
+    .publicUrl;
 
-    if(!data?.publicUrl){
-
-        throw new Error(
-            "Não foi possível obter o link da foto."
-        );
-
-    }
-
-    return data.publicUrl;
+    return publicUrl;
 
 }
 
@@ -904,10 +872,7 @@ async function enviarFoto(){
 
 async function carregarAtletas(){
 
-    const {
-        data,
-        error
-    } =
+    const resultado =
     await supabaseClient
     .from("Atletas")
     .select("*")
@@ -918,26 +883,25 @@ async function carregarAtletas(){
         }
     );
 
-    if(error){
+    if(resultado.error){
 
-        console.error(error);
+        console.error(
+            resultado.error
+        );
 
         mostrarMensagem(
             "Erro ao carregar atletas: " +
-            error.message,
+            resultado.error.message,
             "erro"
         );
 
         return;
-
     }
 
     atletas =
-    data || [];
+    resultado.data || [];
 
-    renderizarAtletas(
-        atletas
-    );
+    renderizarAtletas(atletas);
 
 }
 
@@ -955,6 +919,7 @@ function renderizarAtletas(listaAtletas){
     ? "none"
     : "block";
 
+
     listaAtletas.forEach(
     function(atleta){
 
@@ -965,70 +930,99 @@ function renderizarAtletas(listaAtletas){
         atleta.foto ||
         "1000001685.png";
 
+
         tr.innerHTML = `
 
-        <td>
+<td>
 
-        <img
-        src="${escapeHTML(foto)}"
-        class="foto-atleta"
-        onerror="this.src='1000001685.png'">
+<img
+src="${escapeHTML(foto)}"
+class="foto-atleta"
+onerror="this.src='1000001685.png'">
 
-        </td>
+</td>
 
-        <td>
-        ${escapeHTML(atleta.nome || "-")}
-        </td>
+<td>
+${escapeHTML(atleta.nome || "-")}
+</td>
 
-        <td>
-        ${escapeHTML(atleta.categoria || "-")}
-        </td>
+<td>
+${escapeHTML(atleta.categoria || "-")}
+</td>
 
-        <td>
-        ${escapeHTML(atleta.posicao || "-")}
-        </td>
+<td>
+${escapeHTML(atleta.posicao || "-")}
+</td>
 
-        <td>
-        ${escapeHTML(atleta.data_nascimento || "-")}
-        </td>
+<td>
+${escapeHTML(atleta.data_nascimento || "-")}
+</td>
 
-        <td>
-        ${escapeHTML(atleta.instagram || "-")}
-        </td>
+<td>
+${escapeHTML(atleta.instagram || "-")}
+</td>
 
-        <td>
-        ${escapeHTML(atleta.email || "-")}
-        </td>
+<td>
+${escapeHTML(atleta.email || "-")}
+</td>
 
-        <td>
+<td>
 
-        <button
-        type="button"
-        class="btn-editar"
-        data-id="${escapeHTML(atleta.id)}">
+<button
+type="button"
+class="btn-editar"
+data-id="${escapeHTML(atleta.id)}">
 
-        Editar
+Editar
 
-        </button>
+</button>
 
-        <button
-        type="button"
-        class="btn-excluir"
-        data-id="${escapeHTML(atleta.id)}">
+<button
+type="button"
+class="btn-excluir"
+data-id="${escapeHTML(atleta.id)}">
 
-        Excluir
+Excluir
 
-        </button>
+</button>
 
-        </td>
+</td>
 
-        `;
+`;
 
         lista.appendChild(tr);
 
     });
 
 }
+
+
+/* PESQUISA */
+
+pesquisa.addEventListener(
+"input",
+function(){
+
+    const termo =
+    pesquisa.value
+    .trim()
+    .toLowerCase();
+
+    const filtrados =
+    atletas.filter(
+        atleta =>
+        String(
+            atleta.nome || ""
+        )
+        .toLowerCase()
+        .includes(termo)
+    );
+
+    renderizarAtletas(
+        filtrados
+    );
+
+});
 
 
 /* BOTÕES DA LISTA */
@@ -1073,7 +1067,7 @@ function(event){
 });
 
 
-/* CADASTRAR */
+/* CADASTRAR / EDITAR */
 
 btnSalvar.addEventListener(
 "click",
@@ -1116,7 +1110,6 @@ async function(){
         );
 
         return;
-
     }
 
 
@@ -1130,7 +1123,6 @@ async function(){
             );
 
             return;
-
         }
 
         if(senhaValor.length < 6){
@@ -1141,7 +1133,6 @@ async function(){
             );
 
             return;
-
         }
 
     }
@@ -1153,20 +1144,15 @@ async function(){
 
     try{
 
-        /*
-        ==============================
-        EDITAR
-        ==============================
-        */
+        /* EDITAR */
 
         if(atletaEditando){
 
             const fotoUrl =
             await enviarFoto();
 
-            const {
-                error
-            } =
+
+            const resultado =
             await supabaseClient
             .from("Atletas")
             .update({
@@ -1195,14 +1181,19 @@ async function(){
                 atletaEditando
             );
 
-            if(error){
-                throw error;
+
+            if(resultado.error){
+
+                throw resultado.error;
+
             }
+
 
             mostrarMensagem(
                 "Atleta atualizado com sucesso!",
                 "sucesso"
             );
+
 
             limparFormulario();
 
@@ -1213,14 +1204,17 @@ async function(){
         }
 
 
-        /*
-        ==============================
-        NOVO ATLETA
-        ==============================
-        */
+        /* NOVO ATLETA */
 
-        const fotoUrl =
-        await enviarFoto();
+        let fotoUrl = null;
+
+
+        if(fotoArquivo.files.length > 0){
+
+            fotoUrl =
+            await enviarFoto();
+
+        }
 
 
         mostrarMensagem(
@@ -1229,16 +1223,18 @@ async function(){
         );
 
 
-        const {
-            data,
-            error
-        } =
+        console.log(
+            "Chamando Edge Function:",
+            EDGE_FUNCTION
+        );
+
+
+        const resultado =
         await supabaseClient
         .functions
         .invoke(
             EDGE_FUNCTION,
             {
-
                 body:{
 
                     nome:
@@ -1266,29 +1262,33 @@ async function(){
                         dataValor || null
 
                 }
-
             }
         );
 
 
-        if(error){
+        console.log(
+            "Resposta da Edge Function:",
+            resultado
+        );
 
-            console.error(
-                error
-            );
+
+        if(resultado.error){
 
             throw new Error(
-                error.message ||
-                "Erro na Edge Function."
+                resultado.error.message ||
+                "Erro ao chamar a Edge Function."
             );
 
         }
 
 
-        if(data?.error){
+        if(
+            resultado.data &&
+            resultado.data.error
+        ){
 
             throw new Error(
-                data.error
+                resultado.data.error
             );
 
         }
@@ -1308,11 +1308,18 @@ async function(){
 
     catch(error){
 
-        console.error(error);
+        console.error(
+            "ERRO NO CADASTRO:",
+            error
+        );
+
 
         mostrarMensagem(
             "Não foi possível cadastrar o atleta: " +
-            error.message,
+            (
+                error.message ||
+                "Erro desconhecido."
+            ),
             "erro"
         );
 
@@ -1344,12 +1351,21 @@ function editarAtleta(id){
         String(id)
     );
 
+
     if(!atleta){
+
+        mostrarMensagem(
+            "Atleta não encontrado.",
+            "erro"
+        );
+
         return;
     }
 
+
     atletaEditando =
     atleta.id;
+
 
     nome.value =
     atleta.nome || "";
@@ -1372,14 +1388,18 @@ function editarAtleta(id){
     fotoAtual =
     atleta.foto || "";
 
+
     previewFoto.src =
     fotoAtual ||
     "1000001685.png";
 
-    senha.value = "";
+
+    senha.value =
+    "";
 
     senha.disabled =
     true;
+
 
     document
     .getElementById(
@@ -1388,16 +1408,89 @@ function editarAtleta(id){
     .textContent =
     "✏️ Editar atleta";
 
+
     btnSalvar.textContent =
     "SALVAR ALTERAÇÕES";
 
+
     btnCancelar.style.display =
     "inline-block";
+
 
     window.scrollTo({
         top:0,
         behavior:"smooth"
     });
+
+}
+
+
+/* CANCELAR */
+
+btnCancelar.addEventListener(
+"click",
+function(){
+
+    limparFormulario();
+
+});
+
+
+/* LIMPAR FORMULÁRIO */
+
+function limparFormulario(){
+
+    atletaEditando =
+    null;
+
+    fotoAtual =
+    "";
+
+    nome.value =
+    "";
+
+    categoria.value =
+    "";
+
+    posicao.value =
+    "";
+
+    dataNascimento.value =
+    "";
+
+    email.value =
+    "";
+
+    senha.value =
+    "";
+
+    instagram.value =
+    "";
+
+    fotoArquivo.value =
+    "";
+
+    senha.disabled =
+    false;
+
+    previewFoto.src =
+    "1000001685.png";
+
+
+    document
+    .getElementById(
+        "tituloFormulario"
+    )
+    .textContent =
+    "➕ Cadastrar atleta";
+
+
+    btnSalvar.textContent =
+    "CADASTRAR ATLETA";
+
+
+    btnCancelar.style.display =
+    "none";
 
 }
 
@@ -1412,66 +1505,4 @@ async function excluirAtleta(
     const confirmar =
     confirm(
         "Tem certeza que deseja excluir este atleta?"
-    );
-
-    if(!confirmar){
-        return;
-    }
-
-    botao.disabled =
-    true;
-
-    botao.textContent =
-    "Excluindo...";
-
-
-    try{
-
-        const {
-            error
-        } =
-        await supabaseClient
-        .from("Atletas")
-        .delete()
-        .eq(
-            "id",
-            id
-        );
-
-
-        if(error){
-            throw error;
-        }
-
-
-        atletas =
-        atletas.filter(
-            atleta =>
-            String(atleta.id) !==
-            String(id)
-        );
-
-
-        renderizarAtletas(
-            atletas
-        );
-
-
-        mostrarMensagem(
-            "Atleta removido com sucesso!",
-            "sucesso"
-        );
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-        mostrarMensagem(
-            "Não foi possível excluir o atleta: " +
-            error.message,
-            "erro"
-        );
-
- 
+    
