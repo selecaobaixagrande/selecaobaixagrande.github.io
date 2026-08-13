@@ -1,14 +1,9 @@
-painel-atleta.html
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Painel do Atleta | Seleção de Baixa Grande</title>
 
@@ -34,7 +29,6 @@ header{
     max-width:1200px;
     margin:auto;
     padding:15px 20px;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -109,6 +103,69 @@ main{
 .painel-topo p{
     margin:0;
     color:#999;
+}
+
+.estatisticas{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:14px;
+    padding:20px;
+    text-align:center;
+}
+
+.stat-numero{
+    font-size:28px;
+    font-weight:bold;
+    color:#fff;
+}
+
+.stat-label{
+    margin-top:6px;
+    color:#888;
+    font-size:12px;
+}
+
+.status-area{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.status-card{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:14px;
+    padding:22px;
+}
+
+.status-card .icone{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.status-card h3{
+    margin:0 0 8px;
+    font-size:17px;
+}
+
+.status-card p{
+    margin:0;
+    color:#999;
+    font-size:13px;
+}
+
+.status-valor{
+    margin-top:12px;
+    font-size:20px;
+    font-weight:bold;
 }
 
 .perfil{
@@ -194,33 +251,6 @@ main{
     word-break:break-word;
 }
 
-.estatisticas{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.stat{
-    background:#111;
-    border:1px solid #292929;
-    border-radius:14px;
-    padding:20px;
-    text-align:center;
-}
-
-.stat-numero{
-    font-size:28px;
-    font-weight:bold;
-    color:#fff;
-}
-
-.stat-label{
-    margin-top:6px;
-    color:#888;
-    font-size:12px;
-}
-
 .mensagem{
     display:none;
     margin-bottom:20px;
@@ -282,14 +312,18 @@ footer{
     font-size:12px;
 }
 
-@media(max-width:800px){
-
-    .perfil{
-        grid-template-columns:1fr;
-    }
+@media(max-width:900px){
 
     .estatisticas{
         grid-template-columns:repeat(2,1fr);
+    }
+
+    .status-area{
+        grid-template-columns:1fr;
+    }
+
+    .perfil{
+        grid-template-columns:1fr;
     }
 
 }
@@ -311,6 +345,15 @@ footer{
 
     .painel-topo h2{
         font-size:25px;
+    }
+
+    .acoes{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+        text-align:center;
     }
 
 }
@@ -389,16 +432,14 @@ Bem-vindo ao seu painel da Seleção de Baixa Grande.
 </div>
 
 
+<!-- ESTATÍSTICAS -->
+
 <div class="estatisticas">
 
 <div class="stat">
 
-<div
-id="jogos"
-class="stat-numero">
-
+<div id="jogos" class="stat-numero">
 0
-
 </div>
 
 <div class="stat-label">
@@ -410,12 +451,8 @@ Jogos
 
 <div class="stat">
 
-<div
-id="gols"
-class="stat-numero">
-
+<div id="gols" class="stat-numero">
 0
-
 </div>
 
 <div class="stat-label">
@@ -427,12 +464,8 @@ Gols
 
 <div class="stat">
 
-<div
-id="assistencias"
-class="stat-numero">
-
+<div id="assistencias" class="stat-numero">
 0
-
 </div>
 
 <div class="stat-label">
@@ -444,12 +477,8 @@ Assistências
 
 <div class="stat">
 
-<div
-id="cartoes"
-class="stat-numero">
-
+<div id="cartoes" class="stat-numero">
 0
-
 </div>
 
 <div class="stat-label">
@@ -458,25 +487,93 @@ Cartões amarelos
 
 </div>
 
+</div>
 
-<div class="stat">
+
+<!-- ACOMPANHAMENTO -->
+
+<div class="status-area">
+
+
+<div class="status-card">
+
+<div class="icone">
+⚠️
+</div>
+
+<h3>
+Advertências
+</h3>
+
+<p>
+Quantidade de advertências registradas pela comissão.
+</p>
 
 <div
-id="presencas"
-class="stat-numero">
+id="advertencias"
+class="status-valor">
 
 0
 
 </div>
 
-<div class="stat-label">
-Presenças
 </div>
+
+
+<div class="status-card">
+
+<div class="icone">
+🏃
+</div>
+
+<h3>
+Faltas nos treinos
+</h3>
+
+<p>
+Quantidade de faltas registradas nos treinamentos.
+</p>
+
+<div
+id="faltasTreino"
+class="status-valor">
+
+0
 
 </div>
 
 </div>
 
+
+<div class="status-card">
+
+<div class="icone">
+📋
+</div>
+
+<h3>
+Presença nos treinos
+</h3>
+
+<p>
+Avaliação da frequência nos treinamentos.
+</p>
+
+<div
+id="presenca"
+class="status-valor">
+
+-
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- PERFIL -->
 
 <div class="perfil">
 
@@ -600,12 +697,15 @@ Instagram
 
 </div>
 
-</div>
 
 </div>
 
 </div>
 
+</div>
+
+
+<!-- ÁREA DO ATLETA -->
 
 <div class="card">
 
@@ -616,8 +716,8 @@ Instagram
 <p style="color:#999;font-size:14px;line-height:1.6;">
 
 Aqui você poderá acompanhar seus dados,
-estatísticas e informações da Seleção de
-Baixa Grande.
+estatísticas, frequência, advertências e
+informações da Seleção de Baixa Grande.
 
 </p>
 
@@ -680,7 +780,6 @@ Baixa Grande - Bahia
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
-
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
 
@@ -735,30 +834,63 @@ function mostrarMensagem(
 
 
 /* =================================
-   ESCAPAR TEXTO
+   TEXTO SEGURO
 ================================= */
 
 function textoSeguro(valor){
 
-    return String(
-        valor ?? "-"
-    );
+    if(
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ){
+
+        return "-";
+
+    }
+
+    return String(valor);
 
 }
 
 
 /* =================================
-   FORMATAR DATA
+   NÚMERO SEGURO
+================================= */
+
+function numeroSeguro(valor){
+
+    const numero =
+        Number(valor);
+
+    if(
+        Number.isFinite(numero)
+    ){
+
+        return numero;
+
+    }
+
+    return 0;
+
+}
+
+
+/* =================================
+   DATA
 ================================= */
 
 function formatarData(data){
 
     if(!data){
+
         return "-";
+
     }
 
     const partes =
         String(data).split("-");
+
 
     if(partes.length === 3){
 
@@ -772,7 +904,7 @@ function formatarData(data){
 
     }
 
-    return data;
+    return String(data);
 
 }
 
@@ -793,8 +925,7 @@ async function carregarPainel(){
 
 
         /*
-         * PRIMEIRO:
-         * PEGAR A SESSÃO ATUAL
+         * VERIFICAR SESSÃO
          */
 
         const sessaoResultado =
@@ -806,7 +937,7 @@ async function carregarPainel(){
         if(sessaoResultado.error){
 
             console.error(
-                "Erro ao verificar sessão:",
+                "Erro na sessão:",
                 sessaoResultado.error
             );
 
@@ -821,10 +952,6 @@ async function carregarPainel(){
             sessaoResultado.data?.session;
 
 
-        /*
-         * NÃO EXISTE SESSÃO
-         */
-
         if(!session){
 
             mostrarMensagem(
@@ -834,6 +961,7 @@ async function carregarPainel(){
 
             carregando.style.display =
                 "none";
+
 
             setTimeout(
                 function(){
@@ -872,10 +1000,10 @@ async function carregarPainel(){
 
 
         /*
-         * BUSCAR O ATLETA
+         * BUSCAR ATLETA
          */
 
-        const atletaResultado =
+        const resultado =
             await supabaseClient
                 .from("Atletas")
                 .select("*")
@@ -886,132 +1014,130 @@ async function carregarPainel(){
                 .maybeSingle();
 
 
-        if(atletaResultado.error){
+        if(resultado.error){
 
             console.error(
                 "Erro ao buscar atleta:",
-                atletaResultado.error
+                resultado.error
             );
 
             throw new Error(
-                "Não foi possível carregar os dados do atleta. Verifique as políticas de acesso da tabela Atletas."
+                "Não foi possível carregar os dados do atleta."
             );
 
         }
 
 
         const atleta =
-            atletaResultado.data;
+            resultado.data;
 
 
         if(!atleta){
 
             throw new Error(
-                "A conta entrou no sistema, mas o atleta não foi encontrado na tabela Atletas."
+                "A conta entrou, mas o atleta não foi encontrado."
             );
 
         }
 
 
         /*
-         * SALVAR DADOS
+         * DADOS PRINCIPAIS
          */
 
-        localStorage.setItem(
-            "atleta_id",
-            String(atleta.id || "")
-        );
-
-        localStorage.setItem(
-            "atleta_nome",
-            String(atleta.nome || "")
-        );
-
-        localStorage.setItem(
-            "atleta_email",
-            String(atleta.email || emailUsuario)
-        );
-
-        localStorage.setItem(
-            "atleta_categoria",
-            String(atleta.categoria || "")
-        );
-
-        localStorage.setItem(
-            "atleta_posicao",
-            String(atleta.posicao || "")
-        );
-
-
-        /*
-         * DADOS DO PERFIL
-         */
-
-        const nomeAtleta =
+        const nome =
             atleta.nome ||
             "Atleta";
 
 
+        const categoria =
+            atleta.categoria ||
+            "-";
+
+
+        const posicao =
+            atleta.posicao ||
+            "-";
+
+
+        const email =
+            atleta.email ||
+            emailUsuario;
+
+
+        /*
+         * NOME
+         */
+
         document.getElementById(
             "nomeTopo"
         ).textContent =
-            textoSeguro(nomeAtleta);
+            textoSeguro(nome);
 
 
         document.getElementById(
             "nome"
         ).textContent =
-            textoSeguro(nomeAtleta);
-
-
-        document.getElementById(
-            "email"
-        ).textContent =
-            textoSeguro(
-                atleta.email ||
-                emailUsuario
-            );
-
-
-        document.getElementById(
-            "posicao"
-        ).textContent =
-            textoSeguro(
-                atleta.posicao
-            );
-
-
-        document.getElementById(
-            "categoria"
-        ).textContent =
-            textoSeguro(
-                atleta.categoria
-            );
+            textoSeguro(nome);
 
 
         document.getElementById(
             "infoNome"
         ).textContent =
-            textoSeguro(
-                atleta.nome
-            );
+            textoSeguro(nome);
+
+
+        /*
+         * CATEGORIA
+         */
+
+        document.getElementById(
+            "categoria"
+        ).textContent =
+            textoSeguro(categoria);
 
 
         document.getElementById(
             "infoCategoria"
         ).textContent =
-            textoSeguro(
-                atleta.categoria
-            );
+            textoSeguro(categoria);
+
+
+        /*
+         * POSIÇÃO
+         */
+
+        document.getElementById(
+            "posicao"
+        ).textContent =
+            textoSeguro(posicao);
 
 
         document.getElementById(
             "infoPosicao"
         ).textContent =
-            textoSeguro(
-                atleta.posicao
-            );
+            textoSeguro(posicao);
 
+
+        /*
+         * EMAIL
+         */
+
+        document.getElementById(
+            "email"
+        ).textContent =
+            textoSeguro(email);
+
+
+        document.getElementById(
+            "infoEmail"
+        ).textContent =
+            textoSeguro(email);
+
+
+        /*
+         * DATA DE NASCIMENTO
+         */
 
         document.getElementById(
             "infoNascimento"
@@ -1021,14 +1147,9 @@ async function carregarPainel(){
             );
 
 
-        document.getElementById(
-            "infoEmail"
-        ).textContent =
-            textoSeguro(
-                atleta.email ||
-                emailUsuario
-            );
-
+        /*
+         * INSTAGRAM
+         */
 
         document.getElementById(
             "infoInstagram"
@@ -1042,64 +1163,140 @@ async function carregarPainel(){
          * FOTO
          */
 
-        const foto =
+        document.getElementById(
+            "foto"
+        ).src =
             atleta.foto ||
             "1000001685.png";
 
 
-        document.getElementById(
-            "foto"
-        ).src =
-            foto;
-
-
         /*
          * ESTATÍSTICAS
-         *
-         * Se ainda não existirem na tabela,
-         * serão mostradas como 0.
          */
 
         document.getElementById(
             "jogos"
         ).textContent =
-            Number(
-                atleta.jogos || 0
+            numeroSeguro(
+                atleta.jogos
             );
 
 
         document.getElementById(
             "gols"
         ).textContent =
-            Number(
-                atleta.gols || 0
+            numeroSeguro(
+                atleta.gols
             );
 
 
         document.getElementById(
             "assistencias"
         ).textContent =
-            Number(
-                atleta.assistencias || 0
+            numeroSeguro(
+                atleta.assistencias
             );
 
 
         document.getElementById(
             "cartoes"
         ).textContent =
-            Number(
-                atleta.cartoes_amarelos ||
-                atleta.cartoes ||
-                0
+            numeroSeguro(
+                atleta.cartoes_amarelos
             );
 
+
+        /*
+         * ADVERTÊNCIAS
+         */
 
         document.getElementById(
-            "presencas"
+            "advertencias"
         ).textContent =
-            Number(
-                atleta.presencas || 0
+            numeroSeguro(
+                atleta.advertencias
             );
+
+
+        /*
+         * FALTAS NOS TREINOS
+         */
+
+        document.getElementById(
+            "faltasTreino"
+        ).textContent =
+            numeroSeguro(
+                atleta.faltas_treino
+            );
+
+
+        /*
+         * PRESENÇA
+         *
+         * Esperado:
+         * Bom
+         * Regular
+         * Ruim
+         */
+
+        document.getElementById(
+            "presenca"
+        ).textContent =
+            textoSeguro(
+                atleta.presenca
+            );
+
+
+        /*
+         * SALVAR DADOS NO NAVEGADOR
+         */
+
+        try{
+
+            localStorage.setItem(
+                "atleta_id",
+                String(
+                    atleta.id || ""
+                )
+            );
+
+            localStorage.setItem(
+                "atleta_nome",
+                String(
+                    atleta.nome || ""
+                )
+            );
+
+            localStorage.setItem(
+                "atleta_email",
+                String(
+                    atleta.email ||
+                    emailUsuario
+                )
+            );
+
+            localStorage.setItem(
+                "atleta_categoria",
+                String(
+                    atleta.categoria || ""
+                )
+            );
+
+            localStorage.setItem(
+                "atleta_posicao",
+                String(
+                    atleta.posicao || ""
+                )
+            );
+
+        }catch(error){
+
+            console.warn(
+                "Não foi possível salvar dados locais:",
+                error
+            );
+
+        }
 
 
         /*
@@ -1123,7 +1320,6 @@ async function carregarPainel(){
 
         carregando.style.display =
             "none";
-
 
         conteudo.style.display =
             "none";
