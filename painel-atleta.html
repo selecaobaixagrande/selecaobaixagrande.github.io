@@ -1,3 +1,5 @@
+painel-atleta.html
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -8,7 +10,7 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Login do Atleta | Seleção de Baixa Grande</title>
+<title>Painel do Atleta | Seleção de Baixa Grande</title>
 
 <style>
 
@@ -18,118 +20,212 @@ content="width=device-width, initial-scale=1.0">
 
 body{
     margin:0;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
     font-family:Arial,Helvetica,sans-serif;
     background:#080808;
     color:#fff;
 }
 
-.container{
-    width:100%;
-    max-width:420px;
+header{
+    background:#0d0d0d;
+    border-bottom:1px solid #292929;
 }
 
-.logo-area{
-    text-align:center;
-    margin-bottom:25px;
+.header{
+    max-width:1200px;
+    margin:auto;
+    padding:15px 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.marca{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:#fff;
 }
 
 .logo{
-    width:90px;
-    height:90px;
+    width:55px;
+    height:55px;
     object-fit:contain;
-    margin-bottom:12px;
 }
 
-.logo-area h1{
+.marca h1{
     margin:0;
-    font-size:23px;
+    font-size:18px;
 }
 
-.logo-area span{
+.marca span{
     color:#b5121b;
 }
 
-.logo-area p{
-    margin-top:8px;
-    color:#888;
-    font-size:13px;
+.btn-sair{
+    border:0;
+    border-radius:8px;
+    padding:10px 15px;
+    background:#292929;
+    color:#fff;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btn-sair:hover{
+    background:#b5121b;
+}
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px 70px;
+}
+
+.carregando{
+    text-align:center;
+    padding:80px 20px;
+    color:#aaa;
+}
+
+.painel-topo{
+    margin-bottom:30px;
+}
+
+.painel-topo small{
+    color:#b5121b;
+    font-weight:bold;
+    text-transform:uppercase;
+    font-size:12px;
+}
+
+.painel-topo h2{
+    margin:8px 0;
+    font-size:30px;
+}
+
+.painel-topo p{
+    margin:0;
+    color:#999;
+}
+
+.perfil{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:25px;
+    margin-bottom:25px;
 }
 
 .card{
     background:#111;
     border:1px solid #292929;
     border-radius:16px;
-    padding:28px;
+    padding:25px;
 }
 
-.card h2{
-    margin:0 0 8px;
+.card-perfil{
+    text-align:center;
+}
+
+.foto{
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #b5121b;
+    background:#222;
+    display:block;
+    margin:0 auto 18px;
+}
+
+.card-perfil h3{
+    margin:0 0 7px;
     font-size:22px;
 }
 
-.card .descricao{
-    margin:0 0 25px;
-    color:#888;
+.card-perfil p{
+    margin:5px 0;
+    color:#999;
     font-size:13px;
 }
 
-.campo{
-    margin-bottom:17px;
-}
-
-.campo label{
-    display:block;
-    margin-bottom:7px;
-    font-size:13px;
+.tag{
+    display:inline-block;
+    margin-top:12px;
+    padding:7px 12px;
+    border-radius:20px;
+    background:#2a0d0f;
+    border:1px solid #7d1d25;
+    color:#ff9da3;
+    font-size:12px;
     font-weight:bold;
 }
 
-.campo input{
-    width:100%;
-    padding:14px;
-    border-radius:8px;
-    border:1px solid #333;
+.info h3{
+    margin-top:0;
+    margin-bottom:20px;
+}
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.info-item{
     background:#080808;
-    color:#fff;
-    outline:none;
-    font-size:14px;
+    border:1px solid #292929;
+    border-radius:10px;
+    padding:15px;
 }
 
-.campo input:focus{
-    border-color:#b5121b;
+.info-item small{
+    display:block;
+    color:#777;
+    font-size:11px;
+    margin-bottom:6px;
+    text-transform:uppercase;
 }
 
-button{
-    width:100%;
-    padding:14px;
-    border:0;
-    border-radius:8px;
-    background:#b5121b;
-    color:#fff;
+.info-item strong{
+    font-size:15px;
+    word-break:break-word;
+}
+
+.estatisticas{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:14px;
+    padding:20px;
+    text-align:center;
+}
+
+.stat-numero{
+    font-size:28px;
     font-weight:bold;
-    cursor:pointer;
-    font-size:14px;
+    color:#fff;
 }
 
-button:hover{
-    background:#e32632;
-}
-
-button:disabled{
-    opacity:.6;
-    cursor:not-allowed;
+.stat-label{
+    margin-top:6px;
+    color:#888;
+    font-size:12px;
 }
 
 .mensagem{
     display:none;
-    margin-bottom:18px;
-    padding:13px;
-    border-radius:8px;
+    margin-bottom:20px;
+    padding:14px;
+    border-radius:9px;
     font-size:13px;
 }
 
@@ -140,13 +236,6 @@ button:disabled{
     color:#ff9da3;
 }
 
-.mensagem.sucesso{
-    display:block;
-    background:#0d2415;
-    border:1px solid #236b38;
-    color:#8ee6a6;
-}
-
 .mensagem.info{
     display:block;
     background:#111b2a;
@@ -154,28 +243,74 @@ button:disabled{
     color:#9ecbff;
 }
 
-.voltar{
-    display:block;
-    margin-top:20px;
-    text-align:center;
-    color:#888;
-    text-decoration:none;
-    font-size:13px;
+.acoes{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-.voltar:hover{
+.btn{
+    display:inline-block;
+    padding:12px 18px;
+    border-radius:8px;
+    background:#b5121b;
     color:#fff;
+    text-decoration:none;
+    border:0;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-@media(max-width:500px){
+.btn:hover{
+    background:#e32632;
+}
 
-    .card{
-        padding:22px;
+.btn-sec{
+    background:#292929;
+}
+
+.btn-sec:hover{
+    background:#3a3a3a;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0d0d0d;
+    border-top:1px solid #292929;
+    color:#777;
+    font-size:12px;
+}
+
+@media(max-width:800px){
+
+    .perfil{
+        grid-template-columns:1fr;
     }
 
-    .logo{
-        width:75px;
-        height:75px;
+    .estatisticas{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:550px){
+
+    .header{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .estatisticas{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .painel-topo h2{
+        font-size:25px;
     }
 
 }
@@ -186,100 +321,349 @@ button:disabled{
 
 <body>
 
-<div class="container">
+<header>
 
-    <div class="logo-area">
+<div class="header">
 
-        <img
-        src="1000001685.png"
-        alt="Escudo da Seleção de Baixa Grande"
-        class="logo">
+<a href="index.html" class="marca">
 
-        <h1>
-            SELEÇÃO DE
-            <span>BAIXA GRANDE</span>
-        </h1>
+<img
+src="1000001685.png"
+alt="Escudo da Seleção de Baixa Grande"
+class="logo">
 
-        <p>
-            Área exclusiva dos atletas
-        </p>
+<h1>
+SELEÇÃO DE <span>BAIXA GRANDE</span>
+</h1>
 
-    </div>
+</a>
 
+<button
+id="btnSair"
+class="btn-sair"
+type="button">
 
-    <div class="card">
+SAIR
 
-        <h2>
-            ⚽ Login do atleta
-        </h2>
-
-        <p class="descricao">
-            Entre com o e-mail e a senha cadastrados pela equipe.
-        </p>
-
-
-        <div
-        id="mensagem"
-        class="mensagem">
-        </div>
-
-
-        <form id="formLogin">
-
-            <div class="campo">
-
-                <label for="email">
-                    E-mail
-                </label>
-
-                <input
-                type="email"
-                id="email"
-                placeholder="E-mail do atleta"
-                autocomplete="email"
-                required>
-
-            </div>
-
-
-            <div class="campo">
-
-                <label for="senha">
-                    Senha
-                </label>
-
-                <input
-                type="password"
-                id="senha"
-                placeholder="Senha do atleta"
-                autocomplete="current-password"
-                required>
-
-            </div>
-
-
-            <button
-            id="btnEntrar"
-            type="submit">
-
-                ENTRAR
-
-            </button>
-
-        </form>
-
-
-        <a
-        href="index.html"
-        class="voltar">
-
-            ← Voltar para o site
-
-        </a>
-
-    </div>
+</button>
 
 </div>
+
+</header>
+
+
+<main>
+
+<div
+id="mensagem"
+class="mensagem">
+</div>
+
+
+<div
+id="carregando"
+class="carregando">
+
+Carregando seu painel...
+
+</div>
+
+
+<div
+id="conteudo"
+style="display:none;">
+
+
+<div class="painel-topo">
+
+<small>Área exclusiva do atleta</small>
+
+<h2>
+Olá, <span id="nomeTopo">Atleta</span>! 👋
+</h2>
+
+<p>
+Bem-vindo ao seu painel da Seleção de Baixa Grande.
+</p>
+
+</div>
+
+
+<div class="estatisticas">
+
+<div class="stat">
+
+<div
+id="jogos"
+class="stat-numero">
+
+0
+
+</div>
+
+<div class="stat-label">
+Jogos
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div
+id="gols"
+class="stat-numero">
+
+0
+
+</div>
+
+<div class="stat-label">
+Gols
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div
+id="assistencias"
+class="stat-numero">
+
+0
+
+</div>
+
+<div class="stat-label">
+Assistências
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div
+id="cartoes"
+class="stat-numero">
+
+0
+
+</div>
+
+<div class="stat-label">
+Cartões amarelos
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div
+id="presencas"
+class="stat-numero">
+
+0
+
+</div>
+
+<div class="stat-label">
+Presenças
+</div>
+
+</div>
+
+</div>
+
+
+<div class="perfil">
+
+
+<div class="card card-perfil">
+
+<img
+id="foto"
+src="1000001685.png"
+alt="Foto do atleta"
+class="foto"
+onerror="this.src='1000001685.png';">
+
+<h3 id="nome">
+Atleta
+</h3>
+
+<p id="email">
+-
+</p>
+
+<p id="posicao">
+-
+</p>
+
+<div
+id="categoria"
+class="tag">
+
+-
+
+</div>
+
+</div>
+
+
+<div class="card info">
+
+<h3>
+📋 Meus dados
+</h3>
+
+
+<div class="info-grid">
+
+
+<div class="info-item">
+
+<small>
+Nome completo
+</small>
+
+<strong id="infoNome">
+-
+</strong>
+
+</div>
+
+
+<div class="info-item">
+
+<small>
+Categoria
+</small>
+
+<strong id="infoCategoria">
+-
+</strong>
+
+</div>
+
+
+<div class="info-item">
+
+<small>
+Posição
+</small>
+
+<strong id="infoPosicao">
+-
+</strong>
+
+</div>
+
+
+<div class="info-item">
+
+<small>
+Data de nascimento
+</small>
+
+<strong id="infoNascimento">
+-
+</strong>
+
+</div>
+
+
+<div class="info-item">
+
+<small>
+E-mail
+</small>
+
+<strong id="infoEmail">
+-
+</strong>
+
+</div>
+
+
+<div class="info-item">
+
+<small>
+Instagram
+</small>
+
+<strong id="infoInstagram">
+-
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+⚽ Área do atleta
+</h3>
+
+<p style="color:#999;font-size:14px;line-height:1.6;">
+
+Aqui você poderá acompanhar seus dados,
+estatísticas e informações da Seleção de
+Baixa Grande.
+
+</p>
+
+<div class="acoes">
+
+<a
+href="index.html"
+class="btn">
+
+← Voltar ao site
+
+</a>
+
+<a
+href="elenco.html"
+class="btn btn-sec">
+
+👥 Ver elenco
+
+</a>
+
+</div>
+
+</div>
+
+
+</div>
+
+</main>
+
+
+<footer>
+
+<p>
+⚽ <strong>SELEÇÃO DE BAIXA GRANDE</strong>
+</p>
+
+<p>
+Baixa Grande - Bahia
+</p>
+
+<p>
+© 2026 Seleção de Baixa Grande
+</p>
+
+</footer>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -304,7 +688,14 @@ const SUPABASE_PUBLISHABLE_KEY =
 const supabaseClient =
 window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+    SUPABASE_PUBLISHABLE_KEY,
+    {
+        auth:{
+            persistSession:true,
+            autoRefreshToken:true,
+            detectSessionInUrl:true
+        }
+    }
 );
 
 
@@ -312,20 +703,17 @@ window.supabase.createClient(
    ELEMENTOS
 ================================= */
 
-const formLogin =
-document.getElementById("formLogin");
+const carregando =
+document.getElementById("carregando");
 
-const email =
-document.getElementById("email");
-
-const senha =
-document.getElementById("senha");
-
-const btnEntrar =
-document.getElementById("btnEntrar");
+const conteudo =
+document.getElementById("conteudo");
 
 const mensagem =
 document.getElementById("mensagem");
+
+const btnSair =
+document.getElementById("btnSair");
 
 
 /* =================================
@@ -347,33 +735,404 @@ function mostrarMensagem(
 
 
 /* =================================
-   VERIFICAR SE JÁ ESTÁ LOGADO
+   ESCAPAR TEXTO
 ================================= */
 
-async function verificarSessao(){
+function textoSeguro(valor){
+
+    return String(
+        valor ?? "-"
+    );
+
+}
+
+
+/* =================================
+   FORMATAR DATA
+================================= */
+
+function formatarData(data){
+
+    if(!data){
+        return "-";
+    }
+
+    const partes =
+        String(data).split("-");
+
+    if(partes.length === 3){
+
+        return (
+            partes[2] +
+            "/" +
+            partes[1] +
+            "/" +
+            partes[0]
+        );
+
+    }
+
+    return data;
+
+}
+
+
+/* =================================
+   CARREGAR PAINEL
+================================= */
+
+async function carregarPainel(){
 
     try{
 
-        const {
-            data
-        } =
-        await supabaseClient
-            .auth
-            .getSession();
+        carregando.style.display =
+            "block";
+
+        conteudo.style.display =
+            "none";
 
 
-        if(data?.session){
+        /*
+         * PRIMEIRO:
+         * PEGAR A SESSÃO ATUAL
+         */
 
-            window.location.href =
-                "painel-atleta.html";
+        const sessaoResultado =
+            await supabaseClient
+                .auth
+                .getSession();
+
+
+        if(sessaoResultado.error){
+
+            console.error(
+                "Erro ao verificar sessão:",
+                sessaoResultado.error
+            );
+
+            throw new Error(
+                "Não foi possível verificar sua sessão."
+            );
 
         }
+
+
+        const session =
+            sessaoResultado.data?.session;
+
+
+        /*
+         * NÃO EXISTE SESSÃO
+         */
+
+        if(!session){
+
+            mostrarMensagem(
+                "Sua sessão não está ativa. Faça login novamente.",
+                "erro"
+            );
+
+            carregando.style.display =
+                "none";
+
+            setTimeout(
+                function(){
+
+                    window.location.href =
+                        "login-atleta.html";
+
+                },
+                1500
+            );
+
+            return;
+
+        }
+
+
+        const user =
+            session.user;
+
+
+        const emailUsuario =
+            String(
+                user.email || ""
+            )
+            .trim()
+            .toLowerCase();
+
+
+        if(!emailUsuario){
+
+            throw new Error(
+                "A conta não possui um e-mail válido."
+            );
+
+        }
+
+
+        /*
+         * BUSCAR O ATLETA
+         */
+
+        const atletaResultado =
+            await supabaseClient
+                .from("Atletas")
+                .select("*")
+                .eq(
+                    "email",
+                    emailUsuario
+                )
+                .maybeSingle();
+
+
+        if(atletaResultado.error){
+
+            console.error(
+                "Erro ao buscar atleta:",
+                atletaResultado.error
+            );
+
+            throw new Error(
+                "Não foi possível carregar os dados do atleta. Verifique as políticas de acesso da tabela Atletas."
+            );
+
+        }
+
+
+        const atleta =
+            atletaResultado.data;
+
+
+        if(!atleta){
+
+            throw new Error(
+                "A conta entrou no sistema, mas o atleta não foi encontrado na tabela Atletas."
+            );
+
+        }
+
+
+        /*
+         * SALVAR DADOS
+         */
+
+        localStorage.setItem(
+            "atleta_id",
+            String(atleta.id || "")
+        );
+
+        localStorage.setItem(
+            "atleta_nome",
+            String(atleta.nome || "")
+        );
+
+        localStorage.setItem(
+            "atleta_email",
+            String(atleta.email || emailUsuario)
+        );
+
+        localStorage.setItem(
+            "atleta_categoria",
+            String(atleta.categoria || "")
+        );
+
+        localStorage.setItem(
+            "atleta_posicao",
+            String(atleta.posicao || "")
+        );
+
+
+        /*
+         * DADOS DO PERFIL
+         */
+
+        const nomeAtleta =
+            atleta.nome ||
+            "Atleta";
+
+
+        document.getElementById(
+            "nomeTopo"
+        ).textContent =
+            textoSeguro(nomeAtleta);
+
+
+        document.getElementById(
+            "nome"
+        ).textContent =
+            textoSeguro(nomeAtleta);
+
+
+        document.getElementById(
+            "email"
+        ).textContent =
+            textoSeguro(
+                atleta.email ||
+                emailUsuario
+            );
+
+
+        document.getElementById(
+            "posicao"
+        ).textContent =
+            textoSeguro(
+                atleta.posicao
+            );
+
+
+        document.getElementById(
+            "categoria"
+        ).textContent =
+            textoSeguro(
+                atleta.categoria
+            );
+
+
+        document.getElementById(
+            "infoNome"
+        ).textContent =
+            textoSeguro(
+                atleta.nome
+            );
+
+
+        document.getElementById(
+            "infoCategoria"
+        ).textContent =
+            textoSeguro(
+                atleta.categoria
+            );
+
+
+        document.getElementById(
+            "infoPosicao"
+        ).textContent =
+            textoSeguro(
+                atleta.posicao
+            );
+
+
+        document.getElementById(
+            "infoNascimento"
+        ).textContent =
+            formatarData(
+                atleta.data_nascimento
+            );
+
+
+        document.getElementById(
+            "infoEmail"
+        ).textContent =
+            textoSeguro(
+                atleta.email ||
+                emailUsuario
+            );
+
+
+        document.getElementById(
+            "infoInstagram"
+        ).textContent =
+            textoSeguro(
+                atleta.instagram
+            );
+
+
+        /*
+         * FOTO
+         */
+
+        const foto =
+            atleta.foto ||
+            "1000001685.png";
+
+
+        document.getElementById(
+            "foto"
+        ).src =
+            foto;
+
+
+        /*
+         * ESTATÍSTICAS
+         *
+         * Se ainda não existirem na tabela,
+         * serão mostradas como 0.
+         */
+
+        document.getElementById(
+            "jogos"
+        ).textContent =
+            Number(
+                atleta.jogos || 0
+            );
+
+
+        document.getElementById(
+            "gols"
+        ).textContent =
+            Number(
+                atleta.gols || 0
+            );
+
+
+        document.getElementById(
+            "assistencias"
+        ).textContent =
+            Number(
+                atleta.assistencias || 0
+            );
+
+
+        document.getElementById(
+            "cartoes"
+        ).textContent =
+            Number(
+                atleta.cartoes_amarelos ||
+                atleta.cartoes ||
+                0
+            );
+
+
+        document.getElementById(
+            "presencas"
+        ).textContent =
+            Number(
+                atleta.presencas || 0
+            );
+
+
+        /*
+         * MOSTRAR PAINEL
+         */
+
+        carregando.style.display =
+            "none";
+
+        conteudo.style.display =
+            "block";
+
 
     }catch(error){
 
         console.error(
-            "Erro ao verificar sessão:",
+            "ERRO NO PAINEL:",
             error
+        );
+
+
+        carregando.style.display =
+            "none";
+
+
+        conteudo.style.display =
+            "none";
+
+
+        mostrarMensagem(
+            error.message ||
+            "Não foi possível carregar seu painel.",
+            "erro"
         );
 
     }
@@ -382,147 +1141,59 @@ async function verificarSessao(){
 
 
 /* =================================
-   LOGIN
+   SAIR
 ================================= */
 
-formLogin.addEventListener(
-    "submit",
-    async function(event){
+btnSair.addEventListener(
+    "click",
+    async function(){
 
-        event.preventDefault();
-
-
-        const emailValor =
-            email.value
-                .trim()
-                .toLowerCase();
-
-        const senhaValor =
-            senha.value;
-
-
-        if(!emailValor){
-
-            mostrarMensagem(
-                "Digite seu e-mail.",
-                "erro"
-            );
-
-            return;
-
-        }
-
-
-        if(!senhaValor){
-
-            mostrarMensagem(
-                "Digite sua senha.",
-                "erro"
-            );
-
-            return;
-
-        }
-
-
-        btnEntrar.disabled =
+        btnSair.disabled =
             true;
 
-        btnEntrar.textContent =
-            "ENTRANDO...";
-
-
-        mostrarMensagem(
-            "Verificando seus dados...",
-            "info"
-        );
+        btnSair.textContent =
+            "SAINDO...";
 
 
         try{
 
-            const resultado =
-                await supabaseClient
-                    .auth
-                    .signInWithPassword({
-
-                        email:
-                            emailValor,
-
-                        password:
-                            senhaValor
-
-                    });
-
-
-            if(resultado.error){
-
-                console.error(
-                    "Erro no login:",
-                    resultado.error
-                );
-
-
-                throw new Error(
-                    "E-mail ou senha incorretos."
-                );
-
-            }
-
-
-            if(!resultado.data?.user){
-
-                throw new Error(
-                    "Não foi possível identificar o atleta."
-                );
-
-            }
-
-
-            mostrarMensagem(
-                "Login realizado! Entrando no painel...",
-                "sucesso"
-            );
-
-
-            /*
-            =================================
-            REDIRECIONAMENTO CORRETO
-            =================================
-            */
-
-            setTimeout(
-                function(){
-
-                    window.location.href =
-                        "painel-atleta.html";
-
-                },
-                500
-            );
-
+            await supabaseClient
+                .auth
+                .signOut();
 
         }catch(error){
 
             console.error(
-                "ERRO NO LOGIN:",
+                "Erro ao sair:",
                 error
             );
 
-
-            mostrarMensagem(
-                error.message ||
-                "Não foi possível entrar.",
-                "erro"
-            );
-
-
-            btnEntrar.disabled =
-                false;
-
-            btnEntrar.textContent =
-                "ENTRAR";
-
         }
+
+
+        localStorage.removeItem(
+            "atleta_id"
+        );
+
+        localStorage.removeItem(
+            "atleta_nome"
+        );
+
+        localStorage.removeItem(
+            "atleta_email"
+        );
+
+        localStorage.removeItem(
+            "atleta_categoria"
+        );
+
+        localStorage.removeItem(
+            "atleta_posicao"
+        );
+
+
+        window.location.href =
+            "login-atleta.html";
 
     }
 );
@@ -532,7 +1203,7 @@ formLogin.addEventListener(
    INICIAR
 ================================= */
 
-verificarSessao();
+carregarPainel();
 
 </script>
 
