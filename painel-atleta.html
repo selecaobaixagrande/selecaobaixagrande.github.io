@@ -132,40 +132,35 @@ main{
     font-size:12px;
 }
 
-.status-area{
+.situacao{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:15px;
     margin-bottom:25px;
 }
 
-.status-card{
+.situacao-card{
     background:#111;
     border:1px solid #292929;
     border-radius:14px;
-    padding:22px;
+    padding:20px;
 }
 
-.status-card .icone{
-    font-size:28px;
+.situacao-card .icone{
+    font-size:27px;
     margin-bottom:10px;
 }
 
-.status-card h3{
-    margin:0 0 8px;
-    font-size:17px;
+.situacao-card small{
+    display:block;
+    color:#777;
+    font-size:11px;
+    text-transform:uppercase;
+    margin-bottom:7px;
 }
 
-.status-card p{
-    margin:0;
-    color:#999;
-    font-size:13px;
-}
-
-.status-valor{
-    margin-top:12px;
-    font-size:20px;
-    font-weight:bold;
+.situacao-card strong{
+    font-size:18px;
 }
 
 .perfil{
@@ -312,17 +307,21 @@ footer{
     font-size:12px;
 }
 
+footer strong{
+    color:#fff;
+}
+
 @media(max-width:900px){
+
+    .perfil{
+        grid-template-columns:1fr;
+    }
 
     .estatisticas{
         grid-template-columns:repeat(2,1fr);
     }
 
-    .status-area{
-        grid-template-columns:1fr;
-    }
-
-    .perfil{
+    .situacao{
         grid-template-columns:1fr;
     }
 
@@ -394,14 +393,12 @@ SAIR
 
 </header>
 
-
 <main>
 
 <div
 id="mensagem"
 class="mensagem">
 </div>
-
 
 <div
 id="carregando"
@@ -411,15 +408,15 @@ Carregando seu painel...
 
 </div>
 
-
 <div
 id="conteudo"
 style="display:none;">
 
-
 <div class="painel-topo">
 
-<small>Área exclusiva do atleta</small>
+<small>
+Área exclusiva do atleta
+</small>
 
 <h2>
 Olá, <span id="nomeTopo">Atleta</span>! 👋
@@ -431,14 +428,13 @@ Bem-vindo ao seu painel da Seleção de Baixa Grande.
 
 </div>
 
-
-<!-- ESTATÍSTICAS -->
-
 <div class="estatisticas">
 
 <div class="stat">
 
-<div id="jogos" class="stat-numero">
+<div
+id="jogos"
+class="stat-numero">
 0
 </div>
 
@@ -448,10 +444,11 @@ Jogos
 
 </div>
 
-
 <div class="stat">
 
-<div id="gols" class="stat-numero">
+<div
+id="gols"
+class="stat-numero">
 0
 </div>
 
@@ -461,10 +458,11 @@ Gols
 
 </div>
 
-
 <div class="stat">
 
-<div id="assistencias" class="stat-numero">
+<div
+id="assistencias"
+class="stat-numero">
 0
 </div>
 
@@ -474,10 +472,11 @@ Assistências
 
 </div>
 
-
 <div class="stat">
 
-<div id="cartoes" class="stat-numero">
+<div
+id="cartoes"
+class="stat-numero">
 0
 </div>
 
@@ -489,94 +488,59 @@ Cartões amarelos
 
 </div>
 
+<div class="situacao">
 
-<!-- ACOMPANHAMENTO -->
-
-<div class="status-area">
-
-
-<div class="status-card">
+<div class="situacao-card">
 
 <div class="icone">
 ⚠️
 </div>
 
-<h3>
+<small>
 Advertências
-</h3>
+</small>
 
-<p>
-Quantidade de advertências registradas pela comissão.
-</p>
-
-<div
-id="advertencias"
-class="status-valor">
-
+<strong id="advertencias">
 0
+</strong>
 
 </div>
 
+<div class="situacao-card">
+
+<div class="icone">
+❌
 </div>
 
+<small>
+Faltas no treino
+</small>
 
-<div class="status-card">
+<strong id="faltasTreino">
+0
+</strong>
+
+</div>
+
+<div class="situacao-card">
 
 <div class="icone">
 🏃
 </div>
 
-<h3>
-Faltas nos treinos
-</h3>
+<small>
+Presença no treino
+</small>
 
-<p>
-Quantidade de faltas registradas nos treinamentos.
-</p>
-
-<div
-id="faltasTreino"
-class="status-valor">
-
-0
-
-</div>
-
-</div>
-
-
-<div class="status-card">
-
-<div class="icone">
-📋
-</div>
-
-<h3>
-Presença nos treinos
-</h3>
-
-<p>
-Avaliação da frequência nos treinamentos.
-</p>
-
-<div
-id="presenca"
-class="status-valor">
-
+<strong id="presencaTreino">
 -
+</strong>
 
 </div>
 
 </div>
-
-
-</div>
-
-
-<!-- PERFIL -->
 
 <div class="perfil">
-
 
 <div class="card card-perfil">
 
@@ -602,13 +566,10 @@ Atleta
 <div
 id="categoria"
 class="tag">
-
 -
-
 </div>
 
 </div>
-
 
 <div class="card info">
 
@@ -616,9 +577,7 @@ class="tag">
 📋 Meus dados
 </h3>
 
-
 <div class="info-grid">
-
 
 <div class="info-item">
 
@@ -632,7 +591,6 @@ Nome completo
 
 </div>
 
-
 <div class="info-item">
 
 <small>
@@ -644,7 +602,6 @@ Categoria
 </strong>
 
 </div>
-
 
 <div class="info-item">
 
@@ -658,7 +615,6 @@ Posição
 
 </div>
 
-
 <div class="info-item">
 
 <small>
@@ -670,7 +626,6 @@ Data de nascimento
 </strong>
 
 </div>
-
 
 <div class="info-item">
 
@@ -684,7 +639,6 @@ E-mail
 
 </div>
 
-
 <div class="info-item">
 
 <small>
@@ -697,15 +651,11 @@ Instagram
 
 </div>
 
-
 </div>
 
 </div>
 
 </div>
-
-
-<!-- ÁREA DO ATLETA -->
 
 <div class="card">
 
@@ -716,8 +666,9 @@ Instagram
 <p style="color:#999;font-size:14px;line-height:1.6;">
 
 Aqui você poderá acompanhar seus dados,
-estatísticas, frequência, advertências e
-informações da Seleção de Baixa Grande.
+estatísticas, advertências, faltas nos treinos
+e sua situação de presença na Seleção de
+Baixa Grande.
 
 </p>
 
@@ -743,11 +694,9 @@ class="btn btn-sec">
 
 </div>
 
-
 </div>
 
 </main>
-
 
 <footer>
 
@@ -765,24 +714,17 @@ Baixa Grande - Bahia
 
 </footer>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 "use strict";
 
-
-/* =================================
-   SUPABASE
-================================= */
-
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -797,11 +739,6 @@ window.supabase.createClient(
     }
 );
 
-
-/* =================================
-   ELEMENTOS
-================================= */
-
 const carregando =
 document.getElementById("carregando");
 
@@ -814,83 +751,23 @@ document.getElementById("mensagem");
 const btnSair =
 document.getElementById("btnSair");
 
-
-/* =================================
-   MENSAGEM
-================================= */
-
-function mostrarMensagem(
-    texto,
-    tipo
-){
+function mostrarMensagem(texto,tipo){
 
     mensagem.textContent =
         texto;
 
     mensagem.className =
         "mensagem " + tipo;
-
 }
-
-
-/* =================================
-   TEXTO SEGURO
-================================= */
-
-function textoSeguro(valor){
-
-    if(
-        valor === null ||
-        valor === undefined ||
-        valor === ""
-    ){
-
-        return "-";
-
-    }
-
-    return String(valor);
-
-}
-
-
-/* =================================
-   NÚMERO SEGURO
-================================= */
-
-function numeroSeguro(valor){
-
-    const numero =
-        Number(valor);
-
-    if(
-        Number.isFinite(numero)
-    ){
-
-        return numero;
-
-    }
-
-    return 0;
-
-}
-
-
-/* =================================
-   DATA
-================================= */
 
 function formatarData(data){
 
     if(!data){
-
         return "-";
-
     }
 
     const partes =
         String(data).split("-");
-
 
     if(partes.length === 3){
 
@@ -905,13 +782,7 @@ function formatarData(data){
     }
 
     return String(data);
-
 }
-
-
-/* =================================
-   CARREGAR PAINEL
-================================= */
 
 async function carregarPainel(){
 
@@ -923,34 +794,28 @@ async function carregarPainel(){
         conteudo.style.display =
             "none";
 
+        const {
+            data,
+            error
+        } =
+        await supabaseClient
+            .auth
+            .getSession();
 
-        /*
-         * VERIFICAR SESSÃO
-         */
-
-        const sessaoResultado =
-            await supabaseClient
-                .auth
-                .getSession();
-
-
-        if(sessaoResultado.error){
+        if(error){
 
             console.error(
                 "Erro na sessão:",
-                sessaoResultado.error
+                error
             );
 
             throw new Error(
                 "Não foi possível verificar sua sessão."
             );
-
         }
 
-
         const session =
-            sessaoResultado.data?.session;
-
+            data?.session;
 
         if(!session){
 
@@ -961,7 +826,6 @@ async function carregarPainel(){
 
             carregando.style.display =
                 "none";
-
 
             setTimeout(
                 function(){
@@ -974,13 +838,10 @@ async function carregarPainel(){
             );
 
             return;
-
         }
-
 
         const user =
             session.user;
-
 
         const emailUsuario =
             String(
@@ -989,19 +850,12 @@ async function carregarPainel(){
             .trim()
             .toLowerCase();
 
-
         if(!emailUsuario){
 
             throw new Error(
                 "A conta não possui um e-mail válido."
             );
-
         }
-
-
-        /*
-         * BUSCAR ATLETA
-         */
 
         const resultado =
             await supabaseClient
@@ -1013,7 +867,6 @@ async function carregarPainel(){
                 )
                 .maybeSingle();
 
-
         if(resultado.error){
 
             console.error(
@@ -1022,122 +875,69 @@ async function carregarPainel(){
             );
 
             throw new Error(
-                "Não foi possível carregar os dados do atleta."
+                "Não foi possível carregar os dados do atleta. Verifique as políticas da tabela Atletas."
             );
-
         }
-
 
         const atleta =
             resultado.data;
 
-
         if(!atleta){
 
             throw new Error(
-                "A conta entrou, mas o atleta não foi encontrado."
+                "A conta entrou, mas o atleta não foi encontrado na tabela Atletas."
             );
-
         }
-
-
-        /*
-         * DADOS PRINCIPAIS
-         */
 
         const nome =
             atleta.nome ||
             "Atleta";
 
-
-        const categoria =
-            atleta.categoria ||
-            "-";
-
-
-        const posicao =
-            atleta.posicao ||
-            "-";
-
-
-        const email =
-            atleta.email ||
-            emailUsuario;
-
-
-        /*
-         * NOME
-         */
-
         document.getElementById(
             "nomeTopo"
         ).textContent =
-            textoSeguro(nome);
-
+            nome;
 
         document.getElementById(
             "nome"
         ).textContent =
-            textoSeguro(nome);
-
-
-        document.getElementById(
-            "infoNome"
-        ).textContent =
-            textoSeguro(nome);
-
-
-        /*
-         * CATEGORIA
-         */
-
-        document.getElementById(
-            "categoria"
-        ).textContent =
-            textoSeguro(categoria);
-
-
-        document.getElementById(
-            "infoCategoria"
-        ).textContent =
-            textoSeguro(categoria);
-
-
-        /*
-         * POSIÇÃO
-         */
-
-        document.getElementById(
-            "posicao"
-        ).textContent =
-            textoSeguro(posicao);
-
-
-        document.getElementById(
-            "infoPosicao"
-        ).textContent =
-            textoSeguro(posicao);
-
-
-        /*
-         * EMAIL
-         */
+            nome;
 
         document.getElementById(
             "email"
         ).textContent =
-            textoSeguro(email);
-
+            atleta.email ||
+            emailUsuario;
 
         document.getElementById(
-            "infoEmail"
+            "posicao"
         ).textContent =
-            textoSeguro(email);
+            atleta.posicao ||
+            "-";
 
+        document.getElementById(
+            "categoria"
+        ).textContent =
+            atleta.categoria ||
+            "-";
 
-        /*
-         * DATA DE NASCIMENTO
-         */
+        document.getElementById(
+            "infoNome"
+        ).textContent =
+            atleta.nome ||
+            "-";
+
+        document.getElementById(
+            "infoCategoria"
+        ).textContent =
+            atleta.categoria ||
+            "-";
+
+        document.getElementById(
+            "infoPosicao"
+        ).textContent =
+            atleta.posicao ||
+            "-";
 
         document.getElementById(
             "infoNascimento"
@@ -1146,22 +946,17 @@ async function carregarPainel(){
                 atleta.data_nascimento
             );
 
-
-        /*
-         * INSTAGRAM
-         */
+        document.getElementById(
+            "infoEmail"
+        ).textContent =
+            atleta.email ||
+            emailUsuario;
 
         document.getElementById(
             "infoInstagram"
         ).textContent =
-            textoSeguro(
-                atleta.instagram
-            );
-
-
-        /*
-         * FOTO
-         */
+            atleta.instagram ||
+            "-";
 
         document.getElementById(
             "foto"
@@ -1169,146 +964,99 @@ async function carregarPainel(){
             atleta.foto ||
             "1000001685.png";
 
-
-        /*
-         * ESTATÍSTICAS
-         */
-
         document.getElementById(
             "jogos"
         ).textContent =
-            numeroSeguro(
-                atleta.jogos
+            Number(
+                atleta.jogos || 0
             );
-
 
         document.getElementById(
             "gols"
         ).textContent =
-            numeroSeguro(
-                atleta.gols
+            Number(
+                atleta.gols || 0
             );
-
 
         document.getElementById(
             "assistencias"
         ).textContent =
-            numeroSeguro(
-                atleta.assistencias
+            Number(
+                atleta.assistencias || 0
             );
-
 
         document.getElementById(
             "cartoes"
         ).textContent =
-            numeroSeguro(
-                atleta.cartoes_amarelos
+            Number(
+                atleta.cartoes_amarelos || 0
             );
-
-
-        /*
-         * ADVERTÊNCIAS
-         */
 
         document.getElementById(
             "advertencias"
         ).textContent =
-            numeroSeguro(
-                atleta.advertencias
+            Number(
+                atleta.advertencias || 0
             );
-
-
-        /*
-         * FALTAS NOS TREINOS
-         */
 
         document.getElementById(
             "faltasTreino"
         ).textContent =
-            numeroSeguro(
-                atleta.faltas_treino
+            Number(
+                atleta.faltas_treino || 0
             );
 
-
-        /*
-         * PRESENÇA
-         *
-         * Esperado:
-         * Bom
-         * Regular
-         * Ruim
-         */
+        const presenca =
+            atleta.presenca ||
+            atleta.presenca_treino ||
+            "-";
 
         document.getElementById(
-            "presenca"
+            "presencaTreino"
         ).textContent =
-            textoSeguro(
-                atleta.presenca
-            );
+            presenca;
 
+        localStorage.setItem(
+            "atleta_id",
+            String(
+                atleta.id || ""
+            )
+        );
 
-        /*
-         * SALVAR DADOS NO NAVEGADOR
-         */
+        localStorage.setItem(
+            "atleta_nome",
+            String(
+                atleta.nome || ""
+            )
+        );
 
-        try{
+        localStorage.setItem(
+            "atleta_email",
+            String(
+                atleta.email ||
+                emailUsuario
+            )
+        );
 
-            localStorage.setItem(
-                "atleta_id",
-                String(
-                    atleta.id || ""
-                )
-            );
+        localStorage.setItem(
+            "atleta_categoria",
+            String(
+                atleta.categoria || ""
+            )
+        );
 
-            localStorage.setItem(
-                "atleta_nome",
-                String(
-                    atleta.nome || ""
-                )
-            );
-
-            localStorage.setItem(
-                "atleta_email",
-                String(
-                    atleta.email ||
-                    emailUsuario
-                )
-            );
-
-            localStorage.setItem(
-                "atleta_categoria",
-                String(
-                    atleta.categoria || ""
-                )
-            );
-
-            localStorage.setItem(
-                "atleta_posicao",
-                String(
-                    atleta.posicao || ""
-                )
-            );
-
-        }catch(error){
-
-            console.warn(
-                "Não foi possível salvar dados locais:",
-                error
-            );
-
-        }
-
-
-        /*
-         * MOSTRAR PAINEL
-         */
+        localStorage.setItem(
+            "atleta_posicao",
+            String(
+                atleta.posicao || ""
+            )
+        );
 
         carregando.style.display =
             "none";
 
         conteudo.style.display =
             "block";
-
 
     }catch(error){
 
@@ -1317,28 +1065,19 @@ async function carregarPainel(){
             error
         );
 
-
         carregando.style.display =
             "none";
 
         conteudo.style.display =
             "none";
 
-
         mostrarMensagem(
             error.message ||
             "Não foi possível carregar seu painel.",
             "erro"
         );
-
     }
-
 }
-
-
-/* =================================
-   SAIR
-================================= */
 
 btnSair.addEventListener(
     "click",
@@ -1349,7 +1088,6 @@ btnSair.addEventListener(
 
         btnSair.textContent =
             "SAINDO...";
-
 
         try{
 
@@ -1363,9 +1101,7 @@ btnSair.addEventListener(
                 "Erro ao sair:",
                 error
             );
-
         }
-
 
         localStorage.removeItem(
             "atleta_id"
@@ -1387,17 +1123,10 @@ btnSair.addEventListener(
             "atleta_posicao"
         );
 
-
         window.location.href =
             "login-atleta.html";
-
     }
 );
-
-
-/* =================================
-   INICIAR
-================================= */
 
 carregarPainel();
 
