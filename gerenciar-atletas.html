@@ -1,9 +1,11 @@
-<!DOCTYPE html><html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Gerenciar Atletas | Seleção de Baixa Grande</title><style>
-*{box-sizing:border-box}
+
+*{
+    box-sizing:border-box;
+}
 
 body{
     margin:0;
@@ -12,15 +14,18 @@ body{
     color:#fff;
 }
 
+/* HEADER */
+
 header{
     background:#0d0d0d;
     border-bottom:1px solid #292929;
 }
 
 .header{
-    max-width:1200px;
+    max-width:1150px;
     margin:auto;
     padding:15px 20px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -31,6 +36,7 @@ header{
     display:flex;
     align-items:center;
     gap:12px;
+
     color:#fff;
     text-decoration:none;
 }
@@ -50,56 +56,112 @@ header{
     color:#b5121b;
 }
 
-.btn-voltar{
-    padding:10px 15px;
-    border-radius:8px;
+.btn-painel{
     background:#292929;
     color:#fff;
     text-decoration:none;
+    padding:11px 16px;
+    border-radius:8px;
+    font-size:13px;
     font-weight:bold;
 }
 
+/* MAIN */
+
 main{
-    max-width:1200px;
+    max-width:1150px;
     margin:auto;
     padding:35px 20px 70px;
 }
 
-.topo{
+.titulo{
     margin-bottom:25px;
 }
 
-.topo small{
+.titulo small{
     color:#b5121b;
+    font-size:12px;
     font-weight:bold;
     text-transform:uppercase;
-    font-size:12px;
 }
 
-.topo h2{
-    margin:8px 0;
+.titulo h2{
+    margin:7px 0;
     font-size:30px;
 }
 
-.topo p{
-    color:#999;
+.titulo p{
     margin:0;
+    color:#999;
+    font-size:14px;
 }
 
-.acoes{
+/* MENSAGEM */
+
+.mensagem{
+    display:none;
+    margin-bottom:18px;
+    padding:14px 16px;
+    border-radius:9px;
+    font-size:13px;
+}
+
+.mensagem.erro{
+    display:block;
+    background:#2a0d0f;
+    border:1px solid #7d1d25;
+    color:#ff9da3;
+}
+
+.mensagem.sucesso{
+    display:block;
+    background:#0d2a16;
+    border:1px solid #276b3a;
+    color:#9dffb4;
+}
+
+/* BARRA DE CONTROLE */
+
+.controle{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:14px;
+    padding:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+
+    margin-bottom:18px;
+}
+
+.controle-esquerda{
     display:flex;
     gap:10px;
     flex-wrap:wrap;
-    margin-bottom:20px;
 }
+
+.contador{
+    color:#999;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+}
+
+/* BOTÕES */
 
 .btn{
     border:0;
     border-radius:8px;
-    padding:12px 17px;
+    padding:11px 15px;
+
     background:#b5121b;
     color:#fff;
+
     font-weight:bold;
+    font-size:13px;
+
     cursor:pointer;
 }
 
@@ -115,109 +177,153 @@ main{
     background:#3a3a3a;
 }
 
+/* FILTROS */
+
 .filtros{
     display:grid;
-    grid-template-columns:1fr 220px;
+    grid-template-columns:1fr 210px;
     gap:10px;
     margin-bottom:20px;
 }
 
-input,select{
+input,
+select{
     width:100%;
+
     padding:13px;
+
     border-radius:9px;
+
     border:1px solid #292929;
+
     background:#111;
+
     color:#fff;
+
     outline:none;
-}
 
-input:focus,select:focus{
-    border-color:#b5121b;
-}
-
-.mensagem{
-    display:none;
-    padding:14px;
-    border-radius:9px;
-    margin-bottom:20px;
     font-size:13px;
 }
 
-.mensagem.sucesso{
-    display:block;
-    background:#0d2a16;
-    border:1px solid #276b3a;
-    color:#9dffb4;
+input:focus,
+select:focus{
+    border-color:#b5121b;
 }
 
-.mensagem.erro{
-    display:block;
-    background:#2a0d0f;
-    border:1px solid #7d1d25;
-    color:#ff9da3;
-}
+/* LISTA */
 
 .lista{
     display:grid;
     gap:12px;
 }
 
+.carregando,
+.vazio{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:14px;
+
+    padding:45px 20px;
+
+    text-align:center;
+
+    color:#999;
+}
+
+/* ATLETA */
+
 .atleta{
     background:#111;
     border:1px solid #292929;
     border-radius:14px;
-    padding:18px;
+
+    padding:16px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:15px;
+
+    gap:20px;
+
+    transition:.2s;
+}
+
+.atleta:hover{
+    border-color:#b5121b;
 }
 
 .atleta-info{
     display:flex;
     align-items:center;
     gap:15px;
+
     min-width:0;
 }
 
 .atleta-foto{
-    width:65px;
-    height:65px;
+    width:68px;
+    height:68px;
+
     border-radius:50%;
+
     object-fit:cover;
+
     border:3px solid #b5121b;
+
     background:#222;
+
     flex-shrink:0;
 }
 
-.atleta-info h3{
-    margin:0 0 5px;
-    font-size:17px;
+.atleta-dados{
+    min-width:0;
 }
 
-.atleta-info p{
+.atleta-dados h3{
+    margin:0 0 6px;
+
+    font-size:17px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.atleta-dados p{
     margin:3px 0;
+
     color:#999;
-    font-size:13px;
+
+    font-size:12px;
 }
 
 .tag{
     display:inline-block;
-    margin-top:5px;
+
+    margin-top:7px;
+
     padding:5px 9px;
+
     border-radius:15px;
+
     background:#2a0d0f;
+
     border:1px solid #7d1d25;
+
     color:#ff9da3;
+
     font-size:11px;
+
     font-weight:bold;
 }
+
+/* AÇÕES DO ATLETA */
 
 .acoes-atleta{
     display:flex;
     gap:8px;
-    flex-wrap:wrap;
+
+    flex-shrink:0;
 }
 
 .btn-editar{
@@ -232,29 +338,22 @@ input:focus,select:focus{
     background:#7d1d25;
 }
 
-.vazio{
-    text-align:center;
-    padding:60px 20px;
-    color:#888;
-    background:#111;
-    border:1px solid #292929;
-    border-radius:14px;
-}
-
-.contador{
-    color:#999;
-    font-size:13px;
-    margin-bottom:12px;
-}
+/* MODAL */
 
 .modal{
     display:none;
+
     position:fixed;
+
     inset:0;
-    background:rgba(0,0,0,.8);
-    padding:20px;
-    overflow:auto;
+
     z-index:1000;
+
+    background:rgba(0,0,0,.82);
+
+    padding:20px;
+
+    overflow-y:auto;
 }
 
 .modal.ativo{
@@ -262,65 +361,99 @@ input:focus,select:focus{
 }
 
 .modal-caixa{
+    width:100%;
     max-width:650px;
-    margin:30px auto;
+
+    margin:20px auto;
+
     background:#111;
+
     border:1px solid #292929;
+
     border-radius:16px;
+
     padding:25px;
 }
 
 .modal-caixa h2{
-    margin-top:0;
+    margin:0 0 22px;
+    font-size:22px;
 }
 
 .form-grid{
     display:grid;
+
     grid-template-columns:1fr 1fr;
-    gap:13px;
+
+    gap:14px;
+}
+
+.campo{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.campo.full{
+    grid-column:1 / -1;
 }
 
 .campo label{
-    display:block;
-    margin-bottom:6px;
     color:#aaa;
     font-size:12px;
     font-weight:bold;
 }
 
-.campo{
-    margin-bottom:5px;
-}
-
-.campo.full{
-    grid-column:1/-1;
-}
-
 .modal-acoes{
     display:flex;
     gap:10px;
-    margin-top:20px;
+    margin-top:22px;
 }
 
-.carregando{
-    text-align:center;
-    padding:50px;
-    color:#999;
-}
+/* FOOTER */
 
 footer{
     text-align:center;
-    padding:25px;
+
+    padding:25px 20px;
+
     background:#0d0d0d;
+
     border-top:1px solid #292929;
+
     color:#777;
+
     font-size:12px;
 }
 
-@media(max-width:700px){
+footer strong{
+    color:#fff;
+}
+
+/* CELULAR */
+
+@media(max-width:750px){
+
     .header{
         flex-direction:column;
         text-align:center;
+    }
+
+    .controle{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .controle-esquerda{
+        width:100%;
+    }
+
+    .controle-esquerda .btn{
+        flex:1;
+    }
+
+    .contador{
+        justify-content:center;
     }
 
     .filtros{
@@ -328,8 +461,8 @@ footer{
     }
 
     .atleta{
-        flex-direction:column;
         align-items:stretch;
+        flex-direction:column;
     }
 
     .acoes-atleta{
@@ -338,6 +471,26 @@ footer{
 
     .acoes-atleta .btn{
         flex:1;
+    }
+
+}
+
+@media(max-width:550px){
+
+    main{
+        padding:25px 15px 50px;
+    }
+
+    .titulo h2{
+        font-size:25px;
+    }
+
+    .atleta-info{
+        align-items:flex-start;
+    }
+
+    .atleta-dados h3{
+        white-space:normal;
     }
 
     .form-grid{
@@ -355,95 +508,173 @@ footer{
     .modal-acoes .btn{
         width:100%;
     }
+
 }
-</style></head><body><header>
-<div class="header"><a href="painel-treinador.html" class="marca">
-<img src="1000001685.png" class="logo" alt="Escudo da Seleção de Baixa Grande">
-<h1>SELEÇÃO DE <span>BAIXA GRANDE</span></h1>
-</a><a href="painel-treinador.html" class="btn-voltar">
+
+</style></head><body><header><div class="header"><a
+href="painel-treinador.html"
+class="marca">
+
+<img
+src="1000001685.png"
+class="logo"
+alt="Escudo da Seleção de Baixa Grande">
+
+<h1>
+SELEÇÃO DE <span>BAIXA GRANDE</span>
+</h1></a><a
+href="painel-treinador.html"
+class="btn-painel">
+
 ← Painel
-</a></div>
-</header><main><div class="topo">
-<small>Comissão técnica</small>
-<h2>👥 Gerenciar atletas</h2>
-<p>Cadastre, edite e organize os atletas da Seleção de Baixa Grande.</p>
-</div><div id="mensagem" class="mensagem"></div><div class="acoes">
-<button class="btn" id="btnNovo">
+
+</a></div></header><main><div class="titulo"><small>
+Comissão técnica
+</small><h2>
+👥 Gerenciar atletas
+</h2><p>
+Cadastre, edite e organize os atletas da Seleção de Baixa Grande.
+</p></div><div
+id="mensagem"
+class="mensagem">
+</div><div class="controle"><div class="controle-esquerda"><button
+id="btnNovo"
+class="btn">
+
 ➕ Cadastrar atleta
-</button><button class="btn btn-sec" id="btnAtualizar">
-🔄 Atualizar lista
-</button>
-</div><div class="filtros"><input
-type="search"
+
+</button><button
+id="btnAtualizar"
+class="btn btn-sec">
+
+🔄 Atualizar
+
+</button></div><div
+id="contador"
+class="contador">Carregando...
+
+</div></div><div class="filtros"><input
 id="busca"
-placeholder="🔎 Buscar atleta pelo nome..."
+type="search"
+placeholder="🔎 Buscar atleta pelo nome...">
 
-«»
+<select id="filtroCategoria"><option value="">
+Todas as categorias
+</option><option value="Sub-13">
+Sub-13
+</option><option value="Sub-15">
+Sub-15
+</option><option value="Sub-17">
+Sub-17
+</option><option value="Sub-20">
+Sub-20
+</option></select></div><div
+id="lista"
+class="lista"><div class="carregando">Carregando atletas...
 
-<select id="filtroCategoria">
-<option value="">Todas as categorias</option>
-<option value="Sub-13">Sub-13</option>
-<option value="Sub-15">Sub-15</option>
-<option value="Sub-17">Sub-17</option>
-<option value="Sub-20">Sub-20</option>
-</select></div><div class="contador">
-<span id="contador">0 atletas</span>
-</div><div id="lista" class="lista"><div class="carregando">
-Carregando atletas...
-</div></div></main><footer>
-<p>⚽ <strong>SELEÇÃO DE BAIXA GRANDE</strong></p>
-<p>Área exclusiva da comissão técnica</p>
-<p>© 2026 Seleção de Baixa Grande</p>
-</footer><!-- MODAL --><div id="modal" class="modal"><div class="modal-caixa"><h2 id="tituloModal">
+</div></div></main><footer><p>
+<strong>
+⚽ SELEÇÃO DE BAIXA GRANDE
+</strong>
+</p><p>
+Área exclusiva da comissão técnica
+</p><p>
+© 2026 Seleção de Baixa Grande
+</p></footer><!-- MODAL --><div
+id="modal"
+class="modal"><div class="modal-caixa"><h2 id="tituloModal">
 Cadastrar atleta
-</h2><div class="form-grid"><div class="campo full">
-<label>Nome completo</label>
-<input id="nome" type="text" placeholder="Nome do atleta">
-</div><div class="campo">
-<label>E-mail</label>
-<input id="email" type="email" placeholder="E-mail do atleta">
-</div><div class="campo">
-<label>Categoria</label><select id="categoria">
-<option value="">Selecione</option>
-<option value="Sub-13">Sub-13</option>
-<option value="Sub-15">Sub-15</option>
-<option value="Sub-17">Sub-17</option>
-<option value="Sub-20">Sub-20</option>
-</select></div><div class="campo">
-<label>Posição</label>
-<select id="posicao">
-<option value="">Selecione</option>
-<option value="Goleiro">Goleiro</option>
-<option value="Lateral Direito">Lateral Direito</option>
-<option value="Lateral Esquerdo">Lateral Esquerdo</option>
-<option value="Zagueiro">Zagueiro</option>
-<option value="Volante">Volante</option>
-<option value="Meia">Meia</option>
-<option value="Ponta">Ponta</option>
-<option value="Atacante">Atacante</option>
-</select>
-</div><div class="campo">
-<label>Data de nascimento</label>
-<input id="nascimento" type="date">
-</div><div class="campo">
-<label>Instagram</label>
-<input id="instagram" type="text" placeholder="@usuario">
-</div><div class="campo full">
-<label>Foto do atleta — URL</label>
-<input id="foto" type="text" placeholder="https://...">
-</div></div><div class="modal-acoes"><button class="btn" id="btnSalvar">
+</h2><div class="form-grid"><div class="campo full"><label>
+Nome completo
+</label><input
+id="nome"
+type="text"
+placeholder="Digite o nome completo">
+
+</div><div class="campo"><label>
+E-mail
+</label><input
+id="email"
+type="email"
+placeholder="email@exemplo.com">
+
+</div><div class="campo"><label>
+Categoria
+</label><select id="categoria"><option value="">
+Selecione
+</option><option value="Sub-13">
+Sub-13
+</option><option value="Sub-15">
+Sub-15
+</option><option value="Sub-17">
+Sub-17
+</option><option value="Sub-20">
+Sub-20
+</option></select></div><div class="campo"><label>
+Posição
+</label><select id="posicao"><option value="">
+Selecione
+</option><option value="Goleiro">
+Goleiro
+</option><option value="Lateral Direito">
+Lateral Direito
+</option><option value="Lateral Esquerdo">
+Lateral Esquerdo
+</option><option value="Zagueiro">
+Zagueiro
+</option><option value="Volante">
+Volante
+</option><option value="Meia">
+Meia
+</option><option value="Ponta">
+Ponta
+</option><option value="Atacante">
+Atacante
+</option></select></div><div class="campo"><label>
+Data de nascimento
+</label><input
+id="nascimento"
+type="date">
+
+</div><div class="campo"><label>
+Instagram
+</label><input
+id="instagram"
+type="text"
+placeholder="@usuario">
+
+</div><div class="campo full"><label>
+Foto do atleta — URL
+</label><input
+id="foto"
+type="text"
+placeholder="https://...">
+
+</div></div><div class="modal-acoes"><button
+id="btnSalvar"
+class="btn">
+
 💾 Salvar atleta
-</button><button class="btn btn-sec" id="btnCancelar">
+
+</button><button
+id="btnCancelar"
+class="btn btn-sec">
+
 Cancelar
+
 </button></div></div></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 
 "use strict";
+
+
+/* SUPABASE */
 
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -459,14 +690,22 @@ window.supabase.createClient(
 );
 
 
+/* ELEMENTOS */
+
 const lista =
 document.getElementById("lista");
+
+const contador =
+document.getElementById("contador");
 
 const mensagem =
 document.getElementById("mensagem");
 
-const contador =
-document.getElementById("contador");
+const busca =
+document.getElementById("busca");
+
+const filtroCategoria =
+document.getElementById("filtroCategoria");
 
 const modal =
 document.getElementById("modal");
@@ -474,11 +713,6 @@ document.getElementById("modal");
 const tituloModal =
 document.getElementById("tituloModal");
 
-const busca =
-document.getElementById("busca");
-
-const filtroCategoria =
-document.getElementById("filtroCategoria");
 
 let atletas = [];
 
@@ -489,52 +723,61 @@ let atletaEditando = null;
 
 function mostrarMensagem(texto,tipo){
 
-    mensagem.textContent = texto;
+    mensagem.textContent =
+        texto;
 
     mensagem.className =
         "mensagem " + tipo;
 
-    setTimeout(function(){
-
-        mensagem.className =
-            "mensagem";
-
-    },4000);
-
 }
 
 
-/* VERIFICAR TREINADOR */
+/* VERIFICAR LOGIN */
 
-async function verificarTreinador(){
+async function verificarLogin(){
 
-    const {
-        data,
-        error
-    } =
-    await supabaseClient
-        .auth
-        .getUser();
+    const resultado =
+        await supabaseClient
+            .auth
+            .getSession();
 
-    if(error || !data.user){
+
+    if(resultado.error){
+
+        mostrarMensagem(
+            "Erro ao verificar o login: " +
+            resultado.error.message,
+            "erro"
+        );
+
+        return false;
+    }
+
+
+    if(!resultado.data.session){
 
         window.location.href =
             "login-treinador.html";
 
         return false;
-
     }
 
+
     return true;
+
 }
 
 
-/* CARREGAR ATLETAS */
+/* CARREGAR */
 
 async function carregarAtletas(){
 
     lista.innerHTML =
-        '<div class="carregando">Carregando atletas...</div>';
+        '<div class="carregando">⏳ Carregando atletas...</div>';
+
+    contador.textContent =
+        "Carregando...";
+
 
     const resultado =
         await supabaseClient
@@ -542,39 +785,61 @@ async function carregarAtletas(){
             .select("*")
             .order("nome",{ascending:true});
 
+
     if(resultado.error){
 
-        console.error(resultado.error);
+        console.error(
+            "ERRO SUPABASE:",
+            resultado.error
+        );
+
+
+        contador.textContent =
+            "Erro";
+
 
         lista.innerHTML =
-            '<div class="vazio">Não foi possível carregar os atletas.</div>';
+            '<div class="vazio">' +
+            '<strong>Não foi possível carregar os atletas.</strong>' +
+            '<br><br>' +
+            'Erro: ' +
+            resultado.error.message +
+            '</div>';
+
 
         mostrarMensagem(
-            "Erro ao carregar atletas. Verifique as políticas da tabela Atletas.",
+            "O Supabase recusou a leitura da tabela Atletas: " +
+            resultado.error.message,
             "erro"
         );
 
         return;
+
     }
+
 
     atletas =
         resultado.data || [];
 
-    renderizarAtletas();
+
+    renderizar();
+
 }
 
 
 /* RENDERIZAR */
 
-function renderizarAtletas(){
+function renderizar(){
 
-    const texto =
+    const termo =
         busca.value
             .trim()
             .toLowerCase();
 
+
     const categoria =
         filtroCategoria.value;
+
 
     const filtrados =
         atletas.filter(function(atleta){
@@ -584,16 +849,19 @@ function renderizarAtletas(){
                     atleta.nome || ""
                 ).toLowerCase();
 
-            const correspondeNome =
-                nome.includes(texto);
 
-            const correspondeCategoria =
+            const passouNome =
+                nome.includes(termo);
+
+
+            const passouCategoria =
                 !categoria ||
                 atleta.categoria === categoria;
 
+
             return
-                correspondeNome &&
-                correspondeCategoria;
+                passouNome &&
+                passouCategoria;
 
         });
 
@@ -602,8 +870,8 @@ function renderizarAtletas(){
         filtrados.length +
         (
             filtrados.length === 1
-                ? " atleta"
-                : " atletas"
+                ? " atleta encontrado"
+                : " atletas encontrados"
         );
 
 
@@ -611,10 +879,15 @@ function renderizarAtletas(){
 
         lista.innerHTML =
             '<div class="vazio">' +
-            'Nenhum atleta encontrado.' +
+            '👤 Nenhum atleta encontrado.' +
+            '<br><br>' +
+            '<button class="btn" onclick="abrirCadastro()">' +
+            '➕ Cadastrar primeiro atleta' +
+            '</button>' +
             '</div>';
 
         return;
+
     }
 
 
@@ -625,51 +898,35 @@ function renderizarAtletas(){
                 atleta.foto ||
                 "1000001685.png";
 
-            const nome =
-                atleta.nome ||
-                "Atleta";
-
-            const categoria =
-                atleta.categoria ||
-                "-";
-
-            const posicao =
-                atleta.posicao ||
-                "-";
-
-            const email =
-                atleta.email ||
-                "-";
-
 
             return `
+
             <div class="atleta">
 
                 <div class="atleta-info">
 
                     <img
-                        class="atleta-foto"
-                        src="${foto}"
-                        alt="Foto de ${nome}"
-                        onerror="this.src='1000001685.png';"
-                    >
+                    src="${escapeHtml(foto)}"
+                    class="atleta-foto"
+                    alt="Foto do atleta"
+                    onerror="this.src='1000001685.png';">
 
-                    <div>
+                    <div class="atleta-dados">
 
                         <h3>
-                            ${nome}
+                        ${escapeHtml(atleta.nome || "Atleta")}
                         </h3>
 
                         <p>
-                            ${email}
+                        ${escapeHtml(atleta.email || "Sem e-mail")}
                         </p>
 
                         <p>
-                            ${posicao}
+                        ${escapeHtml(atleta.posicao || "Posição não informada")}
                         </p>
 
                         <span class="tag">
-                            ${categoria}
+                        ${escapeHtml(atleta.categoria || "Sem categoria")}
                         </span>
 
                     </div>
@@ -680,25 +937,43 @@ function renderizarAtletas(){
                 <div class="acoes-atleta">
 
                     <button
-                        class="btn btn-editar"
-                        onclick="editarAtleta('${atleta.id}')"
-                    >
-                        ✏️ Editar
+                    class="btn btn-editar"
+                    onclick="editarAtleta('${atleta.id}')">
+
+                    ✏️ Editar
+
                     </button>
 
+
                     <button
-                        class="btn btn-excluir"
-                        onclick="excluirAtleta('${atleta.id}')"
-                    >
-                        🗑️ Excluir
+                    class="btn btn-excluir"
+                    onclick="excluirAtleta('${atleta.id}')">
+
+                    🗑️ Excluir
+
                     </button>
 
                 </div>
 
             </div>
+
             `;
 
         }).join("");
+
+}
+
+
+/* PROTEÇÃO DE TEXTO */
+
+function escapeHtml(valor){
+
+    return String(valor)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
 
 }
 
@@ -707,16 +982,26 @@ function renderizarAtletas(){
 
 function abrirCadastro(){
 
-    atletaEditando = null;
+    atletaEditando =
+        null;
+
 
     tituloModal.textContent =
         "Cadastrar atleta";
 
+
     limparFormulario();
 
-    modal.classList.add("ativo");
+
+    modal.classList.add(
+        "ativo"
+    );
 
 }
+
+
+window.abrirCadastro =
+    abrirCadastro;
 
 
 /* EDITAR */
@@ -740,6 +1025,7 @@ function(id){
         );
 
         return;
+
     }
 
 
@@ -754,26 +1040,34 @@ function(id){
     document.getElementById("nome").value =
         atleta.nome || "";
 
+
     document.getElementById("email").value =
         atleta.email || "";
+
 
     document.getElementById("categoria").value =
         atleta.categoria || "";
 
+
     document.getElementById("posicao").value =
         atleta.posicao || "";
+
 
     document.getElementById("nascimento").value =
         atleta.data_nascimento || "";
 
+
     document.getElementById("instagram").value =
         atleta.instagram || "";
+
 
     document.getElementById("foto").value =
         atleta.foto || "";
 
 
-    modal.classList.add("ativo");
+    modal.classList.add(
+        "ativo"
+    );
 
 };
 
@@ -782,19 +1076,26 @@ function(id){
 
 function limparFormulario(){
 
-    document.getElementById("nome").value = "";
+    document.getElementById("nome").value =
+        "";
 
-    document.getElementById("email").value = "";
+    document.getElementById("email").value =
+        "";
 
-    document.getElementById("categoria").value = "";
+    document.getElementById("categoria").value =
+        "";
 
-    document.getElementById("posicao").value = "";
+    document.getElementById("posicao").value =
+        "";
 
-    document.getElementById("nascimento").value = "";
+    document.getElementById("nascimento").value =
+        "";
 
-    document.getElementById("instagram").value = "";
+    document.getElementById("instagram").value =
+        "";
 
-    document.getElementById("foto").value = "";
+    document.getElementById("foto").value =
+        "";
 
 }
 
@@ -803,11 +1104,22 @@ function limparFormulario(){
 
 function fecharModal(){
 
-    modal.classList.remove("ativo");
+    modal.classList.remove(
+        "ativo"
+    );
 
-    atletaEditando = null;
+    atletaEditando =
+        null;
 
 }
+
+
+document
+.getElementById("btnCancelar")
+.addEventListener(
+    "click",
+    fecharModal
+);
 
 
 /* SALVAR */
@@ -816,32 +1128,42 @@ async function salvarAtleta(){
 
     const nome =
         document.getElementById("nome")
-            .value.trim();
+            .value
+            .trim();
+
 
     const email =
         document.getElementById("email")
-            .value.trim()
+            .value
+            .trim()
             .toLowerCase();
+
 
     const categoria =
         document.getElementById("categoria")
             .value;
 
+
     const posicao =
         document.getElementById("posicao")
             .value;
+
 
     const nascimento =
         document.getElementById("nascimento")
             .value;
 
+
     const instagram =
         document.getElementById("instagram")
-            .value.trim();
+            .value
+            .trim();
+
 
     const foto =
         document.getElementById("foto")
-            .value.trim();
+            .value
+            .trim();
 
 
     if(!nome){
@@ -852,6 +1174,7 @@ async function salvarAtleta(){
         );
 
         return;
+
     }
 
 
@@ -863,6 +1186,7 @@ async function salvarAtleta(){
         );
 
         return;
+
     }
 
 
@@ -874,6 +1198,7 @@ async function salvarAtleta(){
         );
 
         return;
+
     }
 
 
@@ -885,7 +1210,8 @@ async function salvarAtleta(){
 
         categoria: categoria,
 
-        posicao: posicao || null,
+        posicao:
+            posicao || null,
 
         data_nascimento:
             nascimento || null,
@@ -899,12 +1225,15 @@ async function salvarAtleta(){
     };
 
 
-    const btn =
+    const botao =
         document.getElementById("btnSalvar");
 
-    btn.disabled = true;
 
-    btn.textContent =
+    botao.disabled =
+        true;
+
+
+    botao.textContent =
         "SALVANDO...";
 
 
@@ -932,9 +1261,11 @@ async function salvarAtleta(){
     }
 
 
-    btn.disabled = false;
+    botao.disabled =
+        false;
 
-    btn.textContent =
+
+    botao.textContent =
         "💾 Salvar atleta";
 
 
@@ -944,17 +1275,20 @@ async function salvarAtleta(){
             resultado.error
         );
 
+
         mostrarMensagem(
-            "Não foi possível salvar o atleta: " +
+            "Erro ao salvar: " +
             resultado.error.message,
             "erro"
         );
 
         return;
+
     }
 
 
     fecharModal();
+
 
     mostrarMensagem(
         atletaEditando
@@ -964,7 +1298,7 @@ async function salvarAtleta(){
     );
 
 
-    await carregarAtletas();
+    carregarAtletas();
 
 }
 
@@ -983,117 +1317,24 @@ async function(id){
 
 
     if(!atleta){
+
         return;
+
     }
 
 
-    const confirmar =
-        confirm(
-            "Tem certeza que deseja excluir " +
-            (atleta.nome || "este atleta") +
+    if(
+        !confirm(
+            "Deseja realmente excluir " +
+            atleta.nome +
             "?"
-        );
+        )
+    ){
 
-
-    if(!confirmar){
         return;
+
     }
 
 
     const resultado =
-        await supabaseClient
-            .from("Atletas")
-            .delete()
-            .eq("id",id);
-
-
-    if(resultado.error){
-
-        console.error(
-            resultado.error
-        );
-
-        mostrarMensagem(
-            "Não foi possível excluir o atleta: " +
-            resultado.error.message,
-            "erro"
-        );
-
-        return;
-    }
-
-
-    mostrarMensagem(
-        "Atleta excluído com sucesso.",
-        "sucesso"
-    );
-
-
-    await carregarAtletas();
-
-};
-
-
-/* EVENTOS */
-
-document
-    .getElementById("btnNovo")
-    .addEventListener(
-        "click",
-        abrirCadastro
-    );
-
-
-document
-    .getElementById("btnCancelar")
-    .addEventListener(
-        "click",
-        fecharModal
-    );
-
-
-document
-    .getElementById("btnSalvar")
-    .addEventListener(
-        "click",
-        salvarAtleta
-    );
-
-
-document
-    .getElementById("btnAtualizar")
-    .addEventListener(
-        "click",
-        carregarAtletas
-    );
-
-
-busca.addEventListener(
-    "input",
-    renderizarAtletas
-);
-
-
-filtroCategoria.addEventListener(
-    "change",
-    renderizarAtletas
-);
-
-
-/* INICIAR */
-
-(async function(){
-
-    const autorizado =
-        await verificarTreinador();
-
-    if(autorizado){
-
-        carregarAtletas();
-
-    }
-
-})();
-
-</script></body>
-    </html>
+        await supabase
