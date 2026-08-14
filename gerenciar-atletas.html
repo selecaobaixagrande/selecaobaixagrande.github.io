@@ -1,10 +1,12 @@
-<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Gerenciar Atletas | Seleção de Baixa Grande</title><style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerenciar Atletas | Seleção de Baixa Grande</title>
 
-*{
-    box-sizing:border-box;
-}
+<style>
+*{box-sizing:border-box}
 
 body{
     margin:0;
@@ -22,7 +24,6 @@ header{
     max-width:1200px;
     margin:auto;
     padding:15px 20px;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -132,7 +133,6 @@ main{
     border-radius:14px;
     padding:18px;
     margin-bottom:20px;
-
     display:grid;
     grid-template-columns:1fr 200px;
     gap:12px;
@@ -173,11 +173,9 @@ main{
     border:1px solid #292929;
     border-radius:15px;
     padding:18px;
-
     display:flex;
     gap:16px;
     align-items:center;
-
     transition:.2s;
 }
 
@@ -262,15 +260,23 @@ main{
     display:none;
 }
 
+.sucesso{
+    background:#102416;
+    border:1px solid #285c35;
+    color:#9ff0ae;
+    padding:14px;
+    border-radius:9px;
+    margin-bottom:20px;
+    display:none;
+}
+
 .modal-fundo{
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.78);
-
     display:none;
     align-items:center;
     justify-content:center;
-
     padding:20px;
     z-index:999;
 }
@@ -280,7 +286,6 @@ main{
     max-width:650px;
     max-height:90vh;
     overflow:auto;
-
     background:#111;
     border:1px solid #333;
     border-radius:16px;
@@ -347,7 +352,6 @@ footer strong{
 }
 
 @media(max-width:800px){
-
     .lista{
         grid-template-columns:1fr;
     }
@@ -355,11 +359,9 @@ footer strong{
     .filtros{
         grid-template-columns:1fr;
     }
-
 }
 
 @media(max-width:600px){
-
     .header{
         flex-direction:column;
         text-align:center;
@@ -386,6 +388,7 @@ footer strong{
     }
 
     .atleta{
+        flex-wrap:wrap;
         align-items:flex-start;
     }
 
@@ -412,48 +415,86 @@ footer strong{
     .modal-acoes .btn{
         width:100%;
     }
-
 }
+</style>
+</head>
 
-</style></head><body><header><div class="header"><a href="painel-treinador.html" class="marca"><img
+<body>
+
+<header>
+<div class="header">
+
+<a href="painel-treinador.html" class="marca">
+
+<img
 src="1000001685.png"
 class="logo"
 alt="Escudo da Seleção de Baixa Grande">
 
 <h1>
 SELEÇÃO DE <span>BAIXA GRANDE</span>
-</h1></a><div class="usuario"><strong>Painel do Treinador</strong>
+</h1>
+
+</a>
+
+<div class="usuario">
+
+<strong>Painel do Treinador</strong>
 
 <span id="emailTreinador">
 Verificando acesso...
-</span></div></div></header><main><div class="topo"><small>Comissão técnica</small>
+</span>
 
-<h2>👥 Gerenciar atletas</h2><p>
+</div>
+
+</div>
+</header>
+
+<main>
+
+<div class="topo">
+
+<small>Comissão técnica</small>
+
+<h2>👥 Gerenciar atletas</h2>
+
+<p>
 Cadastre, edite e organize os atletas da Seleção de Baixa Grande.
-</p></div><div
-id="erro"
-class="erro">
-</div><div class="barra-acoes"><button
+</p>
+
+</div>
+
+<div id="erro" class="erro"></div>
+
+<div id="sucesso" class="sucesso"></div>
+
+<div class="barra-acoes">
+
+<button
 id="btnCadastrar"
 class="btn"
 type="button">
-
 ➕ Cadastrar atleta
+</button>
 
-</button><button
+<button
 id="btnAtualizar"
 class="btn btn-sec"
 type="button">
-
 🔄 Atualizar lista
+</button>
 
-</button><a
+<a
 href="painel-treinador.html"
 class="btn btn-sec">
-
 ← Voltar ao painel
+</a>
 
-</a></div><div class="filtros"><input
+</div>
+
+<div class="filtros">
+
+<input
 id="busca"
 class="campo"
 type="search"
@@ -467,94 +508,175 @@ class="campo">
 <option value="Sub-13">Sub-13</option>
 <option value="Sub-15">Sub-15</option>
 <option value="Sub-17">Sub-17</option>
-<option value="Sub-20">Sub-20</option></select></div><div class="resumo"><strong id="quantidade">
-0
-</strong>
-atletas encontrados</div><div
-id="carregando"
-class="carregando">🔄 Carregando atletas...
+<option value="Sub-20">Sub-20</option>
 
-</div><div
+</select>
+
+</div>
+
+<div class="resumo">
+
+<strong id="quantidade">0</strong>
+atletas encontrados
+
+</div>
+
+<div id="carregando" class="carregando">
+🔄 Carregando atletas...
+</div>
+
+<div
 id="lista"
 class="lista"
 style="display:none;">
-</div><div
+</div>
+
+<div
 id="vazio"
 class="vazio"
-style="display:none;">Nenhum atleta encontrado.
+style="display:none;">
+Nenhum atleta encontrado.
+</div>
 
-</div></main><footer><p>
+</main>
+
+<footer>
+
+<p>
 ⚽ <strong>SELEÇÃO DE BAIXA GRANDE</strong>
-</p><p>
+</p>
+
+<p>
 Área exclusiva da comissão técnica
-</p><p>
+</p>
+
+<p>
 © 2026 Seleção de Baixa Grande
-</p></footer><!-- MODAL --><div
-id="modalFundo"
-class="modal-fundo"><div class="modal"><h2 id="modalTitulo">
+</p>
+
+</footer>
+
+
+<!-- MODAL -->
+
+<div id="modalFundo" class="modal-fundo">
+
+<div class="modal">
+
+<h2 id="modalTitulo">
 Cadastrar atleta
-</h2><div class="form-grid"><div class="form-grupo full"><label>Nome completo *</label>
+</h2>
+
+<div class="form-grid">
+
+<div class="form-grupo full">
+
+<label>Nome completo *</label>
 
 <input
 id="campoNome"
 type="text"
 placeholder="Nome completo">
 
-</div><div class="form-grupo"><label>E-mail *</label>
+</div>
+
+<div class="form-grupo">
+
+<label>E-mail *</label>
 
 <input
 id="campoEmail"
 type="email"
 placeholder="email@exemplo.com">
 
-</div><div class="form-grupo"><label>Categoria *</label>
+</div>
 
-<select id="campoCategoria"><option value="">Selecione</option>
+<div class="form-grupo">
+
+<label>Categoria *</label>
+
+<select id="campoCategoria">
+
+<option value="">Selecione</option>
 <option value="Sub-13">Sub-13</option>
 <option value="Sub-15">Sub-15</option>
 <option value="Sub-17">Sub-17</option>
-<option value="Sub-20">Sub-20</option></select></div><div class="form-grupo"><label>Posição</label>
+<option value="Sub-20">Sub-20</option>
+
+</select>
+
+</div>
+
+<div class="form-grupo">
+
+<label>Posição</label>
 
 <input
 id="campoPosicao"
 type="text"
 placeholder="Ex.: Zagueiro">
 
-</div><div class="form-grupo"><label>Data de nascimento</label>
+</div>
+
+<div class="form-grupo">
+
+<label>Data de nascimento</label>
 
 <input
 id="campoNascimento"
 type="date">
 
-</div><div class="form-grupo"><label>Instagram</label>
+</div>
+
+<div class="form-grupo">
+
+<label>Instagram</label>
 
 <input
 id="campoInstagram"
 type="text"
 placeholder="@usuario">
 
-</div><div class="form-grupo full"><label>URL da foto</label>
+</div>
+
+<div class="form-grupo full">
+
+<label>URL da foto</label>
 
 <input
 id="campoFoto"
 type="url"
 placeholder="https://...">
 
-</div></div><div class="modal-acoes"><button
+</div>
+
+</div>
+
+<div class="modal-acoes">
+
+<button
 id="btnSalvar"
 class="btn"
 type="button">
-
 💾 Salvar atleta
+</button>
 
-</button><button
+<button
 id="btnCancelar"
 class="btn btn-sec"
 type="button">
-
 Cancelar
+</button>
 
-</button></div></div></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+</div>
+
+</div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
 
 "use strict";
 
@@ -599,6 +721,9 @@ document.getElementById("vazio");
 const erro =
 document.getElementById("erro");
 
+const sucesso =
+document.getElementById("sucesso");
+
 const quantidade =
 document.getElementById("quantidade");
 
@@ -617,32 +742,48 @@ document.getElementById("modalTitulo");
 const btnSalvar =
 document.getElementById("btnSalvar");
 
-let atletas = [];
+const btnCadastrar =
+document.getElementById("btnCadastrar");
 
+const btnCancelar =
+document.getElementById("btnCancelar");
+
+const btnAtualizar =
+document.getElementById("btnAtualizar");
+
+
+let atletas = [];
 let atletaEditando = null;
 
 
 /* ================================
-   MENSAGEM DE ERRO
+   MENSAGENS
 ================================ */
 
 function mostrarErro(texto){
 
-    erro.textContent =
-        texto;
-
-    erro.style.display =
-        "block";
+    erro.textContent = texto;
+    erro.style.display = "block";
 
 }
 
 function esconderErro(){
 
-    erro.textContent =
-        "";
+    erro.textContent = "";
+    erro.style.display = "none";
 
-    erro.style.display =
-        "none";
+}
+
+function mostrarSucesso(texto){
+
+    sucesso.textContent = texto;
+    sucesso.style.display = "block";
+
+    setTimeout(function(){
+
+        sucesso.style.display = "none";
+
+    },3000);
 
 }
 
@@ -661,7 +802,8 @@ async function verificarTreinador(){
     if(resultado.error){
 
         throw new Error(
-            "Não foi possível verificar o login."
+            "Não foi possível verificar o login: " +
+            resultado.error.message
         );
 
     }
@@ -696,21 +838,11 @@ async function carregarAtletas(){
 
     esconderErro();
 
-    carregando.style.display =
-        "block";
-
-    lista.style.display =
-        "none";
-
-    vazio.style.display =
-        "none";
-
+    carregando.style.display = "block";
+    lista.style.display = "none";
+    vazio.style.display = "none";
 
     try{
-
-        /*
-         * BUSCA OS ATLETAS
-         */
 
         const resultado =
             await supabaseClient
@@ -719,7 +851,6 @@ async function carregarAtletas(){
                 .order("nome",{
                     ascending:true
                 });
-
 
         if(resultado.error){
 
@@ -735,13 +866,10 @@ async function carregarAtletas(){
 
         }
 
-
         atletas =
             resultado.data || [];
 
-
         renderizarAtletas();
-
 
     }catch(error){
 
@@ -755,8 +883,7 @@ async function carregarAtletas(){
             error.message
         );
 
-        carregando.style.display =
-            "none";
+        carregando.style.display = "none";
 
     }
 
@@ -777,7 +904,6 @@ function renderizarAtletas(){
     const categoria =
         filtroCategoria.value;
 
-
     const filtrados =
         atletas.filter(function(atleta){
 
@@ -791,7 +917,6 @@ function renderizarAtletas(){
                     atleta.categoria || ""
                 );
 
-
             const bateNome =
                 !textoBusca ||
                 nome.includes(textoBusca);
@@ -800,7 +925,6 @@ function renderizarAtletas(){
                 !categoria ||
                 categoriaAtleta === categoria;
 
-
             return (
                 bateNome &&
                 bateCategoria
@@ -808,124 +932,99 @@ function renderizarAtletas(){
 
         });
 
-
     quantidade.textContent =
         filtrados.length;
 
+    lista.innerHTML = "";
 
-    lista.innerHTML =
-        "";
-
-
-    carregando.style.display =
-        "none";
-
+    carregando.style.display = "none";
 
     if(filtrados.length === 0){
 
-        lista.style.display =
-            "none";
-
-        vazio.style.display =
-            "block";
+        lista.style.display = "none";
+        vazio.style.display = "block";
 
         return;
 
     }
 
+    vazio.style.display = "none";
+    lista.style.display = "grid";
 
-    vazio.style.display =
-        "none";
+    filtrados.forEach(function(atleta){
 
-    lista.style.display =
-        "grid";
+        const card =
+            document.createElement("div");
 
+        card.className = "atleta";
 
-    filtrados.forEach(
-        function(atleta){
+        const foto =
+            atleta.foto ||
+            "1000001685.png";
 
-            const card =
-                document.createElement(
-                    "div"
-                );
+        const nome =
+            atleta.nome ||
+            "Atleta";
 
-            card.className =
-                "atleta";
+        const posicao =
+            atleta.posicao ||
+            "Posição não informada";
 
+        const categoria =
+            atleta.categoria ||
+            "Categoria não informada";
 
-            const foto =
-                atleta.foto ||
-                "1000001685.png";
+        card.innerHTML = `
 
+            <img
+                class="foto"
+                src="${escaparHTML(foto)}"
+                alt="Foto do atleta"
+                onerror="this.src='1000001685.png';">
 
-            const nome =
-                atleta.nome ||
-                "Atleta";
+            <div class="dados">
 
+                <h3>
+                    ${escaparHTML(nome)}
+                </h3>
 
-            const posicao =
-                atleta.posicao ||
-                "Posição não informada";
+                <p>
+                    ${escaparHTML(posicao)}
+                </p>
 
+                <span class="tag">
+                    ${escaparHTML(categoria)}
+                </span>
 
-            const categoria =
-                atleta.categoria ||
-                "Categoria não informada";
+            </div>
 
+            <div class="acoes-atleta">
 
-            card.innerHTML = `
+                <button
+                    class="btn btn-pequeno"
+                    type="button"
+                    data-editar="${escaparHTML(String(atleta.id))}">
 
-                <img
-                    class="foto"
-                    src="${foto}"
-                    alt="Foto de ${nome}"
-                    onerror="this.src='1000001685.png';">
+                    ✏️ Editar
 
-                <div class="dados">
+                </button>
 
-                    <h3>
-                        ${escaparHTML(nome)}
-                    </h3>
+                <button
+                    class="btn btn-pequeno btn-excluir"
+                    type="button"
+                    data-excluir="${escaparHTML(String(atleta.id))}">
 
-                    <p>
-                        ${escaparHTML(posicao)}
-                    </p>
+                    🗑️ Excluir
 
-                    <span class="tag">
-                        ${escaparHTML(categoria)}
-                    </span>
+                </button>
 
-                </div>
+            </div>
 
-                <div class="acoes-atleta">
+        `;
 
-                    <button
-                        class="btn btn-pequeno"
-                        type="button"
-                        onclick="editarAtleta('${String(atleta.id)}')">
+        lista.appendChild(card);
 
-                        ✏️ Editar
-
-                    </button>
-
-                    <button
-                        class="btn btn-pequeno btn-excluir"
-                        type="button"
-                        onclick="excluirAtleta('${String(atleta.id)}')">
-
-                        🗑️ Excluir
-
-                    </button>
-
-                </div>
-
-            `;
-
-
-            lista.appendChild(card);
-
-        }
-    );
+    });
 
 }
 
@@ -947,13 +1046,29 @@ function escaparHTML(valor){
 
 
 /* ================================
+   LIMPAR FORMULÁRIO
+================================ */
+
+function limparFormulario(){
+
+    document.getElementById("campoNome").value = "";
+    document.getElementById("campoEmail").value = "";
+    document.getElementById("campoCategoria").value = "";
+    document.getElementById("campoPosicao").value = "";
+    document.getElementById("campoNascimento").value = "";
+    document.getElementById("campoInstagram").value = "";
+    document.getElementById("campoFoto").value = "";
+
+}
+
+
+/* ================================
    ABRIR CADASTRO
 ================================ */
 
 function abrirCadastro(){
 
-    atletaEditando =
-        null;
+    atletaEditando = null;
 
     modalTitulo.textContent =
         "Cadastrar atleta";
@@ -962,6 +1077,8 @@ function abrirCadastro(){
         "💾 Salvar atleta";
 
     limparFormulario();
+
+    esconderErro();
 
     modalFundo.style.display =
         "flex";
@@ -973,19 +1090,15 @@ function abrirCadastro(){
    EDITAR
 ================================ */
 
-window.editarAtleta =
-function(id){
+function editarAtleta(id){
 
     const atleta =
-        atletas.find(
-            function(item){
+        atletas.find(function(item){
 
-                return String(item.id) ===
-                    String(id);
+            return String(item.id) ===
+                String(id);
 
-            }
-        );
-
+        });
 
     if(!atleta){
 
@@ -997,10 +1110,8 @@ function(id){
 
     }
 
-
     atletaEditando =
         atleta;
-
 
     modalTitulo.textContent =
         "Editar atleta";
@@ -1008,57 +1119,37 @@ function(id){
     btnSalvar.textContent =
         "💾 Salvar alterações";
 
-
-    document.getElementById(
-        "campoNome"
-    ).value =
+    document.getElementById("campoNome").value =
         atleta.nome || "";
 
-
-    document.getElementById(
-        "campoEmail"
-    ).value =
+    document.getElementById("campoEmail").value =
         atleta.email || "";
 
-
-    document.getElementById(
-        "campoCategoria"
-    ).value =
+    document.getElementById("campoCategoria").value =
         atleta.categoria || "";
 
-
-    document.getElementById(
-        "campoPosicao"
-    ).value =
+    document.getElementById("campoPosicao").value =
         atleta.posicao || "";
 
-
-    document.getElementById(
-        "campoNascimento"
-    ).value =
+    document.getElementById("campoNascimento").value =
         atleta.data_nascimento || "";
 
-
-    document.getElementById(
-        "campoInstagram"
-    ).value =
+    document.getElementById("campoInstagram").value =
         atleta.instagram || "";
 
-
-    document.getElementById(
-        "campoFoto"
-    ).value =
+    document.getElementById("campoFoto").value =
         atleta.foto || "";
 
+    esconderErro();
 
     modalFundo.style.display =
         "flex";
 
-};
+}
 
 
 /* ================================
-   SALVAR
+   SALVAR ATLETA
 ================================ */
 
 async function salvarAtleta(){
@@ -1066,40 +1157,33 @@ async function salvarAtleta(){
     esconderErro();
 
     const nome =
-        document.getElementById(
-            "campoNome"
-        ).value.trim();
+        document.getElementById("campoNome")
+            .value.trim();
 
     const email =
-        document.getElementById(
-            "campoEmail"
-        ).value.trim()
-        .toLowerCase();
+        document.getElementById("campoEmail")
+            .value.trim()
+            .toLowerCase();
 
     const categoria =
-        document.getElementById(
-            "campoCategoria"
-        ).value;
+        document.getElementById("campoCategoria")
+            .value;
 
     const posicao =
-        document.getElementById(
-            "campoPosicao"
-        ).value.trim();
+        document.getElementById("campoPosicao")
+            .value.trim();
 
     const nascimento =
-        document.getElementById(
-            "campoNascimento"
-        ).value;
+        document.getElementById("campoNascimento")
+            .value;
 
     const instagram =
-        document.getElementById(
-            "campoInstagram"
-        ).value.trim();
+        document.getElementById("campoInstagram")
+            .value.trim();
 
     const foto =
-        document.getElementById(
-            "campoFoto"
-        ).value.trim();
+        document.getElementById("campoFoto")
+            .value.trim();
 
 
     if(!nome){
@@ -1112,7 +1196,6 @@ async function salvarAtleta(){
 
     }
 
-
     if(!email){
 
         mostrarErro(
@@ -1122,7 +1205,6 @@ async function salvarAtleta(){
         return;
 
     }
-
 
     if(!categoria){
 
@@ -1135,28 +1217,21 @@ async function salvarAtleta(){
     }
 
 
-    btnSalvar.disabled =
-        true;
-
-    btnSalvar.textContent =
-        "SALVANDO...";
+    btnSalvar.disabled = true;
+    btnSalvar.textContent = "SALVANDO...";
 
 
     try{
 
         const dados = {
 
-            nome:
-                nome,
+            nome: nome,
 
-            email:
-                email,
+            email: email,
 
-            categoria:
-                categoria,
+            categoria: categoria,
 
-            posicao:
-                posicao || null,
+            posicao: posicao || null,
 
             data_nascimento:
                 nascimento || null,
@@ -1186,42 +1261,4 @@ async function salvarAtleta(){
 
         }else{
 
-            /*
-             * NOVO ATLETA
-             */
-
-            resultado =
-                await supabaseClient
-                    .from("Atletas")
-                    .insert(dados);
-
-        }
-
-
-        if(resultado.error){
-
-            console.error(
-                "Erro ao salvar:",
-                resultado.error
-            );
-
-            throw new Error(
-                resultado.error.message
-            );
-
-        }
-
-
-        fecharModal();
-
-        await carregarAtletas();
-
-
-    }catch(error){
-
-        console.error(
-            "ERRO AO SALVAR:",
-            error
-        );
-
-        mostrarE
+ 
