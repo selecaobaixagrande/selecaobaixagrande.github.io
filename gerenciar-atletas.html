@@ -1,7 +1,6 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Gerenciar Atletas | Seleção de Baixa Grande</title><style>
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Gerenciar Atletas | Seleção de Baixa Grande</title><style>
 
 *{
     box-sizing:border-box;
@@ -14,15 +13,13 @@ body{
     color:#fff;
 }
 
-/* HEADER */
-
 header{
     background:#0d0d0d;
     border-bottom:1px solid #292929;
 }
 
 .header{
-    max-width:1150px;
+    max-width:1200px;
     margin:auto;
     padding:15px 20px;
 
@@ -36,7 +33,6 @@ header{
     display:flex;
     align-items:center;
     gap:12px;
-
     color:#fff;
     text-decoration:none;
 }
@@ -56,113 +52,66 @@ header{
     color:#b5121b;
 }
 
-.btn-painel{
-    background:#292929;
-    color:#fff;
-    text-decoration:none;
-    padding:11px 16px;
-    border-radius:8px;
-    font-size:13px;
-    font-weight:bold;
+.usuario{
+    text-align:right;
 }
 
-/* MAIN */
+.usuario strong{
+    display:block;
+    font-size:14px;
+}
+
+.usuario span{
+    color:#888;
+    font-size:12px;
+}
 
 main{
-    max-width:1150px;
+    max-width:1200px;
     margin:auto;
     padding:35px 20px 70px;
 }
 
-.titulo{
+.topo{
     margin-bottom:25px;
 }
 
-.titulo small{
+.topo small{
     color:#b5121b;
-    font-size:12px;
     font-weight:bold;
     text-transform:uppercase;
+    font-size:12px;
 }
 
-.titulo h2{
+.topo h2{
     margin:7px 0;
     font-size:30px;
 }
 
-.titulo p{
+.topo p{
     margin:0;
     color:#999;
-    font-size:14px;
 }
 
-/* MENSAGEM */
-
-.mensagem{
-    display:none;
-    margin-bottom:18px;
-    padding:14px 16px;
-    border-radius:9px;
-    font-size:13px;
-}
-
-.mensagem.erro{
-    display:block;
-    background:#2a0d0f;
-    border:1px solid #7d1d25;
-    color:#ff9da3;
-}
-
-.mensagem.sucesso{
-    display:block;
-    background:#0d2a16;
-    border:1px solid #276b3a;
-    color:#9dffb4;
-}
-
-/* BARRA DE CONTROLE */
-
-.controle{
-    background:#111;
-    border:1px solid #292929;
-    border-radius:14px;
-    padding:18px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-
-    margin-bottom:18px;
-}
-
-.controle-esquerda{
+.barra-acoes{
     display:flex;
     gap:10px;
     flex-wrap:wrap;
+    margin-bottom:20px;
 }
-
-.contador{
-    color:#999;
-    font-size:13px;
-    display:flex;
-    align-items:center;
-}
-
-/* BOTÕES */
 
 .btn{
     border:0;
     border-radius:8px;
-    padding:11px 15px;
-
+    padding:12px 17px;
     background:#b5121b;
     color:#fff;
-
     font-weight:bold;
-    font-size:13px;
-
     cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .btn:hover{
@@ -177,73 +126,57 @@ main{
     background:#3a3a3a;
 }
 
-/* FILTROS */
-
 .filtros{
-    display:grid;
-    grid-template-columns:1fr 210px;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-input,
-select{
-    width:100%;
-
-    padding:13px;
-
-    border-radius:9px;
-
-    border:1px solid #292929;
-
-    background:#111;
-
-    color:#fff;
-
-    outline:none;
-
-    font-size:13px;
-}
-
-input:focus,
-select:focus{
-    border-color:#b5121b;
-}
-
-/* LISTA */
-
-.lista{
-    display:grid;
-    gap:12px;
-}
-
-.carregando,
-.vazio{
     background:#111;
     border:1px solid #292929;
     border-radius:14px;
+    padding:18px;
+    margin-bottom:20px;
 
-    padding:45px 20px;
-
-    text-align:center;
-
-    color:#999;
+    display:grid;
+    grid-template-columns:1fr 200px;
+    gap:12px;
 }
 
-/* ATLETA */
+.campo{
+    width:100%;
+    padding:13px 14px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#080808;
+    color:#fff;
+    outline:none;
+}
+
+.campo:focus{
+    border-color:#b5121b;
+}
+
+.resumo{
+    margin-bottom:15px;
+    color:#999;
+    font-size:14px;
+}
+
+.resumo strong{
+    color:#fff;
+}
+
+.lista{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
 
 .atleta{
     background:#111;
     border:1px solid #292929;
-    border-radius:14px;
-
-    padding:16px;
+    border-radius:15px;
+    padding:18px;
 
     display:flex;
+    gap:16px;
     align-items:center;
-    justify-content:space-between;
-
-    gap:20px;
 
     transition:.2s;
 }
@@ -252,82 +185,53 @@ select:focus{
     border-color:#b5121b;
 }
 
-.atleta-info{
-    display:flex;
-    align-items:center;
-    gap:15px;
-
-    min-width:0;
-}
-
-.atleta-foto{
-    width:68px;
-    height:68px;
-
+.foto{
+    width:80px;
+    height:80px;
+    min-width:80px;
     border-radius:50%;
-
     object-fit:cover;
-
     border:3px solid #b5121b;
-
     background:#222;
-
-    flex-shrink:0;
 }
 
-.atleta-dados{
+.dados{
+    flex:1;
     min-width:0;
 }
 
-.atleta-dados h3{
+.dados h3{
     margin:0 0 6px;
-
-    font-size:17px;
-
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+    font-size:18px;
 }
 
-.atleta-dados p{
-    margin:3px 0;
-
+.dados p{
+    margin:4px 0;
     color:#999;
-
-    font-size:12px;
+    font-size:13px;
 }
 
 .tag{
     display:inline-block;
-
     margin-top:7px;
-
     padding:5px 9px;
-
     border-radius:15px;
-
     background:#2a0d0f;
-
     border:1px solid #7d1d25;
-
     color:#ff9da3;
-
     font-size:11px;
-
     font-weight:bold;
 }
 
-/* AÇÕES DO ATLETA */
-
 .acoes-atleta{
     display:flex;
-    gap:8px;
-
-    flex-shrink:0;
+    flex-direction:column;
+    gap:7px;
 }
 
-.btn-editar{
-    background:#b5121b;
+.btn-pequeno{
+    padding:9px 11px;
+    font-size:12px;
 }
 
 .btn-excluir{
@@ -338,91 +242,103 @@ select:focus{
     background:#7d1d25;
 }
 
-/* MODAL */
+.carregando,
+.vazio{
+    text-align:center;
+    padding:60px 20px;
+    background:#111;
+    border:1px solid #292929;
+    border-radius:15px;
+    color:#999;
+}
 
-.modal{
+.erro{
+    background:#2a0d0f;
+    border:1px solid #7d1d25;
+    color:#ff9da3;
+    padding:14px;
+    border-radius:9px;
+    margin-bottom:20px;
     display:none;
+}
 
+.modal-fundo{
     position:fixed;
-
     inset:0;
+    background:rgba(0,0,0,.78);
 
-    z-index:1000;
-
-    background:rgba(0,0,0,.82);
+    display:none;
+    align-items:center;
+    justify-content:center;
 
     padding:20px;
-
-    overflow-y:auto;
+    z-index:999;
 }
 
-.modal.ativo{
-    display:block;
-}
-
-.modal-caixa{
+.modal{
     width:100%;
     max-width:650px;
-
-    margin:20px auto;
+    max-height:90vh;
+    overflow:auto;
 
     background:#111;
-
-    border:1px solid #292929;
-
+    border:1px solid #333;
     border-radius:16px;
-
     padding:25px;
 }
 
-.modal-caixa h2{
-    margin:0 0 22px;
-    font-size:22px;
+.modal h2{
+    margin-top:0;
 }
 
 .form-grid{
     display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:14px;
+    grid-template-columns:repeat(2,1fr);
+    gap:13px;
 }
 
-.campo{
+.form-grupo{
     display:flex;
     flex-direction:column;
     gap:6px;
 }
 
-.campo.full{
-    grid-column:1 / -1;
+.form-grupo.full{
+    grid-column:1/-1;
 }
 
-.campo label{
+.form-grupo label{
     color:#aaa;
     font-size:12px;
-    font-weight:bold;
+}
+
+.form-grupo input,
+.form-grupo select{
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #333;
+    background:#080808;
+    color:#fff;
+    outline:none;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus{
+    border-color:#b5121b;
 }
 
 .modal-acoes{
     display:flex;
     gap:10px;
-    margin-top:22px;
+    margin-top:20px;
 }
-
-/* FOOTER */
 
 footer{
     text-align:center;
-
-    padding:25px 20px;
-
+    padding:28px 20px;
     background:#0d0d0d;
-
     border-top:1px solid #292929;
-
     color:#777;
-
     font-size:12px;
 }
 
@@ -430,74 +346,62 @@ footer strong{
     color:#fff;
 }
 
-/* CELULAR */
+@media(max-width:800px){
 
-@media(max-width:750px){
-
-    .header{
-        flex-direction:column;
-        text-align:center;
-    }
-
-    .controle{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .controle-esquerda{
-        width:100%;
-    }
-
-    .controle-esquerda .btn{
-        flex:1;
-    }
-
-    .contador{
-        justify-content:center;
+    .lista{
+        grid-template-columns:1fr;
     }
 
     .filtros{
         grid-template-columns:1fr;
     }
 
-    .atleta{
-        align-items:stretch;
+}
+
+@media(max-width:600px){
+
+    .header{
         flex-direction:column;
+        text-align:center;
+    }
+
+    .usuario{
+        text-align:center;
+    }
+
+    main{
+        padding:25px 15px 50px;
+    }
+
+    .topo h2{
+        font-size:26px;
+    }
+
+    .barra-acoes{
+        flex-direction:column;
+    }
+
+    .barra-acoes .btn{
+        width:100%;
+    }
+
+    .atleta{
+        align-items:flex-start;
     }
 
     .acoes-atleta{
         width:100%;
     }
 
-    .acoes-atleta .btn{
-        flex:1;
-    }
-
-}
-
-@media(max-width:550px){
-
-    main{
-        padding:25px 15px 50px;
-    }
-
-    .titulo h2{
-        font-size:25px;
-    }
-
-    .atleta-info{
-        align-items:flex-start;
-    }
-
-    .atleta-dados h3{
-        white-space:normal;
+    .btn-pequeno{
+        width:100%;
     }
 
     .form-grid{
         grid-template-columns:1fr;
     }
 
-    .campo.full{
+    .form-grupo.full{
         grid-column:auto;
     }
 
@@ -511,154 +415,142 @@ footer strong{
 
 }
 
-</style></head><body><header><div class="header"><a
-href="painel-treinador.html"
-class="marca">
-
-<img
+</style></head><body><header><div class="header"><a href="painel-treinador.html" class="marca"><img
 src="1000001685.png"
 class="logo"
 alt="Escudo da Seleção de Baixa Grande">
 
 <h1>
 SELEÇÃO DE <span>BAIXA GRANDE</span>
-</h1></a><a
-href="painel-treinador.html"
-class="btn-painel">
+</h1></a><div class="usuario"><strong>Painel do Treinador</strong>
 
-← Painel
+<span id="emailTreinador">
+Verificando acesso...
+</span></div></div></header><main><div class="topo"><small>Comissão técnica</small>
 
-</a></div></header><main><div class="titulo"><small>
-Comissão técnica
-</small><h2>
-👥 Gerenciar atletas
-</h2><p>
+<h2>👥 Gerenciar atletas</h2><p>
 Cadastre, edite e organize os atletas da Seleção de Baixa Grande.
 </p></div><div
-id="mensagem"
-class="mensagem">
-</div><div class="controle"><div class="controle-esquerda"><button
-id="btnNovo"
-class="btn">
+id="erro"
+class="erro">
+</div><div class="barra-acoes"><button
+id="btnCadastrar"
+class="btn"
+type="button">
 
 ➕ Cadastrar atleta
 
 </button><button
 id="btnAtualizar"
+class="btn btn-sec"
+type="button">
+
+🔄 Atualizar lista
+
+</button><a
+href="painel-treinador.html"
 class="btn btn-sec">
 
-🔄 Atualizar
+← Voltar ao painel
 
-</button></div><div
-id="contador"
-class="contador">Carregando...
-
-</div></div><div class="filtros"><input
+</a></div><div class="filtros"><input
 id="busca"
+class="campo"
 type="search"
 placeholder="🔎 Buscar atleta pelo nome...">
 
-<select id="filtroCategoria"><option value="">
-Todas as categorias
-</option><option value="Sub-13">
-Sub-13
-</option><option value="Sub-15">
-Sub-15
-</option><option value="Sub-17">
-Sub-17
-</option><option value="Sub-20">
-Sub-20
-</option></select></div><div
-id="lista"
-class="lista"><div class="carregando">Carregando atletas...
+<select
+id="filtroCategoria"
+class="campo">
 
-</div></div></main><footer><p>
-<strong>
-⚽ SELEÇÃO DE BAIXA GRANDE
+<option value="">Todas as categorias</option>
+<option value="Sub-13">Sub-13</option>
+<option value="Sub-15">Sub-15</option>
+<option value="Sub-17">Sub-17</option>
+<option value="Sub-20">Sub-20</option></select></div><div class="resumo"><strong id="quantidade">
+0
 </strong>
+atletas encontrados</div><div
+id="carregando"
+class="carregando">🔄 Carregando atletas...
+
+</div><div
+id="lista"
+class="lista"
+style="display:none;">
+</div><div
+id="vazio"
+class="vazio"
+style="display:none;">Nenhum atleta encontrado.
+
+</div></main><footer><p>
+⚽ <strong>SELEÇÃO DE BAIXA GRANDE</strong>
 </p><p>
 Área exclusiva da comissão técnica
 </p><p>
 © 2026 Seleção de Baixa Grande
 </p></footer><!-- MODAL --><div
-id="modal"
-class="modal"><div class="modal-caixa"><h2 id="tituloModal">
+id="modalFundo"
+class="modal-fundo"><div class="modal"><h2 id="modalTitulo">
 Cadastrar atleta
-</h2><div class="form-grid"><div class="campo full"><label>
-Nome completo
-</label><input
-id="nome"
-type="text"
-placeholder="Digite o nome completo">
+</h2><div class="form-grid"><div class="form-grupo full"><label>Nome completo *</label>
 
-</div><div class="campo"><label>
-E-mail
-</label><input
-id="email"
+<input
+id="campoNome"
+type="text"
+placeholder="Nome completo">
+
+</div><div class="form-grupo"><label>E-mail *</label>
+
+<input
+id="campoEmail"
 type="email"
 placeholder="email@exemplo.com">
 
-</div><div class="campo"><label>
-Categoria
-</label><select id="categoria"><option value="">
-Selecione
-</option><option value="Sub-13">
-Sub-13
-</option><option value="Sub-15">
-Sub-15
-</option><option value="Sub-17">
-Sub-17
-</option><option value="Sub-20">
-Sub-20
-</option></select></div><div class="campo"><label>
-Posição
-</label><select id="posicao"><option value="">
-Selecione
-</option><option value="Goleiro">
-Goleiro
-</option><option value="Lateral Direito">
-Lateral Direito
-</option><option value="Lateral Esquerdo">
-Lateral Esquerdo
-</option><option value="Zagueiro">
-Zagueiro
-</option><option value="Volante">
-Volante
-</option><option value="Meia">
-Meia
-</option><option value="Ponta">
-Ponta
-</option><option value="Atacante">
-Atacante
-</option></select></div><div class="campo"><label>
-Data de nascimento
-</label><input
-id="nascimento"
+</div><div class="form-grupo"><label>Categoria *</label>
+
+<select id="campoCategoria"><option value="">Selecione</option>
+<option value="Sub-13">Sub-13</option>
+<option value="Sub-15">Sub-15</option>
+<option value="Sub-17">Sub-17</option>
+<option value="Sub-20">Sub-20</option></select></div><div class="form-grupo"><label>Posição</label>
+
+<input
+id="campoPosicao"
+type="text"
+placeholder="Ex.: Zagueiro">
+
+</div><div class="form-grupo"><label>Data de nascimento</label>
+
+<input
+id="campoNascimento"
 type="date">
 
-</div><div class="campo"><label>
-Instagram
-</label><input
-id="instagram"
+</div><div class="form-grupo"><label>Instagram</label>
+
+<input
+id="campoInstagram"
 type="text"
 placeholder="@usuario">
 
-</div><div class="campo full"><label>
-Foto do atleta — URL
-</label><input
-id="foto"
-type="text"
+</div><div class="form-grupo full"><label>URL da foto</label>
+
+<input
+id="campoFoto"
+type="url"
 placeholder="https://...">
 
 </div></div><div class="modal-acoes"><button
 id="btnSalvar"
-class="btn">
+class="btn"
+type="button">
 
 💾 Salvar atleta
 
 </button><button
 id="btnCancelar"
-class="btn btn-sec">
+class="btn btn-sec"
+type="button">
 
 Cancelar
 
@@ -667,14 +559,15 @@ Cancelar
 "use strict";
 
 
-/* SUPABASE */
+/* ================================
+   SUPABASE
+================================ */
 
 const SUPABASE_URL =
 "https://lvxwziztdngntoqypzga.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -690,16 +583,24 @@ window.supabase.createClient(
 );
 
 
-/* ELEMENTOS */
+/* ================================
+   ELEMENTOS
+================================ */
+
+const carregando =
+document.getElementById("carregando");
 
 const lista =
 document.getElementById("lista");
 
-const contador =
-document.getElementById("contador");
+const vazio =
+document.getElementById("vazio");
 
-const mensagem =
-document.getElementById("mensagem");
+const erro =
+document.getElementById("erro");
+
+const quantidade =
+document.getElementById("quantidade");
 
 const busca =
 document.getElementById("busca");
@@ -707,135 +608,171 @@ document.getElementById("busca");
 const filtroCategoria =
 document.getElementById("filtroCategoria");
 
-const modal =
-document.getElementById("modal");
+const modalFundo =
+document.getElementById("modalFundo");
 
-const tituloModal =
-document.getElementById("tituloModal");
+const modalTitulo =
+document.getElementById("modalTitulo");
 
+const btnSalvar =
+document.getElementById("btnSalvar");
 
 let atletas = [];
 
 let atletaEditando = null;
 
 
-/* MENSAGEM */
+/* ================================
+   MENSAGEM DE ERRO
+================================ */
 
-function mostrarMensagem(texto,tipo){
+function mostrarErro(texto){
 
-    mensagem.textContent =
+    erro.textContent =
         texto;
 
-    mensagem.className =
-        "mensagem " + tipo;
+    erro.style.display =
+        "block";
+
+}
+
+function esconderErro(){
+
+    erro.textContent =
+        "";
+
+    erro.style.display =
+        "none";
 
 }
 
 
-/* VERIFICAR LOGIN */
+/* ================================
+   VERIFICAR TREINADOR
+================================ */
 
-async function verificarLogin(){
+async function verificarTreinador(){
 
     const resultado =
         await supabaseClient
             .auth
-            .getSession();
-
+            .getUser();
 
     if(resultado.error){
 
-        mostrarMensagem(
-            "Erro ao verificar o login: " +
-            resultado.error.message,
-            "erro"
+        throw new Error(
+            "Não foi possível verificar o login."
         );
 
-        return false;
     }
 
+    const user =
+        resultado.data?.user;
 
-    if(!resultado.data.session){
+    if(!user){
 
         window.location.href =
             "login-treinador.html";
 
-        return false;
+        return null;
+
     }
 
+    document.getElementById(
+        "emailTreinador"
+    ).textContent =
+        user.email || "Treinador";
 
-    return true;
+    return user;
 
 }
 
 
-/* CARREGAR */
+/* ================================
+   CARREGAR ATLETAS
+================================ */
 
 async function carregarAtletas(){
 
-    lista.innerHTML =
-        '<div class="carregando">⏳ Carregando atletas...</div>';
+    esconderErro();
 
-    contador.textContent =
-        "Carregando...";
+    carregando.style.display =
+        "block";
 
+    lista.style.display =
+        "none";
 
-    const resultado =
-        await supabaseClient
-            .from("Atletas")
-            .select("*")
-            .order("nome",{ascending:true});
+    vazio.style.display =
+        "none";
 
 
-    if(resultado.error){
+    try{
+
+        /*
+         * BUSCA OS ATLETAS
+         */
+
+        const resultado =
+            await supabaseClient
+                .from("Atletas")
+                .select("*")
+                .order("nome",{
+                    ascending:true
+                });
+
+
+        if(resultado.error){
+
+            console.error(
+                "Erro Supabase:",
+                resultado.error
+            );
+
+            throw new Error(
+                resultado.error.message ||
+                "Não foi possível carregar os atletas."
+            );
+
+        }
+
+
+        atletas =
+            resultado.data || [];
+
+
+        renderizarAtletas();
+
+
+    }catch(error){
 
         console.error(
-            "ERRO SUPABASE:",
-            resultado.error
+            "ERRO AO CARREGAR ATLETAS:",
+            error
         );
 
-
-        contador.textContent =
-            "Erro";
-
-
-        lista.innerHTML =
-            '<div class="vazio">' +
-            '<strong>Não foi possível carregar os atletas.</strong>' +
-            '<br><br>' +
-            'Erro: ' +
-            resultado.error.message +
-            '</div>';
-
-
-        mostrarMensagem(
-            "O Supabase recusou a leitura da tabela Atletas: " +
-            resultado.error.message,
-            "erro"
+        mostrarErro(
+            "Erro ao carregar atletas: " +
+            error.message
         );
 
-        return;
+        carregando.style.display =
+            "none";
 
     }
-
-
-    atletas =
-        resultado.data || [];
-
-
-    renderizar();
 
 }
 
 
-/* RENDERIZAR */
+/* ================================
+   RENDERIZAR
+================================ */
 
-function renderizar(){
+function renderizarAtletas(){
 
-    const termo =
+    const textoBusca =
         busca.value
             .trim()
             .toLowerCase();
-
 
     const categoria =
         filtroCategoria.value;
@@ -849,124 +786,155 @@ function renderizar(){
                     atleta.nome || ""
                 ).toLowerCase();
 
+            const categoriaAtleta =
+                String(
+                    atleta.categoria || ""
+                );
 
-            const passouNome =
-                nome.includes(termo);
 
+            const bateNome =
+                !textoBusca ||
+                nome.includes(textoBusca);
 
-            const passouCategoria =
+            const bateCategoria =
                 !categoria ||
-                atleta.categoria === categoria;
+                categoriaAtleta === categoria;
 
 
-            return
-                passouNome &&
-                passouCategoria;
+            return (
+                bateNome &&
+                bateCategoria
+            );
 
         });
 
 
-    contador.textContent =
-        filtrados.length +
-        (
-            filtrados.length === 1
-                ? " atleta encontrado"
-                : " atletas encontrados"
-        );
+    quantidade.textContent =
+        filtrados.length;
 
 
-    if(!filtrados.length){
+    lista.innerHTML =
+        "";
 
-        lista.innerHTML =
-            '<div class="vazio">' +
-            '👤 Nenhum atleta encontrado.' +
-            '<br><br>' +
-            '<button class="btn" onclick="abrirCadastro()">' +
-            '➕ Cadastrar primeiro atleta' +
-            '</button>' +
-            '</div>';
+
+    carregando.style.display =
+        "none";
+
+
+    if(filtrados.length === 0){
+
+        lista.style.display =
+            "none";
+
+        vazio.style.display =
+            "block";
 
         return;
 
     }
 
 
-    lista.innerHTML =
-        filtrados.map(function(atleta){
+    vazio.style.display =
+        "none";
+
+    lista.style.display =
+        "grid";
+
+
+    filtrados.forEach(
+        function(atleta){
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "atleta";
+
 
             const foto =
                 atleta.foto ||
                 "1000001685.png";
 
 
-            return `
+            const nome =
+                atleta.nome ||
+                "Atleta";
 
-            <div class="atleta">
 
-                <div class="atleta-info">
+            const posicao =
+                atleta.posicao ||
+                "Posição não informada";
 
-                    <img
-                    src="${escapeHtml(foto)}"
-                    class="atleta-foto"
-                    alt="Foto do atleta"
+
+            const categoria =
+                atleta.categoria ||
+                "Categoria não informada";
+
+
+            card.innerHTML = `
+
+                <img
+                    class="foto"
+                    src="${foto}"
+                    alt="Foto de ${nome}"
                     onerror="this.src='1000001685.png';">
 
-                    <div class="atleta-dados">
+                <div class="dados">
 
-                        <h3>
-                        ${escapeHtml(atleta.nome || "Atleta")}
-                        </h3>
+                    <h3>
+                        ${escaparHTML(nome)}
+                    </h3>
 
-                        <p>
-                        ${escapeHtml(atleta.email || "Sem e-mail")}
-                        </p>
+                    <p>
+                        ${escaparHTML(posicao)}
+                    </p>
 
-                        <p>
-                        ${escapeHtml(atleta.posicao || "Posição não informada")}
-                        </p>
-
-                        <span class="tag">
-                        ${escapeHtml(atleta.categoria || "Sem categoria")}
-                        </span>
-
-                    </div>
+                    <span class="tag">
+                        ${escaparHTML(categoria)}
+                    </span>
 
                 </div>
-
 
                 <div class="acoes-atleta">
 
                     <button
-                    class="btn btn-editar"
-                    onclick="editarAtleta('${atleta.id}')">
+                        class="btn btn-pequeno"
+                        type="button"
+                        onclick="editarAtleta('${String(atleta.id)}')">
 
-                    ✏️ Editar
+                        ✏️ Editar
 
                     </button>
 
-
                     <button
-                    class="btn btn-excluir"
-                    onclick="excluirAtleta('${atleta.id}')">
+                        class="btn btn-pequeno btn-excluir"
+                        type="button"
+                        onclick="excluirAtleta('${String(atleta.id)}')">
 
-                    🗑️ Excluir
+                        🗑️ Excluir
 
                     </button>
 
                 </div>
 
-            </div>
-
             `;
 
-        }).join("");
+
+            lista.appendChild(card);
+
+        }
+    );
 
 }
 
 
-/* PROTEÇÃO DE TEXTO */
+/* ================================
+   ESCAPAR HTML
+================================ */
 
-function escapeHtml(valor){
+function escaparHTML(valor){
 
     return String(valor)
         .replaceAll("&","&amp;")
@@ -978,50 +946,51 @@ function escapeHtml(valor){
 }
 
 
-/* ABRIR CADASTRO */
+/* ================================
+   ABRIR CADASTRO
+================================ */
 
 function abrirCadastro(){
 
     atletaEditando =
         null;
 
-
-    tituloModal.textContent =
+    modalTitulo.textContent =
         "Cadastrar atleta";
 
+    btnSalvar.textContent =
+        "💾 Salvar atleta";
 
     limparFormulario();
 
-
-    modal.classList.add(
-        "ativo"
-    );
+    modalFundo.style.display =
+        "flex";
 
 }
 
 
-window.abrirCadastro =
-    abrirCadastro;
-
-
-/* EDITAR */
+/* ================================
+   EDITAR
+================================ */
 
 window.editarAtleta =
 function(id){
 
     const atleta =
-        atletas.find(function(item){
+        atletas.find(
+            function(item){
 
-            return String(item.id) === String(id);
+                return String(item.id) ===
+                    String(id);
 
-        });
+            }
+        );
 
 
     if(!atleta){
 
-        mostrarMensagem(
-            "Atleta não encontrado.",
-            "erro"
+        mostrarErro(
+            "Atleta não encontrado."
         );
 
         return;
@@ -1033,144 +1002,110 @@ function(id){
         atleta;
 
 
-    tituloModal.textContent =
+    modalTitulo.textContent =
         "Editar atleta";
 
+    btnSalvar.textContent =
+        "💾 Salvar alterações";
 
-    document.getElementById("nome").value =
+
+    document.getElementById(
+        "campoNome"
+    ).value =
         atleta.nome || "";
 
 
-    document.getElementById("email").value =
+    document.getElementById(
+        "campoEmail"
+    ).value =
         atleta.email || "";
 
 
-    document.getElementById("categoria").value =
+    document.getElementById(
+        "campoCategoria"
+    ).value =
         atleta.categoria || "";
 
 
-    document.getElementById("posicao").value =
+    document.getElementById(
+        "campoPosicao"
+    ).value =
         atleta.posicao || "";
 
 
-    document.getElementById("nascimento").value =
+    document.getElementById(
+        "campoNascimento"
+    ).value =
         atleta.data_nascimento || "";
 
 
-    document.getElementById("instagram").value =
+    document.getElementById(
+        "campoInstagram"
+    ).value =
         atleta.instagram || "";
 
 
-    document.getElementById("foto").value =
+    document.getElementById(
+        "campoFoto"
+    ).value =
         atleta.foto || "";
 
 
-    modal.classList.add(
-        "ativo"
-    );
+    modalFundo.style.display =
+        "flex";
 
 };
 
 
-/* LIMPAR */
-
-function limparFormulario(){
-
-    document.getElementById("nome").value =
-        "";
-
-    document.getElementById("email").value =
-        "";
-
-    document.getElementById("categoria").value =
-        "";
-
-    document.getElementById("posicao").value =
-        "";
-
-    document.getElementById("nascimento").value =
-        "";
-
-    document.getElementById("instagram").value =
-        "";
-
-    document.getElementById("foto").value =
-        "";
-
-}
-
-
-/* FECHAR */
-
-function fecharModal(){
-
-    modal.classList.remove(
-        "ativo"
-    );
-
-    atletaEditando =
-        null;
-
-}
-
-
-document
-.getElementById("btnCancelar")
-.addEventListener(
-    "click",
-    fecharModal
-);
-
-
-/* SALVAR */
+/* ================================
+   SALVAR
+================================ */
 
 async function salvarAtleta(){
 
-    const nome =
-        document.getElementById("nome")
-            .value
-            .trim();
+    esconderErro();
 
+    const nome =
+        document.getElementById(
+            "campoNome"
+        ).value.trim();
 
     const email =
-        document.getElementById("email")
-            .value
-            .trim()
-            .toLowerCase();
-
+        document.getElementById(
+            "campoEmail"
+        ).value.trim()
+        .toLowerCase();
 
     const categoria =
-        document.getElementById("categoria")
-            .value;
-
+        document.getElementById(
+            "campoCategoria"
+        ).value;
 
     const posicao =
-        document.getElementById("posicao")
-            .value;
-
+        document.getElementById(
+            "campoPosicao"
+        ).value.trim();
 
     const nascimento =
-        document.getElementById("nascimento")
-            .value;
-
+        document.getElementById(
+            "campoNascimento"
+        ).value;
 
     const instagram =
-        document.getElementById("instagram")
-            .value
-            .trim();
-
+        document.getElementById(
+            "campoInstagram"
+        ).value.trim();
 
     const foto =
-        document.getElementById("foto")
-            .value
-            .trim();
+        document.getElementById(
+            "campoFoto"
+        ).value.trim();
 
 
     if(!nome){
 
-        mostrarMensagem(
-            "Digite o nome do atleta.",
-            "erro"
+        mostrarErro(
+            "Digite o nome completo do atleta."
         );
 
         return;
@@ -1180,9 +1115,8 @@ async function salvarAtleta(){
 
     if(!email){
 
-        mostrarMensagem(
-            "Digite o e-mail do atleta.",
-            "erro"
+        mostrarErro(
+            "Digite o e-mail do atleta."
         );
 
         return;
@@ -1192,9 +1126,8 @@ async function salvarAtleta(){
 
     if(!categoria){
 
-        mostrarMensagem(
-            "Selecione a categoria.",
-            "erro"
+        mostrarErro(
+            "Selecione a categoria do atleta."
         );
 
         return;
@@ -1202,139 +1135,93 @@ async function salvarAtleta(){
     }
 
 
-    const dados = {
-
-        nome: nome,
-
-        email: email,
-
-        categoria: categoria,
-
-        posicao:
-            posicao || null,
-
-        data_nascimento:
-            nascimento || null,
-
-        instagram:
-            instagram || null,
-
-        foto:
-            foto || null
-
-    };
-
-
-    const botao =
-        document.getElementById("btnSalvar");
-
-
-    botao.disabled =
+    btnSalvar.disabled =
         true;
 
-
-    botao.textContent =
+    btnSalvar.textContent =
         "SALVANDO...";
 
 
-    let resultado;
+    try{
+
+        const dados = {
+
+            nome:
+                nome,
+
+            email:
+                email,
+
+            categoria:
+                categoria,
+
+            posicao:
+                posicao || null,
+
+            data_nascimento:
+                nascimento || null,
+
+            instagram:
+                instagram || null,
+
+            foto:
+                foto || null
+
+        };
 
 
-    if(atletaEditando){
-
-        resultado =
-            await supabaseClient
-                .from("Atletas")
-                .update(dados)
-                .eq(
-                    "id",
-                    atletaEditando.id
-                );
-
-    }else{
-
-        resultado =
-            await supabaseClient
-                .from("Atletas")
-                .insert(dados);
-
-    }
+        let resultado;
 
 
-    botao.disabled =
-        false;
+        if(atletaEditando){
+
+            resultado =
+                await supabaseClient
+                    .from("Atletas")
+                    .update(dados)
+                    .eq(
+                        "id",
+                        atletaEditando.id
+                    );
+
+        }else{
+
+            /*
+             * NOVO ATLETA
+             */
+
+            resultado =
+                await supabaseClient
+                    .from("Atletas")
+                    .insert(dados);
+
+        }
 
 
-    botao.textContent =
-        "💾 Salvar atleta";
+        if(resultado.error){
+
+            console.error(
+                "Erro ao salvar:",
+                resultado.error
+            );
+
+            throw new Error(
+                resultado.error.message
+            );
+
+        }
 
 
-    if(resultado.error){
+        fecharModal();
+
+        await carregarAtletas();
+
+
+    }catch(error){
 
         console.error(
-            resultado.error
+            "ERRO AO SALVAR:",
+            error
         );
 
-
-        mostrarMensagem(
-            "Erro ao salvar: " +
-            resultado.error.message,
-            "erro"
-        );
-
-        return;
-
-    }
-
-
-    fecharModal();
-
-
-    mostrarMensagem(
-        atletaEditando
-            ? "Atleta atualizado com sucesso!"
-            : "Atleta cadastrado com sucesso!",
-        "sucesso"
-    );
-
-
-    carregarAtletas();
-
-}
-
-
-/* EXCLUIR */
-
-window.excluirAtleta =
-async function(id){
-
-    const atleta =
-        atletas.find(function(item){
-
-            return String(item.id) === String(id);
-
-        });
-
-
-    if(!atleta){
-
-        return;
-
-    }
-
-
-    if(
-        !confirm(
-            "Deseja realmente excluir " +
-            atleta.nome +
-            "?"
-        )
-    ){
-
-        return;
-
-    }
-
-
-    const resultado =
-        await supabase
+        mostrarE
