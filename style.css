@@ -1,80 +1,19 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{scroll-behavior:smooth;}
-body{font-family:Arial,Helvetica,sans-serif;background:#080808;color:#fff;line-height:1.6;}
-a{text-decoration:none;color:inherit;}
-:root{--vermelho:#b5121b;--vermelho-claro:#e32632;--preto:#080808;--card:#151515;--cinza:#999;}
-header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.97);backdrop-filter:blur(10px);border-bottom:2px solid var(--vermelho);}
-.header{max-width:1200px;margin:auto;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
-.logo-header{width:52px;height:52px;object-fit:contain;}.marca{display:flex;align-items:center;gap:12px;}.marca h1{font-size:17px;font-weight:900;}.marca span{color:var(--vermelho-claro);}
-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;}nav a{font-size:12px;font-weight:bold;padding:8px 10px;border-radius:7px;transition:.2s;}nav a:hover,nav a.ativo{background:var(--vermelho);}
-.hero{min-height:650px;display:flex;align-items:center;justify-content:center;text-align:center;padding:70px 20px;background:radial-gradient(circle at center,rgba(227,38,50,.40),transparent 45%),linear-gradient(135deg,#100000,#8f0913 55%,#110000);}.hero-content{max-width:900px;}.logo-principal{width:200px;height:200px;object-fit:contain;filter:drop-shadow(0 15px 30px rgba(0,0,0,.8));margin-bottom:25px;}.hero h2{font-size:60px;line-height:1;font-weight:900;}.hero h3{margin-top:18px;font-size:21px;font-weight:normal;color:#eee;}.hero p{margin-top:10px;color:#ddd;}
-.botoes{margin-top:28px;display:flex;justify-content:center;flex-wrap:wrap;gap:12px;}.botao{display:inline-block;padding:14px 24px;border-radius:9px;font-weight:bold;transition:.2s;}.botao:hover{transform:translateY(-3px);}.botao-branco{background:#fff;color:var(--vermelho);}.botao-vermelho{background:var(--vermelho);border:1px solid #fff;}
-.banner-pagina{text-align:center;padding:70px 20px;background:linear-gradient(135deg,#180000,#760710);}.banner-pagina h2{font-size:45px;}.banner-pagina p{margin-top:8px;color:#ddd;}
-section{max-width:1200px;margin:auto;padding:65px 20px;}.titulo{margin-bottom:30px;}.titulo small{color:var(--vermelho-claro);font-weight:bold;text-transform:uppercase;letter-spacing:1px;}.titulo h2{font-size:34px;margin-top:5px;}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}.card{background:linear-gradient(145deg,#1c1c1c,#111);border:1px solid #303030;border-top:4px solid var(--vermelho);border-radius:16px;padding:28px;text-align:center;transition:.25s;}.card:hover{transform:translateY(-5px);border-color:var(--vermelho-claro);}.icone{font-size:40px;}.card h3{font-size:25px;margin-top:8px;}.card p{color:var(--cinza);font-size:14px;margin-top:7px;}.btn{display:inline-block;margin-top:18px;padding:11px 18px;background:var(--vermelho);border:1px solid var(--vermelho-claro);border-radius:8px;font-size:13px;font-weight:bold;transition:.2s;}.btn:hover{background:var(--vermelho-claro);transform:translateY(-2px);}
-.destaque{background:linear-gradient(135deg,#b5121b,#480006);border:1px solid var(--vermelho-claro);border-radius:20px;padding:35px;}.destaque small{color:#ffd3d3;font-weight:bold;}.destaque h2{font-size:29px;margin-top:7px;}.destaque p{color:#eee;margin-top:12px;}.jogo{background:#151515;border:1px solid #292929;border-radius:18px;padding:35px;text-align:center;}.jogo-label{color:var(--vermelho-claro);font-size:12px;font-weight:bold;text-transform:uppercase;}.times{display:flex;justify-content:center;align-items:center;gap:50px;margin:30px 0;}.time{font-size:20px;font-weight:900;}.time img{width:85px;height:85px;object-fit:contain;display:block;margin:auto auto 8px;}.vs{color:var(--vermelho-claro);font-size:30px;font-weight:900;}.info-jogo{border-top:1px solid #292929;padding-top:20px;color:#aaa;}.jogador{overflow:hidden;padding:0;text-align:left;}.foto-jogador{height:220px;display:flex;justify-content:center;align-items:center;background:linear-gradient(145deg,#250000,#111);font-size:65px;}.info-jogador{padding:18px;}.info-jogador small{color:var(--vermelho-claro);font-weight:bold;}.foto{height:230px;border-radius:16px;border:1px solid #292929;background:linear-gradient(135deg,#250000,#171717);display:flex;align-items:center;justify-content:center;text-align:center;color:#888;}.social{text-align:center;background:linear-gradient(135deg,#180000,#8c0b14);border-radius:22px;padding:50px 20px;}.social h2{font-size:32px;}.social p{color:#ddd;margin-top:8px;}.instagram{display:inline-block;margin-top:22px;padding:14px 25px;background:#fff;color:var(--vermelho);border-radius:9px;font-weight:bold;}
-footer{background:#030303;border-top:1px solid #222;text-align:center;padding:35px 20px;color:#777;}footer strong{color:#fff;}footer p{margin-top:5px;}
-.acesso-restrito{display:flex;align-items:center;gap:8px;margin-left:10px;}.acesso-btn{display:inline-block;padding:8px 11px;border:1px solid #b5121b;border-radius:7px;color:#fff;font-size:11px;font-weight:bold;background:#111;transition:.2s;white-space:nowrap;}.acesso-btn:hover{background:#b5121b;border-color:#e32632;transform:translateY(-2px);}
-
-/* MENU RESPONSIVO UNIFICADO */
-@media(max-width:900px){
-    .header{flex-direction:row;position:relative;}
-    .grid-4{grid-template-columns:repeat(2,1fr);}
-    .grid-3,.grid-2{grid-template-columns:1fr;}
-    .hero h2{font-size:43px;}
-    .acesso-restrito{margin-left:0;justify-content:center;flex-wrap:wrap;}
-    .acesso-btn{font-size:10px;padding:7px 9px;}
-}
-
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}body{font-family:Arial,Helvetica,sans-serif;background:#080808;color:#fff;line-height:1.6}a{text-decoration:none;color:inherit}:root{--vermelho:#b5121b;--vermelho-claro:#e32632;--preto:#080808;--card:#151515;--cinza:#999}
+header{position:sticky;top:0;z-index:1000;background:rgba(5,5,5,.97);backdrop-filter:blur(10px);border-bottom:2px solid var(--vermelho)}
+.header{max-width:1200px;margin:auto;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:66px;position:relative}
+.logo-header{width:44px;height:44px;object-fit:contain}.marca{display:flex;align-items:center;gap:9px}.marca h1{font-size:14px;line-height:1.05;font-weight:900}.marca span{display:block;color:var(--vermelho-claro)}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}nav a{font-size:12px;font-weight:bold;padding:8px 10px;border-radius:7px;transition:.2s}nav a:hover,nav a.ativo{background:var(--vermelho)}
+.hero{min-height:650px;display:flex;align-items:center;justify-content:center;text-align:center;padding:70px 20px;background:radial-gradient(circle at center,rgba(227,38,50,.40),transparent 45%),linear-gradient(135deg,#100000,#8f0913 55%,#110000)}.hero-content{max-width:900px}.logo-principal{width:200px;height:200px;object-fit:contain;filter:drop-shadow(0 15px 30px rgba(0,0,0,.8));margin-bottom:25px}.hero h2{font-size:60px;line-height:1;font-weight:900}.hero h3{margin-top:18px;font-size:21px;font-weight:normal;color:#eee}.hero p{margin-top:10px;color:#ddd}
+.botoes{margin-top:28px;display:flex;justify-content:center;flex-wrap:wrap;gap:12px}.botao{display:inline-block;padding:14px 24px;border-radius:9px;font-weight:bold;transition:.2s}.botao:hover{transform:translateY(-3px)}.botao-branco{background:#fff;color:var(--vermelho)}.botao-vermelho{background:var(--vermelho);border:1px solid #fff}.banner-pagina{text-align:center;padding:70px 20px;background:linear-gradient(135deg,#180000,#760710)}.banner-pagina h2{font-size:45px}.banner-pagina p{margin-top:8px;color:#ddd}section{max-width:1200px;margin:auto;padding:65px 20px}.titulo{margin-bottom:30px}.titulo small{color:var(--vermelho-claro);font-weight:bold;text-transform:uppercase;letter-spacing:1px}.titulo h2{font-size:34px;margin-top:5px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.card{background:linear-gradient(145deg,#1c1c1c,#111);border:1px solid #303030;border-top:4px solid var(--vermelho);border-radius:16px;padding:28px;text-align:center;transition:.25s}.card:hover{transform:translateY(-5px);border-color:var(--vermelho-claro)}.icone{font-size:40px}.card h3{font-size:25px;margin-top:8px}.card p{color:var(--cinza);font-size:14px;margin-top:7px}.btn{display:inline-block;margin-top:18px;padding:11px 18px;background:var(--vermelho);border:1px solid var(--vermelho-claro);border-radius:8px;font-size:13px;font-weight:bold;transition:.2s}.btn:hover{background:var(--vermelho-claro);transform:translateY(-2px)}.destaque{background:linear-gradient(135deg,#b5121b,#480006);border:1px solid var(--vermelho-claro);border-radius:20px;padding:35px}.destaque small{color:#ffd3d3;font-weight:bold}.destaque h2{font-size:29px;margin-top:7px}.destaque p{color:#eee;margin-top:12px}.jogo{background:#151515;border:1px solid #292929;border-radius:18px;padding:35px;text-align:center}.jogo-label{color:var(--vermelho-claro);font-size:12px;font-weight:bold;text-transform:uppercase}.times{display:flex;justify-content:center;align-items:center;gap:50px;margin:30px 0}.time{font-size:20px;font-weight:900}.time img{width:85px;height:85px;object-fit:contain;display:block;margin:auto auto 8px}.vs{color:var(--vermelho-claro);font-size:30px;font-weight:900}.info-jogo{border-top:1px solid #292929;padding-top:20px;color:#aaa}.jogador{overflow:hidden;padding:0;text-align:left}.foto-jogador{height:220px;display:flex;justify-content:center;align-items:center;background:linear-gradient(145deg,#250000,#111);font-size:65px}.info-jogador{padding:18px}.info-jogador small{color:var(--vermelho-claro);font-weight:bold}.foto{height:230px;border-radius:16px;border:1px solid #292929;background:linear-gradient(135deg,#250000,#171717);display:flex;align-items:center;justify-content:center;text-align:center;color:#888}.social{text-align:center;background:linear-gradient(135deg,#180000,#8c0b14);border-radius:22px;padding:50px 20px}.social h2{font-size:32px}.social p{color:#ddd;margin-top:8px}.instagram{display:inline-block;margin-top:22px;padding:14px 25px;background:#fff;color:var(--vermelho);border-radius:9px;font-weight:bold}footer{background:#030303;border-top:1px solid #222;text-align:center;padding:35px 20px;color:#777}footer strong{color:#fff}footer p{margin-top:5px}.acesso-restrito{display:flex;align-items:center;gap:8px;margin-left:10px}.acesso-btn{display:inline-block;padding:8px 11px;border:1px solid #b5121b;border-radius:7px;color:#fff;font-size:11px;font-weight:bold;background:#111;transition:.2s;white-space:nowrap}.acesso-btn:hover{background:#b5121b;border-color:#e32632;transform:translateY(-2px)}
+@media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3,.grid-2{grid-template-columns:1fr}.hero h2{font-size:43px}.acesso-restrito{margin-left:0;justify-content:center;flex-wrap:wrap}.acesso-btn{font-size:10px;padding:7px 9px}}
 @media(max-width:600px){
-    .header{min-height:68px;padding:9px 14px;}
-    .marca h1{font-size:14px;line-height:1.1;}
-    .logo-header{width:44px;height:44px;}
-    .hero{min-height:570px;padding:50px 15px;}
-    .logo-principal{width:150px;height:150px;}
-    .hero h2{font-size:36px;}
-    .hero h3{font-size:17px;}
-    .grid-4{grid-template-columns:1fr 1fr;gap:10px;}
-    .card{padding:20px 8px;}
-    .card h3{font-size:21px;}
-    .times{gap:10px;}
-    .time{font-size:14px;}
-    .time img{width:65px;height:65px;}
-    .vs{font-size:22px;}
-
-    /* O nav vira o botão ☰ e abre ao tocar/pressionar. */
-    nav{
-        position:absolute;
-        top:100%;
-        right:10px;
-        width:150px;
-        display:block;
-        background:#0d0d0d;
-        border:1px solid #333;
-        border-radius:10px;
-        padding:5px;
-        box-shadow:0 10px 25px rgba(0,0,0,.6);
-        z-index:2000;
-    }
-    nav::before{
-        content:'☰  Menu';
-        display:block;
-        padding:10px 12px;
-        text-align:center;
-        background:#151515;
-        border-radius:7px;
-        color:#fff;
-        font-size:13px;
-        font-weight:bold;
-        border:1px solid #333;
-    }
-    nav a{display:none;font-size:13px;padding:11px 10px;margin-top:2px;}
-    nav:hover a,nav:focus-within a{display:block;}
-    nav:hover::before,nav:focus-within::before{background:#b5121b;border-color:#e32632;}
-    nav a.ativo{background:#b5121b;}
+.header{min-height:60px;padding:7px 12px}.marca{gap:7px}.marca h1{font-size:12px}.logo-header{width:38px;height:38px}.hero{min-height:570px;padding:50px 15px}.logo-principal{width:150px;height:150px}.hero h2{font-size:36px}.hero h3{font-size:17px}.grid-4{grid-template-columns:1fr 1fr;gap:10px}.card{padding:20px 8px}.card h3{font-size:21px}.times{gap:10px}.time{font-size:14px}.time img{width:65px;height:65px}.vs{font-size:22px}
+/* Menu mobile compacto, igual ao estilo da tela de entrada */
+nav{position:absolute;top:calc(100% + 7px);right:12px;width:auto;min-width:108px;display:block;background:transparent;border:0;border-radius:9px;padding:0;box-shadow:none;z-index:2000;font-size:0}
+nav::before{content:'☰ Menu';display:block;padding:9px 12px;text-align:center;background:#151515;border:1px solid #333;border-radius:9px;color:#fff;font-size:12px;font-weight:bold;line-height:1;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+nav a{display:none;font-size:13px;padding:10px 11px;margin:2px 0 0;background:#0d0d0d;border:1px solid #292929;border-radius:7px;text-align:left}
+nav:hover a,nav:focus-within a{display:block}.nav a:hover{background:#b5121b}.nav a.ativo{background:#b5121b}
+nav:hover::before,nav:focus-within::before{background:#b5121b;border-color:#e32632}
 }
+@media(max-width:400px){.marca h1{font-size:11px}.hero h2{font-size:32px}.botoes{flex-direction:column}.botao{width:100%}}
