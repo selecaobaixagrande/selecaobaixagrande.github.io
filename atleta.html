@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Acesso | Seleção de Baixa Grande</title>
 
@@ -23,60 +22,24 @@ body{
     color:#fff;
 }
 
-/* CABEÇALHO */
+/* VOLTAR NO TOPO */
 
-header{
+.topo-voltar{
+    padding:18px 20px;
     background:#0d0d0d;
     border-bottom:1px solid #292929;
 }
 
-.header{
-    max-width:1200px;
-    margin:auto;
-    padding:15px 20px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
-}
-
-.marca{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    color:#fff;
-    text-decoration:none;
-}
-
-.logo-header{
-    width:55px;
-    height:55px;
-    object-fit:contain;
-}
-
-.marca h1{
-    margin:0;
-    font-size:18px;
-}
-
-.marca h1 span{
-    color:#b5121b;
-}
-
-nav{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-}
-
-nav a{
+.voltar-topo{
+    display:inline-block;
     color:#aaa;
     text-decoration:none;
-    font-size:13px;
+    font-size:14px;
+    font-weight:bold;
+    transition:.2s;
 }
 
-nav a:hover{
+.voltar-topo:hover{
     color:#fff;
 }
 
@@ -262,30 +225,6 @@ h2{
 
 }
 
-/* VOLTAR */
-
-.voltar{
-
-    display:block;
-
-    text-align:center;
-
-    margin-top:30px;
-
-    color:#aaa;
-
-    text-decoration:none;
-
-    font-size:13px;
-
-}
-
-.voltar:hover{
-
-    color:#fff;
-
-}
-
 /* RODAPÉ */
 
 footer{
@@ -316,20 +255,16 @@ footer strong{
 
 @media(max-width:650px){
 
-    .header{
-        flex-direction:column;
-    }
-
-    nav{
-        justify-content:center;
-    }
-
     .opcoes{
         grid-template-columns:1fr;
     }
 
     .caixa{
         padding:30px 20px;
+    }
+
+    .area{
+        padding:40px 15px;
     }
 
 }
@@ -340,103 +275,37 @@ footer strong{
 
 <body>
 
+<!-- SOMENTE O BOTÃO VOLTAR NO TOPO -->
 
-<header>
+<div class="topo-voltar">
 
-<div class="header">
-
-
-<a
-href="index.html"
-class="marca">
-
-
-<img
-src="1000001685.png"
-alt="Escudo da Seleção de Baixa Grande"
-class="logo-header">
-
-
-<h1>
-
-SELEÇÃO DE
-<span>BAIXA GRANDE</span>
-
-</h1>
-
-
+<a href="index.html" class="voltar-topo">
+← Voltar
 </a>
-
-
-<nav>
-
-<a href="index.html">
-Início
-</a>
-
-<a href="jogos.html">
-Jogos
-</a>
-
-<a href="resultados.html">
-Resultados
-</a>
-
-<a href="categorias.html">
-Categorias
-</a>
-
-<a href="elenco.html">
-Elenco
-</a>
-
-<a href="noticias.html">
-Notícias
-</a>
-
-<a href="galeria.html">
-Galeria
-</a>
-
-<a href="atleta.html">
-👤 Acesso
-</a>
-
-</nav>
-
 
 </div>
-
-</header>
 
 
 <main>
 
-
 <section class="area">
 
-
 <div class="caixa">
-
 
 <img
 src="1000001685.png"
 alt="Escudo da Seleção de Baixa Grande"
 class="logo">
 
-
 <h2>
 🔐 Área de Acesso
 </h2>
-
 
 <p class="subtitulo">
 Escolha o tipo de acesso para continuar.
 </p>
 
-
 <div class="opcoes">
-
 
 <!-- ATLETA -->
 
@@ -444,27 +313,22 @@ Escolha o tipo de acesso para continuar.
 href="login-atleta.html"
 class="opcao">
 
-
 <div class="icone">
 👤
 </div>
 
-
 <h3>
 Você é atleta?
 </h3>
-
 
 <p>
 Acesse sua área exclusiva
 como atleta.
 </p>
 
-
 <span class="botao">
 ENTRAR COMO ATLETA
 </span>
-
 
 </a>
 
@@ -475,77 +339,52 @@ ENTRAR COMO ATLETA
 href="login-treinador.html"
 class="opcao">
 
-
 <div class="icone">
 🎓
 </div>
 
-
 <h3>
 Você é treinador?
 </h3>
-
 
 <p>
 Acesse o painel exclusivo
 da comissão técnica.
 </p>
 
-
 <span class="botao">
 ENTRAR COMO TREINADOR
 </span>
 
-
 </a>
-
 
 </div>
 
-
-<a
-href="index.html"
-class="voltar">
-
-← Voltar para o site
-
-</a>
-
-
 </div>
-
 
 </section>
-
 
 </main>
 
 
 <footer>
 
-
 <p>
-
 <strong>
 ⚽ SELEÇÃO DE BAIXA GRANDE
 </strong>
-
 </p>
-
 
 <p>
 Baixa Grande - Bahia
 </p>
 
-
 <p>
 © 2026 Seleção de Baixa Grande
 </p>
 
-
 </footer>
-
 
 </body>
 
-    </html>
+</html>
