@@ -1,0 +1,1 @@
+O efeito sonoro de clique está em click-sound.js. Para ativá-lo em uma página, adicionar antes de </body>: <script src="click-sound.js"></script>.
