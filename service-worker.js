@@ -1,7 +1,11 @@
-const CACHE_NAME = 'sbg-site-v3';
+const CACHE_NAME = 'sbg-site-v99';
 self.addEventListener('install', event => self.skipWaiting());
-self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));
+self.addEventListener('activate', event => event.waitUntil((async () => {
+  const keys = await caches.keys();
+  await Promise.all(keys.map(key => caches.delete(key)));
+  await self.clients.claim();
+})()));
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET' || event.request.mode !== 'navigate') return;
-  event.respondWith(fetch(event.request, { cache: 'no-store' }).catch(() => caches.match(event.request)));
+  if (event.request.method !== 'GET') return;
+  event.respondWith(fetch(event.request, { cache: 'no-store' }));
 });
