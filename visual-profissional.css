@@ -7,7 +7,7 @@ header{background:rgba(5,6,7,.88)!important;border-bottom:1px solid rgba(255,255
 @media(max-width:760px){.header{min-height:62px!important;padding:8px 12px!important}.logo-header{width:40px!important;height:40px!important}.marca h1{font-size:10px!important}.home-hero{min-height:calc(100svh - 62px)!important}.home-hero video{opacity:.52!important}.home-hero .hero-copy{padding:65px 16px 48px!important}.home-hero .hero-copy h1{font-size:clamp(42px,13vw,62px)!important;letter-spacing:-3px!important}.home-hero .hero-crest{width:68px!important;height:68px!important}.block{padding-top:54px!important;padding-bottom:54px!important}.stats{gap:9px!important}.stat{padding:18px 12px!important}.stat b{font-size:30px!important}.cat{min-height:180px!important}.next{padding:24px 12px!important}}
 @media(max-width:390px){.stats{grid-template-columns:1fr 1fr!important}.stat b{font-size:28px!important}}
 
-/* HOME — remover somente as seções solicitadas, sem afetar outras páginas */
-body:has(.home-hero) main > .block:nth-of-type(1),
-body:has(.home-hero) main > .block:nth-of-type(5),
-body:has(.home-hero) main > .block:nth-of-type(7){display:none!important}
+/* HOME — remover somente as seções solicitadas */
+body:has(.home-hero) main > section.block:nth-of-type(2),
+body:has(.home-hero) main > section.block:nth-of-type(6),
+body:has(.home-hero) main > section.block:nth-of-type(8){display:none!important}
