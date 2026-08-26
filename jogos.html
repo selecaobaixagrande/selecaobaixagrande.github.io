@@ -6,6 +6,7 @@
 <meta name="description" content="Agenda oficial de jogos da Seleção de Baixa Grande — Bahia.">
 <title>Jogos | Seleção de Baixa Grande</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="portal-overrides.css">
 <style>
 #menuBtn{display:none;background:#151619;color:#fff;border:1px solid #34363a;border-radius:8px;padding:9px 12px;font:800 11px Arial;cursor:pointer}
 .match-empty{padding:34px 20px;text-align:center}.match-empty .icone{font-size:42px}.match-empty h3{margin-top:10px}.match-empty p{color:#92959c;margin-top:5px}
@@ -15,74 +16,23 @@
 </head>
 <body>
 <header><div class="header">
-<a href="index.html" class="marca"><img src="1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="logo-header"><h1>SELEÇÃO DE <span>BAIXA GRANDE</span></h1></a>
+<a href="home.html" class="marca"><img src="1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="logo-header"><h1>SELEÇÃO DE <span>BAIXA GRANDE</span></h1></a>
 <button id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false">☰ <span>Menu</span></button>
-<nav id="nav"><a href="index.html">Início</a><a href="jogos.html" class="ativo">Jogos</a><a href="resultados.html">Resultados</a><a href="categorias.html">Categorias</a><a href="elenco.html">Elenco</a><a href="noticias.html">Notícias</a><a href="galeria.html">Galeria</a><a href="atleta.html">Área de acesso</a></nav>
+<nav id="nav"><a href="home.html">Início</a><a href="jogos.html" class="ativo">Jogos</a><a href="resultados.html">Resultados</a><a href="categorias.html">Categorias</a><a href="elenco.html">Elenco</a><a href="noticias.html">Notícias</a><a href="galeria.html">Galeria</a><a href="atleta.html">Área de acesso</a></nav>
 </div></header>
-
-<div class="banner-pagina"><h2>⚽ Jogos</h2><p>Confira a agenda oficial da Seleção de Baixa Grande.</p></div>
-
-<section><div class="titulo"><small>Agenda oficial</small><h2>⚽ Próxima Partida</h2></div><div id="proximo" class="jogo"><div class="match-empty"><div class="icone">⚽</div><h3>PRÓXIMA PARTIDA</h3><p>Buscando a agenda oficial...</p></div></div></section>
-
-<section><div class="titulo"><small>Calendário</small><h2>📅 Próximas Partidas</h2></div><div id="agenda" class="grid-2"><div class="card">Buscando a agenda oficial...</div></div></section>
-
-<footer><p><strong>⚽ SELEÇÃO DE BAIXA GRANDE</strong></p><p>Baixa Grande - Bahia</p><p>Sub-13 • Sub-15 • Sub-17 • Sub-20</p><p>© 2026 Seleção de Baixa Grande</p></footer>
-
+<div class="banner-pagina"><h2>Jogos</h2><p>Confira a agenda oficial da Seleção de Baixa Grande.</p></div>
+<section><div class="titulo"><small>Agenda oficial</small><h2>Próxima Partida</h2></div><div id="proximo" class="jogo"><div class="match-empty"><div class="icone">⚽</div><h3>PRÓXIMA PARTIDA</h3><p>Buscando a agenda oficial...</p></div></div></section>
+<section><div class="titulo"><small>Calendário</small><h2>Próximas Partidas</h2></div><div id="agenda" class="grid-2"><div class="card">Buscando a agenda oficial...</div></div></section>
+<footer><p><strong>SELEÇÃO DE BAIXA GRANDE</strong></p><p>Baixa Grande - Bahia</p><p>Sub-13 • Sub-15 • Sub-17 • Sub-20</p><p>© 2026 Seleção de Baixa Grande</p></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const sb=window.supabase.createClient('https://lvxwziztdngntoqypzga.supabase.co','sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvY');
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-
-function getOpponentCrest(j){
-  return j.escudo_adversario||j.escudo_visitante||j.escudo_visitante_url||j.adversario_escudo||j.escudo_oponente||'';
-}
-
-function crest(src,alt){
-  if(!src)return '<div class="match-image" aria-label="Escudo não cadastrado"></div>';
-  return '<img class="match-image" src="'+esc(src)+'" alt="'+esc(alt)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';"><div class="match-image" style="display:none" aria-label="Escudo não encontrado"></div>';
-}
-
-function card(j){
-  const adversario=String(j.adversario||j.oponente||j.time_adversario||j.visitante||'Adversário').trim().toUpperCase();
-  const escudoAdversario=getOpponentCrest(j);
-  return '<article class="card agenda-card">'+
-    '<p class="agenda-title">PRÓXIMA PARTIDA</p>'+
-    '<div class="teams">'+
-      '<div class="team">'+crest('1000001685.png','Escudo oficial de Baixa Grande')+'<strong>BAIXA GRANDE</strong></div>'+
-      '<div class="vs">X</div>'+
-      '<div class="team">'+crest(escudoAdversario,'Escudo de '+adversario)+'<strong>'+esc(adversario)+'</strong></div>'+ 
-    '</div>'+ 
-  '</article>';
-}
-
-function render(jogos){
-  const lista=Array.isArray(jogos)?jogos:[];
-  if(!lista.length){
-    const vazio='<div class="match-empty"><div class="icone">⚽</div><h3>NENHUMA PARTIDA AGENDADA</h3><p>A agenda será atualizada assim que um novo jogo for cadastrado.</p></div>';
-    document.getElementById('proximo').innerHTML=vazio;
-    document.getElementById('agenda').innerHTML='<div class="card">'+vazio+'</div>';
-    return;
-  }
-  document.getElementById('proximo').innerHTML=card(lista[0]);
-  document.getElementById('agenda').innerHTML=lista.map(card).join('');
-}
-
-async function carregar(){
-  try{
-    const r=await sb.from('jogos').select('*').eq('status','agendado').order('data_jogo',{ascending:true}).order('horario',{ascending:true});
-    if(r.error)throw r.error;
-    render(r.data||[]);
-  }catch(e){
-    console.error('Erro ao carregar agenda:',e);
-    render([]);
-  }
-}
-carregar();
-
-const menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('nav');
-menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');menuBtn.setAttribute('aria-expanded',String(open));menuBtn.setAttribute('aria-label',open?'Fechar menu':'Abrir menu')});
-nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('menu-open');menuBtn.setAttribute('aria-expanded','false')}));
-</script>
-<script src="click-sound.js"></script>
-</body>
-</html>
+function getOpponentCrest(j){return j.escudo_adversario||j.escudo_visitante||j.escudo_visitante_url||j.adversario_escudo||j.escudo_oponente||''}
+function crest(src,alt){if(!src)return '<div class="match-image" aria-label="Escudo não cadastrado"></div>';return '<img class="match-image" src="'+esc(src)+'" alt="'+esc(alt)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';"><div class="match-image" style="display:none" aria-label="Escudo não encontrado"></div>'}
+function card(j){const adversario=String(j.adversario||j.oponente||j.time_adversario||j.visitante||'Adversário').trim().toUpperCase();return '<article class="card agenda-card"><p class="agenda-title">PRÓXIMA PARTIDA</p><div class="teams"><div class="team">'+crest('1000001685.png','Escudo oficial de Baixa Grande')+'<strong>BAIXA GRANDE</strong></div><div class="vs">X</div><div class="team">'+crest(getOpponentCrest(j),'Escudo de '+adversario)+'<strong>'+esc(adversario)+'</strong></div></div></article>'}
+function render(jogos){const lista=Array.isArray(jogos)?jogos:[];if(!lista.length){const vazio='<div class="match-empty"><div class="icone">⚽</div><h3>NENHUMA PARTIDA AGENDADA</h3><p>A agenda será atualizada assim que um novo jogo for cadastrado.</p></div>';document.getElementById('proximo').innerHTML=vazio;document.getElementById('agenda').innerHTML='<div class="card">'+vazio+'</div>';return}document.getElementById('proximo').innerHTML=card(lista[0]);document.getElementById('agenda').innerHTML=lista.map(card).join('')}
+async function carregar(){try{const r=await sb.from('jogos').select('*').eq('status','agendado').order('data_jogo',{ascending:true}).order('horario',{ascending:true});if(r.error)throw r.error;render(r.data||[])}catch(e){console.error('Erro ao carregar agenda:',e);render([])}}carregar();
+const menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('nav');menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');menuBtn.setAttribute('aria-expanded',String(open));menuBtn.setAttribute('aria-label',open?'Fechar menu':'Abrir menu')});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('menu-open');menuBtn.setAttribute('aria-expanded','false')}));
+</script><script src="click-sound.js"></script>
+</body></html>
