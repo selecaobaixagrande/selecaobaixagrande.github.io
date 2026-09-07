@@ -7,6 +7,7 @@ const VIDEO = 'lv_0_20260816145459.mp4';
 const FIX_SCRIPT = `
 (function(){
   'use strict';
+
   function setupLatestGames(){
     var headings=[...document.querySelectorAll('h1,h2,h3,h4')];
     var heading=headings.find(function(h){return /últimos\\s+jogos/i.test((h.textContent||'').trim());});
@@ -22,12 +23,34 @@ const FIX_SCRIPT = `
     tabs.innerHTML='<button type="button" data-gender="masculino" role="tab" aria-selected="true" style="appearance:none;border:1px solid #b5121b;background:#b5121b;color:#fff;border-radius:8px;padding:11px 18px;font:900 10px Arial,sans-serif;letter-spacing:1px;cursor:pointer">MASCULINO</button><button type="button" data-gender="feminino" role="tab" aria-selected="false" style="appearance:none;border:1px solid #363a40;background:#111316;color:#fff;border-radius:8px;padding:11px 18px;font:900 10px Arial,sans-serif;letter-spacing:1px;cursor:pointer">FEMININO</button>';
     heading.parentNode.insertBefore(tabs,heading.nextSibling);
 
-    var items=[...section.querySelectorAll('.card,.game-card,.match-card,.result-card,.result-feature,[class*="game"],[class*="match"]')].filter(function(el){return !el.closest('[data-latest-games-tabs]') && el!==tabs;});
-    if(!items.length) items=[...section.children].filter(function(el){return el!==tabs && el!==heading.parentElement && (el.textContent||'').trim().length>5;});
+    var originalItems=[...section.querySelectorAll('.card,.game-card,.match-card,.result-card,.result-feature,[class*="game"],[class*="match"]')].filter(function(el){return !el.closest('[data-latest-games-tabs]');});
 
-    function isFemale(el){return /feminina|feminino|futsal feminino|futebol feminino|\\bFEM\\b/i.test(el.textContent||'');}
+    var female=document.createElement('div');
+    female.setAttribute('data-female-games','1');
+    female.style.cssText='display:none;gap:14px;flex-direction:column;width:100%';
+    female.innerHTML=
+      '<article style="border:1px solid #292d32;border-radius:16px;background:linear-gradient(145deg,#111316,#0b0c0e);padding:22px;text-align:center">'+
+        '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Copa Regional de Futsal Feminino 2026</div>'+
+        '<div style="font:700 22px Oswald,Arial,sans-serif">BAIXA GRANDE <span style="color:#ff5962">×</span> MUNDO NOVO</div>'+
+        '<div style="font:900 34px Oswald,Arial,sans-serif;margin:10px 0">2 × 1</div>'+
+        '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+
+        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Ginásio de Esportes — Mairi</div>'+
+      '</article>'+ 
+      '<article style="border:1px solid #292d32;border-radius:16px;background:linear-gradient(145deg,#111316,#0b0c0e);padding:22px;text-align:center">'+
+        '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Quartas de Final • Copa Regional de Futsal Feminino</div>'+
+        '<div style="font:700 22px Oswald,Arial,sans-serif">TAPIRAMUTÁ <span style="color:#ff5962">×</span> BAIXA GRANDE</div>'+ 
+        '<div style="font:900 34px Oswald,Arial,sans-serif;margin:10px 0">4 × 8</div>'+ 
+        '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+ 
+        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Quartas de final</div>'+ 
+      '</article>';
+    tabs.parentNode.insertBefore(female,tabs.nextSibling);
+
     function render(gender){
-      items.forEach(function(el){el.hidden=(gender==='feminino')!==isFemale(el);});
+      var isFemale=gender==='feminino';
+      originalItems.forEach(function(el){
+        el.hidden=isFemale;
+      });
+      female.style.display=isFemale?'flex':'none';
       tabs.querySelectorAll('button').forEach(function(btn){
         var active=btn.dataset.gender===gender;
         btn.setAttribute('aria-selected',String(active));
@@ -35,20 +58,24 @@ const FIX_SCRIPT = `
         btn.style.borderColor=active?'#b5121b':'#363a40';
       });
     }
-    tabs.addEventListener('click',function(e){var btn=e.target.closest('button[data-gender]');if(btn)render(btn.dataset.gender);});
+    tabs.addEventListener('click',function(e){
+      var btn=e.target.closest('button[data-gender]');
+      if(btn) render(btn.dataset.gender);
+    });
     render('masculino');
   }
+
   function fixVideos(){
     document.querySelectorAll('video').forEach(function(video){
-      if(!video.querySelector('source')){
-        var s=document.createElement('source');
-        s.src=new URL('${VIDEO}',location.href).href;
-        s.type='video/mp4';
-        video.prepend(s);
-      }
+      var src=new URL('${VIDEO}',location.href).href;
+      video.setAttribute('playsinline','');
+      video.setAttribute('preload','auto');
+      video.muted=true;
+      video.src=src;
       video.load();
     });
   }
+
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setupLatestGames();fixVideos();});
   else {setupLatestGames();fixVideos();}
 })();
