@@ -35,6 +35,7 @@ const FIX_SCRIPT = `
         '<div style="font:900 34px Oswald,Arial,sans-serif;margin:10px 0">2 × 1</div>'+ 
         '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+ 
         '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Ginásio de Esportes — Mairi</div>'+ 
+        '<div style="color:#ff5962;font:900 9px Arial,sans-serif;letter-spacing:1px;margin-top:12px">22 AGO · 2026</div>'+ 
       '</article>'+ 
       '<article style="border:1px solid #292d32;border-radius:16px;background:linear-gradient(145deg,#111316,#0b0c0e);padding:22px;text-align:center">'+
         '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Copa Regional de Futsal Feminino 2026</div>'+ 
@@ -43,6 +44,7 @@ const FIX_SCRIPT = `
         '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+ 
         '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Ginásio de Esportes — Mairi</div>'+ 
         '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:5px">Quartas de Final</div>'+ 
+        '<div style="color:#ff5962;font:900 9px Arial,sans-serif;letter-spacing:1px;margin-top:12px">05 SET · 2026</div>'+ 
       '</article>';
     tabs.parentNode.insertBefore(female,tabs.nextSibling);
 
