@@ -1,4 +1,5 @@
 (()=>{'use strict';
+if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(()=>{})}
 let clickAudio;
 function playClick(){try{if(!clickAudio)clickAudio=new Audio('mixkit-select-click-1109.wav');clickAudio.currentTime=0;clickAudio.volume=.72;const p=clickAudio.play();if(p)p.catch(()=>{})}catch(e){}}
 function stopInfiniteLoading(){setTimeout(()=>document.querySelectorAll('.loading').forEach(el=>{if(/^Carregando/i.test(el.textContent.trim()))el.innerHTML='<div class="error-note">Nenhuma informação publicada no momento.</div>'}),7000)}
@@ -49,7 +50,8 @@ function setupHomeLatestGames(){
       <article class="latest-game-card"><div class="latest-game-date"><strong>22 MAR</strong><small>2026</small></div><div class="latest-game-main"><h3>BAIXA GRANDE × SÃO JOSÉ DO JACUÍPE</h3><p>Copa Jacuípe — Sub-15</p></div><div class="latest-game-score"><strong>4 × 3</strong><span>ENCERRADO</span></div></article>
     </div></div>
     <div class="latest-games-panel" data-panel="feminino"><div class="latest-game-list">
-      <article class="latest-game-card"><div class="latest-game-date"><strong>22 AGO</strong><small>2026</small></div><div class="latest-game-main"><h3>BAIXA GRANDE × MUNDO NOVO</h3><p>Copa Regional de Futsal Feminino 2026</p><p class="latest-game-note">Ginásio de Esportes — Mairi</p></div><div class="latest-game-score"><strong>0 × 2</strong><span>ENCERRADO</span></div></article>
+      <article class="latest-game-card"><div class="latest-game-date"><strong>22 AGO</strong><small>2026</small></div><div class="latest-game-main"><h3>BAIXA GRANDE × MUNDO NOVO</h3><p>Copa Regional de Futsal Feminino 2026</p><p class="latest-game-note">Ginásio de Esportes — Mairi</p></div><div class="latest-game-score"><strong>2 × 1</strong><span>ENCERRADO</span></div></article>
+      <article class="latest-game-card"><div class="latest-game-date"><strong>QUARTAS</strong><small>2026</small></div><div class="latest-game-main"><h3>TAPIRAMUTÁ × BAIXA GRANDE</h3><p>Copa Regional de Futsal Feminino 2026</p><p class="latest-game-note">Ginásio de Esportes — Mairi</p><p class="latest-game-note">Quartas de Final</p></div><div class="latest-game-score"><strong>4 × 8</strong><span>ENCERRADO</span></div></article>
     </div></div>`;
   feature.replaceWith(panels);
   tabs.querySelectorAll('.latest-games-tab').forEach(btn=>btn.addEventListener('click',()=>{
