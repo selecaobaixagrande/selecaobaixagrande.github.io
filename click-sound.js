@@ -2,6 +2,15 @@
 let clickAudio;
 function playClick(){try{if(!clickAudio)clickAudio=new Audio('mixkit-select-click-1109.wav');clickAudio.currentTime=0;clickAudio.volume=.72;const p=clickAudio.play();if(p)p.catch(()=>{})}catch(e){}}
 function stopInfiniteLoading(){setTimeout(()=>document.querySelectorAll('.loading').forEach(el=>{if(/^Carregando/i.test(el.textContent.trim()))el.innerHTML='<div class="error-note">Nenhuma informação publicada no momento.</div>'}),7000)}
+function setupEntranceVideo(){
+  const video=document.querySelector('video.video-fundo');
+  if(!video)return;
+  const fallback='https://raw.githubusercontent.com/selecaobaixagrande/selecaobaixagrande.github.io/main/lv_0_20260816145459.mp4';
+  const useFallback=()=>{if(video.dataset.fallbackApplied==='1')return;video.dataset.fallbackApplied='1';video.src=fallback+'?v=20260906';video.load();const p=video.play();if(p)p.catch(()=>{})};
+  video.addEventListener('error',useFallback,{once:true});
+  video.addEventListener('loadedmetadata',()=>{const p=video.play();if(p)p.catch(()=>{})},{once:true});
+  const p=video.play();if(p)p.catch(()=>{});
+}
 function setupHomeLatestGames(){
   if(!document.body.classList.contains('home'))return;
   const feature=document.querySelector('.result-feature');
@@ -16,7 +25,6 @@ function setupHomeLatestGames(){
   .latest-games-tab.active{background:#b5121b;border-color:#ed2733;color:#fff;box-shadow:0 8px 24px rgba(181,18,27,.22)}
   .latest-games-panel{display:none}
   .latest-games-panel.active{display:block}
-  .latest-games-empty{border:1px solid #30343a;border-radius:18px;background:linear-gradient(145deg,#101214,#0b0c0e);padding:30px;text-align:center;color:#8f949c;font-size:11px}
   .latest-game-list{display:grid;gap:12px}
   .latest-game-card{display:grid;grid-template-columns:92px 1fr 110px;align-items:center;gap:18px;padding:20px;border:1px solid #30343a;border-radius:18px;background:linear-gradient(125deg,#101214,#0d0e10);box-shadow:0 16px 40px rgba(0,0,0,.2)}
   .latest-game-date{text-align:center;border-right:1px solid #292d32;padding-right:18px}.latest-game-date strong{display:block;color:#fff;font:700 24px/1 Oswald,Arial,sans-serif}.latest-game-date small{display:block;margin-top:6px;color:#ff5962;font-size:8px;font-weight:900;letter-spacing:1.2px}
@@ -51,5 +59,5 @@ function setupHomeLatestGames(){
   }));
 }
 document.addEventListener('click',e=>{const target=e.target.closest('button,a,[role="button"],input[type="button"],input[type="submit"]');if(target)playClick()},{passive:true});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{stopInfiniteLoading();setupHomeLatestGames()});else{stopInfiniteLoading();setupHomeLatestGames()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{stopInfiniteLoading();setupEntranceVideo();setupHomeLatestGames()});else{stopInfiniteLoading();setupEntranceVideo();setupHomeLatestGames()}
 })();
