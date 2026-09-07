@@ -30,26 +30,25 @@ const FIX_SCRIPT = `
     female.style.cssText='display:none;gap:14px;flex-direction:column;width:100%';
     female.innerHTML=
       '<article style="border:1px solid #292d32;border-radius:16px;background:linear-gradient(145deg,#111316,#0b0c0e);padding:22px;text-align:center">'+
-        '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Copa Regional de Futsal Feminino 2026</div>'+
-        '<div style="font:700 22px Oswald,Arial,sans-serif">BAIXA GRANDE <span style="color:#ff5962">×</span> MUNDO NOVO</div>'+
-        '<div style="font:900 34px Oswald,Arial,sans-serif;margin:10px 0">2 × 1</div>'+
-        '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+
-        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Ginásio de Esportes — Mairi</div>'+
+        '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Copa Regional de Futsal Feminino 2026</div>'+ 
+        '<div style="font:700 22px Oswald,Arial,sans-serif">BAIXA GRANDE <span style="color:#ff5962">×</span> MUNDO NOVO</div>'+ 
+        '<div style="font:900 34px Oswald,Arial,sans-serif;margin:10px 0">2 × 1</div>'+ 
+        '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+ 
+        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Ginásio de Esportes — Mairi</div>'+ 
       '</article>'+ 
       '<article style="border:1px solid #292d32;border-radius:16px;background:linear-gradient(145deg,#111316,#0b0c0e);padding:22px;text-align:center">'+
-        '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Quartas de Final • Copa Regional de Futsal Feminino</div>'+
+        '<div style="color:#ff5962;font:900 8px Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">Copa Regional de Futsal Feminino 2026</div>'+ 
         '<div style="font:700 22px Oswald,Arial,sans-serif">TAPIRAMUTÁ <span style="color:#ff5962">×</span> BAIXA GRANDE</div>'+ 
         '<div style="font:900 34px Oswald,Arial,sans-serif;margin:10px 0">4 × 8</div>'+ 
         '<div style="color:#9ba0a8;font:700 9px Arial,sans-serif;letter-spacing:1px">ENCERRADO</div>'+ 
-        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Quartas de final</div>'+ 
+        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:9px">Ginásio de Esportes — Mairi</div>'+ 
+        '<div style="color:#777d85;font:10px Arial,sans-serif;margin-top:5px">Quartas de Final</div>'+ 
       '</article>';
     tabs.parentNode.insertBefore(female,tabs.nextSibling);
 
     function render(gender){
       var isFemale=gender==='feminino';
-      originalItems.forEach(function(el){
-        el.hidden=isFemale;
-      });
+      originalItems.forEach(function(el){el.hidden=isFemale;});
       female.style.display=isFemale?'flex':'none';
       tabs.querySelectorAll('button').forEach(function(btn){
         var active=btn.dataset.gender===gender;
