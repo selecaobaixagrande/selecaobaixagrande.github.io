@@ -15,50 +15,17 @@
     <button class="nav active" data-view="dashboard">Visão geral</button>
     <button class="nav" data-view="news">Notícias</button>
     <button class="nav" data-view="editor">Nova notícia</button>
-    <button class="nav disabled" title="Será conectado ao Supabase">Jogos</button>
-    <button class="nav disabled" title="Será conectado ao Supabase">Elenco</button>
-    <button class="nav disabled" title="Será conectado ao Supabase">Categorias</button>
-    <button class="nav disabled" title="Será conectado ao Supabase">Galeria</button>
+    <button class="nav disabled">Jogos</button><button class="nav disabled">Elenco</button><button class="nav disabled">Categorias</button><button class="nav disabled">Galeria</button>
   </nav>
   <a class="back" href="../home.html">← Voltar ao site</a>
 </aside>
 <main class="main">
-  <header class="top"><div><small>SELEÇÃO DE BAIXA GRANDE</small><h1 id="pageTitle">Visão geral</h1></div><div class="status"><i></i> Estrutura preparada</div></header>
-
-  <section id="dashboard" class="view active">
-    <div class="hero-card"><div><small>CMS OFICIAL</small><h2>Central de conteúdo</h2><p>Gerencie notícias e prepare as publicações do portal em um único lugar.</p></div><button class="primary" data-go="editor">+ Nova notícia</button></div>
-    <div class="stats"><article><span>NOTÍCIAS</span><strong id="statNews">0</strong><small>prontas para sincronização</small></article><article><span>RASCUNHOS</span><strong id="statDraft">0</strong><small>salvos neste navegador</small></article><article><span>PUBLICADAS</span><strong id="statPublished">0</strong><small>aguardando conexão CMS</small></article></div>
-    <div class="grid"><article class="panel"><div class="panel-head"><div><small>PUBLICAÇÃO</small><h3>Fluxo preparado</h3></div></div><ol class="steps"><li><b>01</b><span>Escrever notícia</span></li><li><b>02</b><span>Adicionar capa e conteúdo</span></li><li><b>03</b><span>Revisar e visualizar</span></li><li><b>04</b><span>Publicar pelo Supabase</span></li></ol></article><article class="panel"><div class="panel-head"><div><small>PRÓXIMA ETAPA</small><h3>Supabase</h3></div></div><p class="muted">A autenticação, banco, Storage, permissões e publicação online serão ligados quando a conexão do projeto Supabase estiver disponível. Nenhuma credencial é armazenada neste painel.</p></article></div>
-  </section>
-
-  <section id="news" class="view">
-    <div class="section-head"><div><small>CMS</small><h2>Notícias</h2><p>Rascunhos locais da interface administrativa.</p></div><button class="primary" data-go="editor">+ Nova notícia</button></div>
-    <div id="newsList" class="news-list"></div>
-  </section>
-
-  <section id="editor" class="view">
-    <div class="section-head"><div><small>EDITOR</small><h2>Nova notícia</h2><p>Interface pronta para receber a integração com banco e Storage.</p></div></div>
-    <form id="newsForm" class="editor-grid">
-      <div class="panel form-panel">
-        <label>Título<input id="title" required maxlength="160" placeholder="Título da notícia"></label>
-        <label>Subtítulo<textarea id="subtitle" maxlength="240" rows="2" placeholder="Resumo curto da notícia"></textarea></label>
-        <div class="two"><label>Categoria<select id="category"><option>Notícias</option><option>Futebol de Base</option><option>Seleção</option><option>Jogos</option><option>Comunicado Oficial</option></select></label><label>Autor<input id="author" placeholder="Seleção de Baixa Grande"></label></div>
-        <label>Imagem de capa<input id="cover" type="url" placeholder="URL da imagem — Storage será conectado depois"></label>
-        <div class="cover-preview" id="coverPreview"><span>Prévia da capa</span></div>
-      </div>
-      <div class="panel form-panel">
-        <label>Conteúdo</label>
-        <div class="toolbar" role="toolbar"><button type="button" data-cmd="bold"><b>B</b></button><button type="button" data-cmd="italic"><i>I</i></button><button type="button" data-cmd="formatBlock" data-value="h2">H2</button><button type="button" data-cmd="formatBlock" data-value="p">P</button><button type="button" data-cmd="insertUnorderedList">• Lista</button><button type="button" data-cmd="createLink">Link</button></div>
-        <div id="content" class="editor" contenteditable="true" data-placeholder="Escreva a notícia aqui..."></div>
-        <div class="two"><label>SEO title<input id="seoTitle" maxlength="70" placeholder="Título para buscadores"></label><label>Slug<input id="slug" maxlength="100" placeholder="sera-gerado-automaticamente"></label></div>
-        <label>SEO description<textarea id="seoDescription" maxlength="160" rows="2" placeholder="Descrição curta para buscadores"></textarea></label>
-        <div class="actions"><button type="button" class="ghost" id="previewBtn">Visualizar</button><button type="button" class="ghost" id="draftBtn">Salvar rascunho</button><button type="submit" class="primary">Preparar publicação</button></div>
-        <p class="notice">Modo local: os rascunhos desta tela ficam apenas neste navegador até o Supabase ser conectado.</p>
-      </div>
-    </form>
-  </section>
-</main>
-</div>
-<div id="toast" class="toast"></div>
-<script src="admin.js"></script>
+<header class="top"><div><small>SELEÇÃO DE BAIXA GRANDE</small><h1 id="pageTitle">Visão geral</h1></div><div class="status"><i></i><span id="connectionStatus">Conectando ao Supabase...</span></div></header>
+<section id="login" class="view active"><div class="panel login-panel"><small>ACESSO RESTRITO</small><h2>Entrar no painel</h2><p class="muted">Use sua conta de administrador do Supabase. Somente usuários autorizados podem publicar conteúdo.</p><form id="loginForm"><label>E-mail<input id="loginEmail" type="email" required autocomplete="email"></label><label>Senha<input id="loginPassword" type="password" required autocomplete="current-password"></label><button class="primary" type="submit">Entrar</button></form><p id="loginMessage" class="notice"></p></div></section>
+<div id="app" hidden>
+<section id="dashboard" class="view"><div class="hero-card"><div><small>CMS OFICIAL</small><h2>Central de conteúdo</h2><p>Gerencie notícias e publique diretamente pelo Supabase.</p></div><button class="primary" data-go="editor">+ Nova notícia</button></div><div class="stats"><article><span>NOTÍCIAS</span><strong id="statNews">0</strong><small>no CMS</small></article><article><span>RASCUNHOS</span><strong id="statDraft">0</strong><small>não publicadas</small></article><article><span>PUBLICADAS</span><strong id="statPublished">0</strong><small>visíveis no site</small></article></div></section>
+<section id="news" class="view"><div class="section-head"><div><small>CMS</small><h2>Notícias</h2><p>Conteúdo armazenado no Supabase.</p></div><button class="primary" data-go="editor">+ Nova notícia</button></div><div id="newsList" class="news-list"></div></section>
+<section id="editor" class="view"><div class="section-head"><div><small>EDITOR</small><h2 id="editorTitle">Nova notícia</h2><p>Crie, revise e publique sem precisar alterar o GitHub.</p></div></div><form id="newsForm" class="editor-grid"><div class="panel form-panel"><label>Título<input id="title" required maxlength="160" placeholder="Título da notícia"></label><label>Subtítulo<textarea id="subtitle" maxlength="240" rows="2"></textarea></label><div class="two"><label>Categoria<select id="category"><option>Notícias</option><option>Futebol de Base</option><option>Seleção</option><option>Jogos</option><option>Comunicado Oficial</option></select></label><label>Autor<input id="author" placeholder="Seleção de Baixa Grande"></label></div><label>Capa<input id="coverFile" type="file" accept="image/*"></label><div class="cover-preview" id="coverPreview"><span>Prévia da capa</span></div></div><div class="panel form-panel"><label>Conteúdo</label><div class="toolbar"><button type="button" data-cmd="bold"><b>B</b></button><button type="button" data-cmd="italic"><i>I</i></button><button type="button" data-cmd="formatBlock" data-value="h2">H2</button><button type="button" data-cmd="formatBlock" data-value="p">P</button><button type="button" data-cmd="insertUnorderedList">• Lista</button><button type="button" data-cmd="createLink">Link</button></div><div id="content" class="editor" contenteditable="true" data-placeholder="Escreva a notícia aqui..."></div><div class="two"><label>SEO title<input id="seoTitle" maxlength="70"></label><label>Slug<input id="slug" maxlength="100"></label></div><label>SEO description<textarea id="seoDescription" maxlength="160" rows="2"></textarea></label><div class="actions"><button type="button" class="ghost" id="newBtn">Limpar</button><button type="button" class="ghost" id="previewBtn">Visualizar</button><button type="button" class="ghost" id="draftBtn">Salvar rascunho</button><button type="submit" class="primary">Publicar notícia</button></div></div></form></section>
+</div></main></div><div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="admin.js"></script>
 </body></html>
