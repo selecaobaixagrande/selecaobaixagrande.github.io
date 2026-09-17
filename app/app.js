@@ -4,7 +4,7 @@ const SITE_URL='https://selecaobaixagrande.github.io/';
 const INSTAGRAM_URL='https://www.instagram.com/selecaobaixagrande/';
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)||null;
 const app=document.getElementById('app'),screen=document.getElementById('screen'),installBtn=document.getElementById('installBtn'),homeUpdates=document.getElementById('homeUpdates');
-let deferredPrompt=null,liveChannel=null,refreshTimer=null;
+let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[];
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
 installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
@@ -111,7 +111,7 @@ async function renderAssistant(){
   if(!supabaseClient){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Conexão com o banco indisponível.');return}
   const{data:{session}}=await supabaseClient.auth.getSession();
   if(!session){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Área administrativa</h2><p>Entre para usar o Assistente da Seleção.</p></div></div><form id="loginForm" class="chat-form" style="display:flex;flex-direction:column"><input id="loginEmail" type="email" autocomplete="username" placeholder="E-mail"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Senha"><button type="submit" style="height:44px">Entrar</button><div id="loginError" class="empty-state" hidden></div></form>';document.getElementById('loginForm').addEventListener('submit',loginAdmin);return}
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><form class="chat-form" id="chatForm"><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await supabaseClient.auth.signOut();renderAssistant()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));
+  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><div id="imagePreview" class="image-preview" hidden></div><form class="chat-form" id="chatForm"><button type="button" class="attach-btn" id="attachBtn" title="Adicionar fotos">＋</button><input id="imageInput" type="file" accept="image/*" multiple hidden><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await supabaseClient.auth.signOut();renderAssistant()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));document.getElementById('attachBtn').addEventListener('click',()=>document.getElementById('imageInput').click());document.getElementById('imageInput').addEventListener('change',async e=>{for(const file of [...e.target.files].slice(0,6-chatImages.length)){if(file.type.startsWith('image/'))chatImages.push(await prepareImage(file));}renderImagePreview();e.target.value='';});
 }
 
 async function loginAdmin(e){
@@ -138,9 +138,28 @@ async function openScreen(name){
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
 }
 
+async function prepareImage(file){
+  return await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1600,scale=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve({name:file.name,data:c.toDataURL('image/jpeg',.82)});};img.onerror=reject;img.src=reader.result;};reader.onerror=reject;reader.readAsDataURL(file);
+  });
+}
+function renderImagePreview(){
+  const box=document.getElementById('imagePreview');if(!box)return;
+  box.hidden=!chatImages.length;
+  box.innerHTML=chatImages.map((x,i)=>'<div class="image-chip"><img src="'+x.data+'" alt="Imagem '+(i+1)+'"><button type="button" data-remove-image="'+i+'">×</button><small>Imagem '+(i+1)+'</small></div>').join('');
+  box.querySelectorAll('[data-remove-image]').forEach(b=>b.addEventListener('click',()=>{chatImages.splice(Number(b.dataset.removeImage),1);renderImagePreview();}));
+}
 async function sendChat(e){
-  e.preventDefault();const input=document.getElementById('chatInput'),text=input.value.trim();if(!text)return;const chat=document.getElementById('chat');const me=document.createElement('div');me.className='bubble me';me.textContent=text;chat.appendChild(me);input.value='';const loading=document.createElement('div');loading.className='bubble';loading.textContent='Preparando resposta…';chat.appendChild(loading);
-  try{const{data,error}=await supabaseClient.functions.invoke('selecaobot',{body:{message:text}});if(error)throw error;loading.textContent=data?.answer||'Não recebi uma resposta.'}catch(err){loading.textContent='Não foi possível conectar ao Assistente agora.'}
+  e.preventDefault();const input=document.getElementById('chatInput'),text=input.value.trim();if(!text&&!chatImages.length)return;
+  const chat=document.getElementById('chat');const me=document.createElement('div');me.className='bubble me';me.textContent=(text||'Analise as fotos que enviei.')+(chatImages.length?'\n\n📷 '+chatImages.length+' foto(s) enviada(s).':'');chat.appendChild(me);input.value='';
+  const loading=document.createElement('div');loading.className='bubble';loading.textContent='Analisando…';chat.appendChild(loading);
+  const images=chatImages.map(x=>x.data);chatImages=[];renderImagePreview();
+  try{
+    const{data,error}=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images}});
+    if(error)throw error;
+    loading.textContent=data?.answer||'Não recebi uma resposta.';
+  }catch(err){console.error(err);loading.textContent='Não foi possível conectar ao Assistente agora. Tente novamente em alguns segundos.'}
 }
 
 function setupLiveSync(){
