@@ -4,7 +4,10 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Painel Administrativo | Seleção de Baixa Grande</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="../1000001685.png"><link rel="stylesheet" href="admin.css?v=8">
+<link rel="icon" href="../1000001685.png"><link rel="stylesheet" href="admin.css?v=9">
+<style>
+html,body{margin:0;min-height:100%;background:#080808;color:#f5f5f5;font-family:Arial,sans-serif}.shell{min-height:100vh}.main{min-width:0}.view{display:none}.view.active{display:block}.login-panel{max-width:520px;margin:10vh auto;padding:32px;background:#111;border:1px solid #292929;border-radius:14px}.login-panel form{display:grid;gap:14px}.login-panel label{display:grid;gap:7px}.login-panel input{box-sizing:border-box;width:100%;padding:13px;border-radius:8px;border:1px solid #333;background:#181818;color:#fff}.login-panel button{padding:13px;border:0;border-radius:8px;cursor:pointer}.login-panel .primary{background:#b5121b;color:#fff}.notice{min-height:20px}.muted{color:#aaa}
+</style>
 </head>
 <body>
 <div class="shell">
@@ -29,13 +32,8 @@
 </div></main></div><div id="toast" class="toast"></div>
 <script>
 window.__adminPageLoaded=true;
-window.addEventListener('error',function(e){
-  var m=document.getElementById('loginMessage');
-  if(m && !window.__adminReady) m.textContent='Erro ao carregar o painel. Recarregue a página.';
-  console.error(e.error||e.message);
-});
+window.addEventListener('error',function(e){var m=document.getElementById('loginMessage');if(m&&!window.__adminReady)m.textContent='Erro ao carregar o painel. Recarregue a página.';console.error(e.error||e.message)});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="window.__supabaseLoadError=true"></script>
-<script src="supabase-config.js?v=8"></script>
-<script src="admin.js?v=8"></script>
+<script src="supabase-config.js?v=9"></script>
+<script src="admin.js?v=9"></script>
 </body></html>
