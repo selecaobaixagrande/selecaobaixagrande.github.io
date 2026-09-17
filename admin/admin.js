@@ -17,30 +17,33 @@ async function requireAdmin(){
   if(!data){await supabase.auth.signOut();$('#login').classList.add('active');$('#app').hidden=true;setStatus('Acesso negado');loginMessage('Este e-mail não está autorizado como administrador.');return false}
   $('#login').classList.remove('active');$('#app').hidden=false;setStatus('Supabase conectado',true);loginMessage('');await loadStats();await loadNews();return true
 }
-$('#loginForm').onsubmit=async e=>{
-  e.preventDefault();
+async function doLogin(){
+  if(!supabase){loginMessage('O sistema ainda está carregando. Aguarde um instante e tente novamente.');return}
   const email=$('#loginEmail').value.trim(),password=$('#loginPassword').value;
   loginMessage('Entrando...','loading');
   if(!email||!password){loginMessage('Informe o e-mail e a senha.');return}
-  const {error}=await supabase.auth.signInWithPassword({email,password});
-  if(error){
-    console.error('Login error:',error);
-    const msg=(error.message||'').toLowerCase();
-    if(msg.includes('invalid login credentials')||msg.includes('invalid credentials')) loginMessage('E-mail ou senha incorretos. Confira os dados e tente novamente.');
-    else if(msg.includes('email not confirmed')) loginMessage('O e-mail ainda não foi confirmado no Supabase.');
-    else if(msg.includes('too many requests')) loginMessage('Muitas tentativas. Aguarde um pouco e tente novamente.');
-    else loginMessage('Não foi possível entrar: '+error.message);
-    return
-  }
-  loginMessage('Login realizado. Verificando acesso...','loading');
-  await requireAdmin()
-};
-supabase?.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT')requireAdmin()});
+  const btn=$('#loginBtn');btn.disabled=true;btn.textContent='Entrando...';
+  try{
+    const {error}=await supabase.auth.signInWithPassword({email,password});
+    if(error){
+      console.error('Login error:',error);
+      const msg=(error.message||'').toLowerCase();
+      if(msg.includes('invalid login credentials')||msg.includes('invalid credentials')) loginMessage('E-mail ou senha incorretos. Confira os dados e tente novamente.');
+      else if(msg.includes('email not confirmed')) loginMessage('O e-mail ainda não foi confirmado no Supabase.');
+      else if(msg.includes('too many requests')) loginMessage('Muitas tentativas. Aguarde um pouco e tente novamente.');
+      else loginMessage('Não foi possível entrar: '+error.message);
+      return;
+    }
+    loginMessage('Login realizado. Verificando acesso...','loading');
+    await requireAdmin();
+  }catch(e){console.error(e);loginMessage('Não foi possível conectar ao Supabase. Verifique sua internet e tente novamente.')}finally{btn.disabled=false;btn.textContent='Entrar'}
+}
+$('#loginBtn').onclick=doLogin;$('#loginForm').onsubmit=e=>{e.preventDefault();doLogin()};
 async function loadStats(){const {data,error}=await supabase.from('news').select('status');if(error){toast('Erro ao carregar notícias.');return}const total=data.length,d=data.filter(n=>n.status==='draft'||n.status==='unpublished').length,p=data.filter(n=>n.status==='published').length;$('#statNews').textContent=total;$('#statDraft').textContent=d;$('#statPublished').textContent=p}
 async function loadNews(){const box=$('#newsList');box.innerHTML='<div class="empty">Carregando notícias...</div>';const {data,error}=await supabase.from('news').select('*').order('created_at',{ascending:false});if(error){box.innerHTML='<div class="empty">Não foi possível carregar as notícias.</div>';return}if(!data.length){box.innerHTML='<div class="empty">Nenhuma notícia cadastrada ainda.</div>';return}box.innerHTML=data.map(n=>`<article class="panel"><div class="panel-head"><div><small>${esc(n.category||'Notícias')} • ${esc(n.status)}</small><h3>${esc(n.title)}</h3></div><div class="actions"><button class="ghost" data-edit="${n.id}">Editar</button>${n.status==='published'?`<button class="ghost" data-toggle="${n.id}" data-status="unpublished">Despublicar</button>`:`<button class="ghost" data-toggle="${n.id}" data-status="published">Publicar</button>`}<button class="ghost" data-delete="${n.id}">Excluir</button></div></div><p class="muted">${esc(n.subtitle||'')}</p><small class="muted">${n.published_at?new Date(n.published_at).toLocaleString('pt-BR'):'Sem publicação'}</small></article>`).join('');$$('[data-edit]').forEach(b=>b.onclick=()=>editNews(b.dataset.edit));$$('[data-toggle]').forEach(b=>b.onclick=()=>setNewsStatus(b.dataset.toggle,b.dataset.status));$$('[data-delete]').forEach(b=>b.onclick=()=>deleteNews(b.dataset.delete));await loadStats()}
 async function editNews(id){const {data,error}=await supabase.from('news').select('*').eq('id',id).single();if(error)return toast('Erro ao abrir notícia.');editingId=id;coverPath=null;coverUrl=data.cover_image||null;$('#title').value=data.title||'';$('#subtitle').value=data.subtitle||'';$('#category').value=data.category||'Notícias';$('#author').value=data.author||'';$('#content').innerHTML=data.content||'';$('#seoTitle').value=data.seo_title||'';$('#slug').value=data.slug||'';$('#seoDescription').value=data.seo_description||'';updateCover();show('editor')}
 function collect(){return{title:$('#title').value.trim(),subtitle:$('#subtitle').value.trim(),category:$('#category').value,author:$('#author').value.trim()||'Seleção de Baixa Grande',content:$('#content').innerHTML.trim(),seo_title:$('#seoTitle').value.trim()||$('#title').value.trim().slice(0,70),slug:$('#slug').value.trim()||slugify($('#title').value),seo_description:$('#seoDescription').value.trim()}}
-async function uploadCover(){const f=$('#coverFile').files[0];if(!f)return coverUrl;const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`covers/${crypto.randomUUID()}.${ext}`;const {error}=await supabase.storage.from('news').upload(path,f,{upsert:false,contentType:f.type,cacheControl:'31536000'});if(error)throw error;coverPath=path;const {data}=supabase.storage.from('news').getPublicUrl(path);coverUrl=data.publicUrl;return coverUrl}
+async function uploadCover(){const f=$('#coverFile').files[0];if(!f)return coverUrl;const ext=(f.name.split('.').pop()||'jpg').toLowerCase();const path=`covers/${crypto.randomUUID()}.${ext}`;const {error}=await supabase.storage.from('news').upload(path,f,{upsert:false,contentType:f.type,cacheControl:'31536000'});if(error)throw error;coverPath=path;coverUrl=supabase.storage.from('news').getPublicUrl(path).data.publicUrl;return coverUrl}
 async function saveNews(status){const n=collect();if(!n.title)return toast('Informe o título.');try{const image=await uploadCover();const row={title:n.title,slug:n.slug,subtitle:n.subtitle,content:n.content,cover_image:image,category:n.category,author:n.author,status,published_at:status==='published'?new Date().toISOString():null,seo_title:n.seo_title,seo_description:n.seo_description,og_image:image};let error;if(editingId){({error}=await supabase.from('news').update(row).eq('id',editingId))}else{const r=await supabase.from('news').insert(row).select('id').single();error=r.error;if(!error)editingId=r.data.id}if(error)throw error;toast(status==='published'?'Notícia publicada.':'Rascunho salvo.');await loadStats();await loadNews();show('news')}catch(e){toast('Não foi possível salvar: '+(e.message||'erro'))}}
 $('#draftBtn').onclick=()=>saveNews('draft');$('#newsForm').onsubmit=e=>{e.preventDefault();saveNews('published')};
 async function setNewsStatus(id,status){const {error}=await supabase.from('news').update({status,published_at:status==='published'?new Date().toISOString():null}).eq('id',id);if(error)toast('Erro ao alterar publicação.');else{toast(status==='published'?'Publicado.':'Despublicado.');loadNews()}}
@@ -49,5 +52,5 @@ $('#title').oninput=()=>{if(!$('#slug').dataset.manual)$('#slug').value=slugify(
 $$('[data-cmd]').forEach(b=>b.onclick=()=>{if(b.dataset.cmd==='createLink'){const u=prompt('URL do link:');if(u)document.execCommand('createLink',false,u)}else document.execCommand(b.dataset.cmd,false,b.dataset.value||null);$('#content').focus()});
 $('#newBtn').onclick=()=>{editingId=null;coverUrl=null;coverPath=null;$('#newsForm').reset();$('#content').innerHTML='';$('#slug').dataset.manual='';updateCover();show('editor')};
 $('#previewBtn').onclick=()=>{const n=collect(),w=window.open('','_blank');if(!w)return;w.document.write(`<html lang="pt-BR"><head><meta charset="utf-8"><title>${esc(n.title)}</title><style>body{margin:0;background:#070708;color:#f5f5f5;font:16px Arial;line-height:1.8}.wrap{max-width:850px;margin:auto;padding:50px 20px}small{color:#ed2733;font-weight:bold}h1{font:700 48px Georgia;line-height:1.05}img{max-width:100%;border-radius:12px}article{color:#c7cbd0}</style></head><body><main class="wrap"><small>${esc(n.category)}</small><h1>${esc(n.title)}</h1><p>${esc(n.subtitle)}</p>${coverUrl?`<img src="${esc(coverUrl)}">`:''}<article>${n.content}</article></main></body></html>`);w.document.close()};
-function init(){try{if(!window.supabase||!window.SUPABASE_URL||!window.SUPABASE_ANON_KEY)throw new Error('config');supabase=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);supabase.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT')requireAdmin()});requireAdmin()}catch(e){console.error(e);setStatus('Erro de configuração');loginMessage('O painel não conseguiu carregar a conexão com o Supabase. Recarregue a página.')}}
+function init(){try{if(!window.supabase||!window.SUPABASE_URL||!window.SUPABASE_ANON_KEY)throw new Error('config');supabase=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);requireAdmin()}catch(e){console.error(e);setStatus('Erro de configuração');loginMessage('O painel não conseguiu carregar a conexão com o Supabase. Recarregue a página.')}}
 init();
