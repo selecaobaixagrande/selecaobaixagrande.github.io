@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Painel Administrativo | Seleção de Baixa Grande</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="../1000001685.png"><link rel="stylesheet" href="admin.css?v=6">
+<link rel="icon" href="../1000001685.png"><link rel="stylesheet" href="admin.css?v=7">
 </head>
 <body>
 <div class="shell">
@@ -27,5 +27,5 @@
 <section id="news" class="view"><div class="section-head"><div><small>CMS</small><h2>Notícias</h2><p>Conteúdo armazenado no Supabase.</p></div><button type="button" class="primary" data-go="editor">+ Nova notícia</button></div><div id="newsList" class="news-list"></div></section>
 <section id="editor" class="view"><div class="section-head"><div><small>EDITOR</small><h2 id="editorTitle">Nova notícia</h2><p>Crie, revise e publique sem precisar alterar o GitHub.</p></div></div><form id="newsForm" class="editor-grid"><div class="panel form-panel"><label>Título<input id="title" required maxlength="160" placeholder="Título da notícia"></label><label>Subtítulo<textarea id="subtitle" maxlength="240" rows="2"></textarea></label><div class="two"><label>Categoria<select id="category"><option>Notícias</option><option>Futebol de Base</option><option>Seleção</option><option>Jogos</option><option>Comunicado Oficial</option></select></label><label>Autor<input id="author" placeholder="Seleção de Baixa Grande"></label></div><label>Capa<input id="coverFile" type="file" accept="image/*"></label><div class="cover-preview" id="coverPreview"><span>Prévia da capa</span></div></div><div class="panel form-panel"><label>Conteúdo</label><div class="toolbar"><button type="button" data-cmd="bold"><b>B</b></button><button type="button" data-cmd="italic"><i>I</i></button><button type="button" data-cmd="formatBlock" data-value="h2">H2</button><button type="button" data-cmd="formatBlock" data-value="p">P</button><button type="button" data-cmd="insertUnorderedList">• Lista</button><button type="button" data-cmd="createLink">Link</button></div><div id="content" class="editor" contenteditable="true" data-placeholder="Escreva a notícia aqui..."></div><div class="two"><label>SEO title<input id="seoTitle" maxlength="70"></label><label>Slug<input id="slug" maxlength="100"></label></div><label>SEO description<textarea id="seoDescription" maxlength="160" rows="2"></textarea></label><div class="actions"><button type="button" class="ghost" id="newBtn">Limpar</button><button type="button" class="ghost" id="previewBtn">Visualizar</button><button type="button" class="ghost" id="draftBtn">Salvar rascunho</button><button type="submit" class="primary">Publicar notícia</button></div></div></form></section>
 </div></main></div><div id="toast" class="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script src="supabase-config.js?v=6"></script><script src="admin.js?v=6"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js?v=7"></script><script src="admin.js?v=7"></script>
 </body></html>
