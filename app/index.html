@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#070708">
+  <meta name="description" content="Aplicativo oficial da Seleção de Baixa Grande.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="../1000001685.png" type="image/png">
+  <link rel="apple-touch-icon" href="../1000001685.png">
+  <title>Seleção de Baixa Grande — App Oficial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande">
+        <div><strong>SELEÇÃO</strong><span>BAIXA GRANDE</span></div>
+      </div>
+      <button class="icon-btn" id="installBtn" hidden aria-label="Instalar aplicativo">＋</button>
+    </header>
+
+    <main id="app" class="content">
+      <section class="hero card">
+        <div class="eyebrow">APP OFICIAL</div>
+        <h1>A Seleção de Baixa Grande<br><span>na palma da sua mão.</span></h1>
+        <p>Notícias, jogos, resultados, elenco e o Assistente da Seleção em um só lugar.</p>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Acesso rápido</h2></div>
+        <div class="grid">
+          <button class="tile" data-screen="news"><b>Notícias</b><small>Informações oficiais</small></button>
+          <button class="tile" data-screen="games"><b>Jogos</b><small>Agenda da Seleção</small></button>
+          <button class="tile" data-screen="results"><b>Resultados</b><small>Partidas encerradas</small></button>
+          <button class="tile" data-screen="squad"><b>Elenco</b><small>Atletas e categorias</small></button>
+        </div>
+      </section>
+
+      <section class="section">
+        <button class="assistant-card" data-screen="assistant">
+          <div class="assistant-icon">✦</div>
+          <div><strong>Assistente da Seleção</strong><p>Crie textos, notícias, legendas e publicações com a IA.</p></div>
+          <span>›</span>
+        </button>
+      </section>
+
+      <section id="screen" class="screen card" hidden></section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <button class="nav-item active" data-screen="home"><span>⌂</span><small>Início</small></button>
+      <button class="nav-item" data-screen="news"><span>▤</span><small>Notícias</small></button>
+      <button class="nav-item" data-screen="games"><span>◉</span><small>Jogos</small></button>
+      <button class="nav-item" data-screen="assistant"><span>✦</span><small>Assistente</small></button>
+    </nav>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
