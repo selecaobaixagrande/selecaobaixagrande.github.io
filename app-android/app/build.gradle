@@ -14,7 +14,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = "Selecao-De-Baixa-Grande-" + variant.name + ".apk"
+            outputFileName = "Seleção De Baixa Grande.apk"
         }
     }
 }
