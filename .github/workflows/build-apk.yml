@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+env:
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+  ANDROID_HOME: /usr/local/lib/android/sdk
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,22 +32,23 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: platform-tools
-
-      - name: Install Android SDK packages
+      - name: Prepare Android SDK
         run: |
-          yes | sdkmanager --licenses >/dev/null 2>&1 || true
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+          set -e
+          SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager"
+          fi
+          echo "Using sdkmanager: $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Verify toolchain
         run: |
           java -version
           gradle --version
-          adb --version
-          sdkmanager --version
+          "$ANDROID_SDK_ROOT/platform-tools/adb" --version
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --version 2>/dev/null || "$ANDROID_SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager" --version
 
       - name: Generate Gradle wrapper
         working-directory: app-android
