@@ -60,12 +60,12 @@ jobs:
 
       - name: Verify APK
         run: |
-          test -f app-android/app/build/outputs/apk/debug/app-debug.apk
-          ls -lh app-android/app/build/outputs/apk/debug/app-debug.apk
+          test -f app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk
+          ls -lh app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: selecao-baixa-grande-apk
-          path: app-android/app/build/outputs/apk/debug/app-debug.apk
+          path: app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk
           if-no-files-found: error
