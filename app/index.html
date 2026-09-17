@@ -9,7 +9,7 @@
   <link rel="icon" href="../1000001685.png" type="image/png">
   <link rel="apple-touch-icon" href="../1000001685.png">
   <title>Seleção de Baixa Grande — App Oficial</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <div class="app-shell">
@@ -18,14 +18,53 @@
       <button class="icon-btn" id="installBtn" hidden aria-label="Instalar aplicativo">＋</button>
     </header>
     <main id="app" class="content">
-      <section class="hero card"><div class="eyebrow">APP OFICIAL</div><h1>Seleção de Baixa Grande<br><span>na palma da sua mão.</span></h1><p>Notícias, jogos, resultados, elenco e o Assistente da Seleção em um só lugar.</p></section>
-      <section class="section"><div class="section-title"><h2>Acesso rápido</h2></div><div class="grid"><button class="tile" data-screen="news"><b>Notícias</b><small>Informações oficiais</small></button><button class="tile" data-screen="games"><b>Jogos</b><small>Agenda da Seleção</small></button><button class="tile" data-screen="results"><b>Resultados</b><small>Partidas encerradas</small></button><button class="tile" data-screen="squad"><b>Elenco</b><small>Atletas e categorias</small></button></div></section>
-      <section class="section"><button class="assistant-card" data-screen="assistant"><div class="assistant-icon">✦</div><div><strong>Assistente da Seleção</strong><p>Crie textos, notícias, legendas e publicações com a IA.</p></div><span>›</span></button></section>
+      <section class="hero card">
+        <div class="eyebrow">APP OFICIAL</div>
+        <h1>Seleção de Baixa Grande<br><span>na palma da sua mão.</span></h1>
+        <p>Notícias, jogos, resultados, elenco, categorias, galeria, avisos e informações oficiais em um só lugar.</p>
+        <div class="sync-line"><span id="syncDot"></span><span id="syncText">Sincronizando com o site...</span><button id="refreshBtn" class="mini-btn" type="button">Atualizar</button></div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Acesso rápido</h2></div>
+        <div class="grid">
+          <button class="tile" data-screen="news"><b>Notícias</b><small>Informações oficiais</small></button>
+          <button class="tile" data-screen="games"><b>Jogos</b><small>Agenda da Seleção</small></button>
+          <button class="tile" data-screen="results"><b>Resultados</b><small>Partidas encerradas</small></button>
+          <button class="tile" data-screen="squad"><b>Elenco</b><small>Atletas e categorias</small></button>
+          <button class="tile" data-screen="categories"><b>Categorias</b><small>Sub-13 • Sub-15 • Sub-17 • Sub-20</small></button>
+          <button class="tile" data-screen="gallery"><b>Galeria</b><small>Fotos e momentos</small></button>
+          <button class="tile" data-screen="lineups"><b>Escalações</b><small>Relacionados e titulares</small></button>
+          <button class="tile" data-screen="alerts"><b>Avisos</b><small>Comunicados oficiais</small></button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><h2>Últimas atualizações</h2></div>
+        <div id="homeUpdates" class="data-list compact-list"><div class="empty-state">Carregando informações do site...</div></div>
+      </section>
+
+      <section class="section">
+        <button class="assistant-card" data-screen="assistant"><div class="assistant-icon">✦</div><div><strong>Assistente da Seleção</strong><p>Área exclusiva para administração e produção de conteúdo.</p></div><span>›</span></button>
+      </section>
+
+      <section class="section">
+        <div class="grid">
+          <button class="tile" data-url="https://selecaobaixagrande.github.io/"><b>Site oficial</b><small>Abrir o portal completo</small></button>
+          <button class="tile" data-url="https://www.instagram.com/selecaobaixagrande/"><b>Instagram</b><small>@selecaobaixagrande</small></button>
+        </div>
+      </section>
+
       <section id="screen" class="screen card" hidden></section>
     </main>
-    <nav class="bottom-nav" aria-label="Navegação principal"><button class="nav-item active" data-screen="home"><span>⌂</span><small>Início</small></button><button class="nav-item" data-screen="news"><span>▤</span><small>Notícias</small></button><button class="nav-item" data-screen="games"><span>◉</span><small>Jogos</small></button><button class="nav-item" data-screen="assistant"><span>✦</span><small>Assistente</small></button></nav>
+    <nav class="bottom-nav" aria-label="Navegação principal">
+      <button class="nav-item active" data-screen="home"><span>⌂</span><small>Início</small></button>
+      <button class="nav-item" data-screen="news"><span>▤</span><small>Notícias</small></button>
+      <button class="nav-item" data-screen="games"><span>◉</span><small>Jogos</small></button>
+      <button class="nav-item" data-screen="more"><span>☰</span><small>Mais</small></button>
+    </nav>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
