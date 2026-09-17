@@ -1,0 +1,6 @@
+(()=>{
+const api=window.adminApi;
+if(!api)return;
+function make(table,method,body){let filters=[],params='',orderPart='';const q={select(cols='*'){method='GET';params='?select='+encodeURIComponent(cols);return q},eq(k,v){filters.push(`${k}=eq.${encodeURIComponent(v)}`);return q},order(k,opt={}){orderPart=`&order=${k}.${opt.ascending===false?'desc':'asc'}`;return q},single(){q._single=true;return q},maybeSingle(){q._single=true;q._maybe=true;return q},insert(row){method='POST';body=row;return q},update(row){method='PATCH';body=row;return q},delete(){method='DELETE';return q},then(resolve,reject){let path=`/rest/v1/${table}`;if(method==='GET')path+=(params+(filters.length?'&':'')+filters.join('&')+orderPart);else if(filters.length)path+='?'+filters.join('&');const headers={'Content-Type':'application/json'};if(method==='GET')headers.Prefer='return=representation';else headers.Prefer='return=representation';api(path,{method,headers,body:body?JSON.stringify(body):undefined}).then(data=>{if(q._single){const value=Array.isArray(data)?(data[0]||null):data;resolve({data:value,error:null})}else resolve({data,error:null})}).catch(error=>resolve({data:null,error}))}};return q}
+window.adminSupabase={from:table=>make(table)};
+})();
