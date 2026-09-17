@@ -1,0 +1,11 @@
+{
+  "name":"Seleção de Baixa Grande — App Oficial",
+  "short_name":"Seleção BG",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#070708",
+  "theme_color":"#070708",
+  "description":"Aplicativo oficial da Seleção de Baixa Grande.",
+  "icons":[{"src":"../1000001685.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"../1000001685.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]
+}
