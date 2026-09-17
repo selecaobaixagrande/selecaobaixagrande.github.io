@@ -169,4 +169,4 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshAll()});
 window.addEventListener('online',refreshAll);
-loadHome();setupLiveSync();setSync(true,'Sincronizado com o site');
+loadHome();setupLiveSync();setSync(true,'Sincronizado com o site');setInterval(()=>{if(document.visibilityState==='visible')refreshAll()},60000);
