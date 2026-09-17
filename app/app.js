@@ -6,16 +6,52 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPro
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 const content={news:['Notícias','Confira as notícias oficiais da Seleção de Baixa Grande.'],games:['Jogos','Próximos jogos, horários, locais e competições.'],results:['Resultados','Resultados oficiais e placares das partidas.'],squad:['Elenco','Atletas e categorias da Seleção de Baixa Grande.']};
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function fmtDate(v){if(!v)return '';const d=new Date(v+'T00:00:00');return Number.isNaN(d.getTime())?'':d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'})}
+function fmtTime(v){return v?String(v).slice(0,5):''}
+function image(src,alt=''){return src?`<img class="data-image" src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.remove()">`:''}
 async function loadData(name){
- if(!supabaseClient){screen.innerHTML+='<div class="empty-state">Conexão com o banco indisponível.</div>';return}
- let data,error;
- if(name==='news'){({data,error}=await supabaseClient.from('noticias').select('id,titulo,resumo,imagem,criado_em,publicado').eq('publicado',true).order('criado_em',{ascending:false}).limit(20))}
- if(name==='games'||name==='results'){let q=supabaseClient.from('jogos').select('id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario,escudo_adversario').order('data_jogo',{ascending:true}).limit(30);if(name==='games')q=q.neq('status','encerrado');else q=q.eq('status','encerrado');({data,error}=await q)}
- if(name==='squad'){({data,error}=await supabaseClient.from('Atletas').select('id,nome,categoria,posicao,numero_camisa,foto,status_atleta,status').order('nome',{ascending:true}).limit(100))}
- if(error||!data?.length){screen.insertAdjacentHTML('beforeend',`<div class="empty-state">${error?'Não foi possível carregar os dados agora.':'Nenhum conteúdo oficial publicado ainda.'}</div>`);return}
+ if(!supabaseClient){screen.insertAdjacentHTML('beforeend','<div class="empty-state">Conexão com o banco indisponível.</div>');return}
+ let data=null,error=null;
+ if(name==='news'){
+   ({data,error}=await supabaseClient.from('noticias').select('id,titulo,resumo,imagem,criado_em,publicado').eq('publicado',true).order('criado_em',{ascending:false}).limit(20));
+ }
+ if(name==='games'||name==='results'){
+   let q=supabaseClient.from('jogos').select('id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario,escudo_adversario').order('data_jogo',{ascending:name==='games'}).limit(30);
+   q=name==='games'?q.neq('status','encerrado'):q.eq('status','encerrado');
+   ({data,error}=await q);
+ }
+ if(name==='squad'){
+   ({data,error}=await supabaseClient.from('app_elenco_publico').select('id,nome,categoria,posicao,numero_camisa,foto,instagram,jogos,titularidades,gols,assistencias,cartoes_amarelos,cartoes_vermelhos').order('nome',{ascending:true}).limit(100));
+ }
+ if(error){screen.insertAdjacentHTML('beforeend',`<div class="empty-state">Não foi possível carregar os dados agora.</div>`);return}
+ if(!data?.length){screen.insertAdjacentHTML('beforeend','<div class="empty-state">Nenhum conteúdo oficial publicado ainda.</div>');return}
  const box=document.createElement('div');box.className='data-list';
- data.forEach(item=>{const card=document.createElement('article');card.className='data-card';if(name==='news')card.innerHTML=`${item.imagem?`<img src="${esc(item.imagem)}" alt="">`:''}<div><small>NOTÍCIA OFICIAL</small><h3>${esc(item.titulo)}</h3><p>${esc(item.resumo||'')}</p></div>`;else if(name==='squad')card.innerHTML=`${item.foto?`<img src="${esc(item.foto)}" alt="${esc(item.nome)}">`:''}<div><small>${esc(item.categoria||'ELENCO')}</small><h3>${esc(item.nome)}</h3><p>${esc(item.posicao||'Atleta')}${item.numero_camisa?` • Camisa ${esc(item.numero_camisa)}`:''}</p></div>`;else card.innerHTML=`<div><small>${esc(item.competicao||'JOGO')}</small><h3>Baixa Grande × ${esc(item.adversario)}</h3><p>${esc(item.data_jogo||'')} ${esc(item.horario||'')} • ${esc(item.local||'')}</p>${name==='results'?`<strong>${esc(item.gols_baixa_grande??'-')} × ${esc(item.gols_adversario??'-')}</strong>`:''}</div>`;box.appendChild(card)});screen.appendChild(box)
+ data.forEach(item=>{
+   const card=document.createElement('article');card.className='data-card';
+   if(name==='news'){
+     card.innerHTML=`${image(item.imagem,item.titulo)}<div class="data-body"><small>NOTÍCIA OFICIAL</small><h3>${esc(item.titulo)}</h3>${item.resumo?`<p>${esc(item.resumo)}</p>`:''}<span>${fmtDate(item.criado_em)}</span></div>`;
+   }else if(name==='squad'){
+     const stats=[item.jogos!=null?`${item.jogos} jogos`:null,item.gols!=null?`${item.gols} gols`:null,item.assistencias!=null?`${item.assistencias} assist.`:null].filter(Boolean).join(' • ');
+     card.innerHTML=`${image(item.foto,item.nome)}<div class="data-body"><small>${esc(item.categoria||'ELENCO')}</small><h3>${esc(item.nome)}</h3><p>${esc(item.posicao||'Atleta')}${item.numero_camisa!=null?` • Camisa ${esc(item.numero_camisa)}`:''}</p>${stats?`<span>${esc(stats)}</span>`:''}</div>`;
+   }else{
+     const score=name==='results'?`<strong class="data-score">${esc(item.gols_baixa_grande??'-')} × ${esc(item.gols_adversario??'-')}</strong>`:'';
+     const status=item.status==='ao_vivo'?'AO VIVO':(item.status==='encerrado'?'ENCERRADO':'PRÓXIMO JOGO');
+     card.innerHTML=`${item.escudo_adversario?image(item.escudo_adversario,item.adversario):''}<div class="data-body"><small>${esc(item.competicao||'JOGO')} • ${status}</small><h3>Baixa Grande × ${esc(item.adversario)}</h3><p>${fmtDate(item.data_jogo)}${item.horario?` • ${fmtTime(item.horario)}`:''}${item.local?` • ${esc(item.local)}`:''}</p>${score}</div>`;
+   }
+   box.appendChild(card);
+ });
+ screen.appendChild(box);
 }
-async function openScreen(name){if(name==='home'){screen.hidden=true;document.querySelector('.hero').hidden=false;document.querySelectorAll('.section').forEach(x=>x.hidden=false)}else if(name==='assistant'){document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><form class="chat-form" id="chatForm"><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}))}else{document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;screen.innerHTML=`<button class="back" data-screen="home">‹ Voltar</button><h2>${content[name][0]}</h2><p>${content[name][1]}</p><div class="empty-state">Carregando conteúdo oficial…</div>`;await loadData(name);screen.querySelector('.empty-state')?.remove()}document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.screen===name))}
+async function openScreen(name){
+ if(name==='home'){screen.hidden=true;document.querySelector('.hero').hidden=false;document.querySelectorAll('.section').forEach(x=>x.hidden=false)}
+ else if(name==='assistant'){
+   document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;
+   screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><form class="chat-form" id="chatForm"><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';
+   document.getElementById('chatForm').addEventListener('submit',sendChat);document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));
+ }else{
+   document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;screen.innerHTML=`<button class="back" data-screen="home">‹ Voltar</button><h2>${content[name][0]}</h2><p>${content[name][1]}</p>`;await loadData(name);
+ }
+ document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
+}
 async function sendChat(e){e.preventDefault();const input=document.getElementById('chatInput'),text=input.value.trim();if(!text)return;const chat=document.getElementById('chat');const me=document.createElement('div');me.className='bubble me';me.textContent=text;chat.appendChild(me);input.value='';const loading=document.createElement('div');loading.className='bubble';loading.textContent='Preparando resposta…';chat.appendChild(loading);try{const{data,error}=await supabaseClient.functions.invoke('selecaobot',{body:{message:text}});if(error)throw error;loading.textContent=data?.answer||'Não recebi uma resposta.'}catch(err){loading.textContent='Não foi possível conectar ao Assistente agora.'}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');if(b)openScreen(b.dataset.screen)});
