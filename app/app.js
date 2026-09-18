@@ -39,7 +39,8 @@ async function loadDashboard(){
     count('Atletas',x=>x.eq('status','Ativo')),
     count('treinos',x=>x.gte('data_treino',today()).lt('data_treino',new Date(Date.now()+8*86400000).toISOString().slice(0,10))),
     count('chamadas',x=>x.eq('status','aberta')),
-    count('presencas_treino',x=>x.eq('status','presente')),\n    count('presencas_treino'),
+    count('presencas_treino',x=>x.eq('status','presente')),
+    count('presencas_treino'),
     count('avisos_internos',x=>x.eq('ativo',true)),
     q('treinos','id,data_treino,horario,local,objetivo,status,categoria_id',x=>x.gte('data_treino',today()).neq('status','cancelado').order('data_treino').order('horario').limit(1))
   ]);
@@ -223,7 +224,8 @@ async function openScreen(name){
   else if(name==='notes')await renderNotes();
   else if(name==='notices')await renderNotices();
   else if(name==='lineups')await renderLineups();
-  else if(name==='admin'&&role==='admin')await renderAdmin();\n  else if(name==='categories-admin'&&role==='admin')await renderCategoriesAdmin();
+  else if(name==='admin'&&role==='admin')await renderAdmin();
+  else if(name==='categories-admin'&&role==='admin')await renderCategoriesAdmin();
   else if(name==='more')await renderMore();
   else return;
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
