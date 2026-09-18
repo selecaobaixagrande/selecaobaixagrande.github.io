@@ -462,22 +462,8 @@ async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveC
 function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen)}});
 document.getElementById('logoutBtn').onclick=signOut;
-if(supabaseClient)supabaseClient.auth.onAuthStateChange((e,s)=>{
-  if(e!=='SIGNED_IN'||!s||authHandling)return;
-  const uid=s.user?.id;
-  if(uid&&authHandledUser===uid)return;
-  authHandledUser=uid;
-  // IMPORTANTE: não faça chamadas async do Supabase dentro do callback.
-  // O SDK pode deadlockar chamadas seguintes quando isso acontece.
-  setTimeout(()=>{
-    if(!document.getElementById('appShell')?.hidden)return;
-    authHandling=true;
-    showAuthenticatedApp(s).catch(err=>{
-      console.error('Falha ao processar sessão autenticada:',err);
-      showLogin();
-    }).finally(()=>{authHandling=false});
-  },0);
-});
+// O login é controlado diretamente por bindLogin(). Não executamos chamadas
+// assíncronas em onAuthStateChange, evitando corrida/deadlock na entrada.
 async function boot(){
   if(!supabaseClient){showLogin();return}
   document.body.classList.add('auth-locked');
