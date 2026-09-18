@@ -150,25 +150,39 @@ async function renderCalls(){
 }
 
 async function callForm(cats,ats,x=null){
-  shell(x?"Editar chamada":"Nova chamada","Todos os atletas ativos serão incluídos automaticamente.",
+  shell(x?"Editar chamada":"Nova chamada","Escolha categoria e grupo antes de convocar os atletas.",
     '<form id="callForm" class="form-grid">'+
     formField("Tipo",'<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+
+    formField("Categoria",'<select name="categoria_id">'+catOptions(cats,x?.categoria_id||"")+'</select>')+
+    formField("Grupo",'<select name="grupo"><option value="">Sem grupo</option><option value="A">Grupo A</option><option value="B">Grupo B</option><option value="C">Grupo C</option><option value="D">Grupo D</option></select>')+
     formField("Data",'<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+
     formField("Horário",'<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
     formField("Local",'<input name="local" value="'+esc(x?.local||"")+'">')+
     formField("Observações",'<textarea name="observacoes">'+esc(x?.observacoes||"")+'</textarea>')+
+    '<div class="empty-state">Os atletas são carregados pela categoria escolhida. O grupo fica registrado na chamada para a organização da comissão.</div>'+
     actions()+"</form>");
+
+  const typeEl=document.querySelector("[name=tipo]");
+  const catEl=document.querySelector("[name=categoria_id]");
+  const groupEl=document.querySelector("[name=grupo]");
+  typeEl.value=x?.tipo||"treino";
+  groupEl.value=x?.grupo||"";
 
   document.getElementById("callForm").onsubmit=async e=>{
     e.preventDefault();
     const f=new FormData(e.target);
-    const active=ats.filter(a=>String(a.status||"Ativo").toLowerCase()==="ativo");
-    if(!active.length)return alert("Nenhum atleta ativo foi encontrado.");
+    const categoria=f.get("categoria_id")||null;
+    const active=ats.filter(a=>{
+      const okStatus=String(a.status||"Ativo").toLowerCase()==="ativo";
+      const okCat=!categoria||String(a.categoria||"")===String(cats.find(c=>c.id===categoria)?.nome||categoria);
+      return okStatus&&okCat;
+    });
+    if(!active.length)return alert("Nenhum atleta ativo foi encontrado para a categoria selecionada.");
 
     const row={
       tipo:f.get("tipo"),
-      categoria_id:null,
-      grupo:null,
+      categoria_id:categoria,
+      grupo:f.get("grupo")||null,
       data_chamada:f.get("data_chamada"),
       horario:f.get("horario")||null,
       local:f.get("local")||null,
@@ -180,7 +194,8 @@ async function callForm(cats,ats,x=null){
     if(x){
       const r=await upd("chamadas",id,row);
       if(r.error)return alert(r.error.message);
-      await supabaseClient.from("chamada_atletas").delete().eq("chamada_id",id);
+      const delLinks=await supabaseClient.from("chamada_atletas").delete().eq("chamada_id",id);
+      if(delLinks.error)return alert("Não foi possível atualizar os atletas da chamada: "+delLinks.error.message);
     }else{
       const r=await save("chamadas",row);
       if(r.error)return alert(r.error.message);
@@ -190,10 +205,8 @@ async function callForm(cats,ats,x=null){
     const links=active.map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"}));
     const rr=await supabaseClient.from("chamada_atletas").insert(links);
     if(rr.error)return alert("A chamada não foi salva: "+rr.error.message);
-    alert("Chamada salva com "+links.length+" atleta(s) ativo(s).");
     renderCalls();
   };
-  document.querySelector("[name=tipo]").value=x?.tipo||"treino";
 }
 
 async function callDetail(id,all,ats){
