@@ -25,3 +25,34 @@ body.auth-locked{overflow:hidden}
 @keyframes splashPulse{0%,100%{transform:scale(.9);opacity:.55}50%{transform:scale(1.12);opacity:1}}
 @keyframes loadLine{0%{transform:translateX(-120%)}100%{transform:translateX(250%)}}
 @keyframes loginIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* POLIMENTO VISUAL — v17 */
+:root{--red:#b5121b;--red2:#ed2733;--black:#060607;--panel:#0e0e10;--line:rgba(255,255,255,.075)}
+body{background:radial-gradient(circle at 50% -10%,rgba(181,18,27,.10),transparent 32%),var(--black)}
+.app-shell{animation:appReveal .55s ease both}
+.topbar{height:64px;border-bottom:1px solid var(--line);background:rgba(6,6,7,.82);backdrop-filter:blur(20px);box-shadow:0 8px 35px rgba(0,0,0,.18)}
+.brand img{transition:transform .35s ease,filter .35s ease}.brand:hover img{transform:scale(1.05);filter:drop-shadow(0 0 12px rgba(181,18,27,.35))}
+.hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.075);box-shadow:0 24px 70px rgba(0,0,0,.22)}
+.hero:before{content:"";position:absolute;width:240px;height:240px;right:-90px;top:-100px;border-radius:50%;background:rgba(181,18,27,.11);filter:blur(2px);animation:heroOrb 7s ease-in-out infinite}
+.hero>*{position:relative;z-index:1}
+.tile{position:relative;overflow:hidden;transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease}
+.tile:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.045) 50%,transparent 80%);transform:translateX(-120%);transition:transform .55s ease}
+.tile:hover{transform:translateY(-3px);border-color:rgba(237,39,51,.32);box-shadow:0 14px 34px rgba(0,0,0,.22)}
+.tile:hover:before{transform:translateX(120%)}
+.tile b{position:relative}
+.bottom-nav{box-shadow:0 -12px 35px rgba(0,0,0,.28)}
+.nav-item{transition:color .2s ease,transform .2s ease}.nav-item:active{transform:scale(.94)}.nav-item.active span{filter:drop-shadow(0 0 7px rgba(237,39,51,.45))}
+.login-card{position:relative;overflow:hidden;border-color:rgba(255,255,255,.10);box-shadow:0 28px 90px rgba(0,0,0,.55)}
+.login-card:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--red2),transparent);animation:loginLine 3s ease-in-out infinite}
+.login-crest{animation:loginCrest .9s cubic-bezier(.2,.8,.2,1) both}
+.login-form input{transition:border-color .2s,box-shadow .2s,transform .2s}.login-form input:focus{box-shadow:0 0 0 3px rgba(181,18,27,.10);transform:translateY(-1px)}
+.login-form button{position:relative;overflow:hidden;transition:transform .2s,filter .2s,box-shadow .2s}.login-form button:hover{filter:brightness(1.08);box-shadow:0 10px 24px rgba(181,18,27,.22)}.login-form button:active{transform:scale(.98)}
+.splash-crest{animation:crestEntrance 1.15s cubic-bezier(.2,.8,.2,1) both}
+.splash-screen:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.035) 50%,transparent 65%);transform:translateX(-100%);animation:splashSweep 2.2s .25s ease-in-out infinite}
+.splash-crest,.splash-title,.splash-loader{z-index:2}
+@keyframes appReveal{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes heroOrb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-18px,12px) scale(1.08)}}
+@keyframes splashSweep{0%{transform:translateX(-100%)}45%,100%{transform:translateX(100%)}}
+@keyframes loginLine{0%,100%{opacity:.35;transform:scaleX(.35)}50%{opacity:1;transform:scaleX(1)}}
+@keyframes loginCrest{from{opacity:0;transform:scale(.82) translateY(-8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
