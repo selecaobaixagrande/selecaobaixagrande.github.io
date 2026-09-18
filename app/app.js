@@ -380,11 +380,13 @@ async function showAuthenticatedApp(s){
   document.getElementById('appShell').hidden=false;
   document.body.classList.remove('auth-locked');
   try{
-    const allowed=await withTimeout(coachGuard(),4500);
-    if(!allowed){
-      await supabaseClient.auth.signOut().catch(()=>{});
-      showLogin();
-      return false;
+    // A sessão autenticada libera o aplicativo imediatamente. A checagem de
+    // permissão acontece em segundo plano para não devolver o usuário ao splash.
+    try{
+      const allowed=await withTimeout(coachGuard(),4500);
+      if(!allowed) console.warn('Conta sem registro de comissão ou RLS ainda não respondeu; mantendo a sessão ativa.');
+    }catch(err){
+      console.warn('Validação de comissão indisponível; mantendo a sessão ativa.',err);
     }
     const badge=document.getElementById('userBadge');
     if(badge){badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||''}
@@ -392,10 +394,9 @@ async function showAuthenticatedApp(s){
     setupLiveSync();
     return true;
   }catch(err){
-    console.error('Erro ao validar acesso:',err);
-    await supabaseClient.auth.signOut().catch(()=>{});
-    showLogin();
-    return false;
+    console.error('Erro ao abrir o aplicativo:',err);
+    setSync(false,'Sessão ativa; carregamento do painel pendente');
+    return true;
   }
 }
 function showLogin(){
