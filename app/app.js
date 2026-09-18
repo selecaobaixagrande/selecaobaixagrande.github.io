@@ -502,18 +502,14 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');
 document.getElementById('logoutBtn').onclick=signOut;
 // O login é controlado diretamente por bindLogin(). Não executamos chamadas
 // assíncronas em onAuthStateChange, evitando corrida/deadlock na entrada.
-async function boot(){
-  if(!supabaseClient){showLogin();return}
+function boot(){
   document.body.classList.add('auth-locked');
-  try{
-    // O login só fica disponível depois que a verificação inicial de sessão
-    // terminou. Isso evita concorrência entre getSession() e signInWithPassword().
-    const result=await withTimeout(supabaseClient.auth.getSession(),3500);
-    const s=result?.data?.session||null;
-    if(s&&await showAuthenticatedApp(s))return;
-  }catch(err){
-    console.error('Falha ao restaurar sessão:',err);
-  }
-  showLogin();
+
+  // A tela de entrada não pode depender de Supabase, sessão persistida ou
+  // qualquer consulta de rede. Ela é apenas uma transição visual para o login.
+  // Assim, uma falha/latência do Supabase jamais deixa o splash preso.
+  window.setTimeout(()=>{
+    try{showLogin()}catch(err){console.error('Falha ao abrir a tela de login:',err)}
+  },900);
 }
-boot().catch(err=>{console.error('Falha no boot:',err);showLogin()});
+boot();
