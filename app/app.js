@@ -194,7 +194,7 @@ async function callDetail(id,all,ats){
 
   const categoryHtml=orderedCategories.map(cat=>{
     const rows=grouped[cat].sort((u,v)=>String(u.a.nome||"").localeCompare(String(v.a.nome||""),"pt-BR"));
-    return '<section class="call-category"><div class="section-title"><h2>'+esc(cat)+'</h2><small>'+rows.length+" atleta(s)</small></div><div class="data-list">'+
+    return '<section class="call-category"><div class="section-title"><h2>'+esc(cat)+'</h2><small>'+rows.length+' atleta(s)</small></div><div class="data-list">'+
       rows.map(({s,a})=>'<article class="data-card call-athlete-row" data-row="'+s.id+'"><div class="data-body"><h3>'+esc(a.nome||"Atleta")+
       '</h3><div class="attendance-actions"><button type="button" class="attendance-btn present '+(s.status==="presente"?"selected":"")+'" data-presente="'+s.id+'">✓ PRESENTE</button>'+
       '<button type="button" class="attendance-btn absent '+(s.status==="faltou"?"selected":"")+'" data-faltou="'+s.id+'">✕ FALTOU</button></div></div></article>').join("")+
