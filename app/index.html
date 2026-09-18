@@ -1,95 +1,87 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#070708">
-  <meta name="description" content="Aplicativo interno oficial da comissão técnica da Seleção de Baixa Grande.">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="../1000001685.png" type="image/png">
-  <link rel="apple-touch-icon" href="../1000001685.png">
-  <title>Seleção de Baixa Grande — Comissão Técnica</title>
-  <link rel="stylesheet" href="style.css?v=36">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070708">
+<meta name="description" content="Aplicativo interno oficial da comissão técnica da Seleção de Baixa Grande.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="../1000001685.png" type="image/png">
+<link rel="apple-touch-icon" href="../1000001685.png">
+<title>Seleção de Baixa Grande — Comissão Técnica</title>
+<link rel="stylesheet" href="style.css?v=37">
 </head>
 <body>
-  <div id="authGate" class="auth-gate">
-    <div id="splashScreen" class="splash-screen">
-      <div class="splash-glow"></div>
-      <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="splash-crest">
-      <div class="splash-title">SELEÇÃO<br><span>BAIXA GRANDE</span></div>
-      <div class="splash-loader"><span></span></div>
-    </div>
-    <div id="loginScreen" class="login-screen" hidden>
-      <div class="login-card">
-        <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="login-crest">
-        <div class="eyebrow">COMISSÃO TÉCNICA</div>
-        <h1>Acesso interno</h1>
-        <p>Entre com sua conta autorizada de professor, treinador ou administrador.</p>
-        <form id="globalLoginForm" class="login-form">
-          <input id="globalLoginEmail" type="email" autocomplete="username" placeholder="E-mail" required>
-          <input id="globalLoginPassword" type="password" autocomplete="current-password" placeholder="Senha" required>
-          <button type="submit">Entrar</button>
-          <div id="globalLoginError" class="login-error" hidden></div>
-        </form>
-        <small class="login-note">Ambiente privado. Dados da comissão não são publicados.</small>
-      </div>
+<div id="authGate" class="auth-gate">
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-glow"></div>
+    <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="splash-crest">
+    <div class="splash-title">SELEÇÃO<br><span>BAIXA GRANDE</span></div>
+    <div class="splash-loader"><span></span></div>
+  </div>
+  <div id="loginScreen" class="login-screen" hidden>
+    <div class="login-card">
+      <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="login-crest">
+      <div class="eyebrow">COMISSÃO TÉCNICA</div>
+      <h1>Acesso interno</h1>
+      <p>Entre com sua conta autorizada de professor, treinador ou administrador.</p>
+      <form id="globalLoginForm" class="login-form">
+        <input id="globalLoginEmail" type="email" autocomplete="username" placeholder="E-mail" required>
+        <input id="globalLoginPassword" type="password" autocomplete="current-password" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+        <div id="globalLoginError" class="login-error" hidden></div>
+      </form>
+      <small class="login-note">Ambiente privado. Dados da comissão não são publicados.</small>
     </div>
   </div>
+</div>
 
-  <div class="app-shell" id="appShell" hidden>
-    <header class="topbar">
-      <div class="brand"><img src="../1000001685.png" alt="Escudo"><div><strong>SELEÇÃO</strong><span>BAIXA GRANDE</span></div></div>
-      <div class="topbar-actions"><span id="userBadge" class="user-badge">Equipe</span><button class="icon-btn" id="logoutBtn" aria-label="Sair">×</button></div>
-    </header>
-
-    <main id="app" class="content">
-      <section class="hero card">
-        <div class="eyebrow">ÁREA RESTRITA</div>
-        <h1>Painel da<br><span>comissão técnica.</span></h1>
-        <p>Gestão interna de atletas, treinos, chamadas, presença e preparação da equipe.</p>
-        <div class="sync-line"><span id="syncDot" class="sync-ok"></span><span id="syncText">Banco conectado</span></div>
-      </section>
-      <section id="dashboard" class="section"></section>
-      <section id="screen" class="screen card" hidden></section>
-    </main>
-
-    <nav class="bottom-nav" aria-label="Navegação principal">
-      <button class="nav-item active" data-screen="home"><span>⌂</span><small>Painel</small></button>
-      <button class="nav-item" data-screen="athletes"><span>⚽</span><small>Atletas</small></button>
-      <button class="nav-item" data-screen="calls"><span>✓</span><small>Chamadas</small></button>
-      <button class="nav-item" data-screen="more"><span>☰</span><small>Equipe</small></button>
-    </nav>
+<div class="app-shell" id="appShell" hidden>
+<header class="topbar">
+  <div class="brand">
+    <img src="../1000001685.png" alt="Escudo">
+    <div><strong>Seleção de Baixa Grande</strong><span>Aplicativo da Comissão Técnica</span></div>
   </div>
+  <div class="topbar-actions">
+    <span id="userBadge" class="user-badge">Treinador</span>
+    <button class="icon-btn" id="logoutBtn" aria-label="Sair">⚙</button>
+  </div>
+</header>
 
-  <!-- A transição splash → login é controlada pelo boot do app, evitando corrida com getSession(). -->
-  <script>
-    // Carrega o Supabase antes do aplicativo, com uma segunda CDN como fallback.
-    (function(){
-      var sources=[
-        'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-        'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
-      ];
-      function loadApp(){
-        var s=document.createElement('script');
-        s.src='app.js?v=40';
-        s.async=false;
-        s.onerror=function(){
-          var e=document.getElementById('globalLoginError');
-          if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}
-        };
-        document.body.appendChild(s);
-      }
-      function load(i){
-        if(i>=sources.length){loadApp();return}
-        var s=document.createElement('script');
-        s.src=sources[i];
-        s.async=false;
-        s.onload=loadApp;
-        s.onerror=function(){load(i+1)};
-        document.head.appendChild(s);
-      }
-      load(0);
-    })();
-  </script>
-  </body>
+<main id="app" class="content">
+  <section class="home-hero">
+    <div class="home-hero-copy">
+      <span class="eyebrow">COMISSÃO TÉCNICA</span>
+      <h1>Disciplina hoje,<br><span>resultados amanhã.</span></h1>
+      <p>Organização, preparação e evolução da Seleção de Baixa Grande.</p>
+    </div>
+    <div class="home-hero-photo">
+      <img alt="Campo de futebol ao pôr do sol" src="data:image/jpeg;base64,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">
+    </div>
+  </section>
+
+  <section id="dashboard" class="section"></section>
+  <section id="screen" class="screen card" hidden></section>
+</main>
+
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <button class="nav-item active" data-screen="home"><span>⌂</span><small>Início</small></button>
+  <button class="nav-item" data-screen="calls"><span>✓</span><small>Chamadas</small></button>
+  <button class="nav-item" data-screen="athletes"><span>♙</span><small>Atletas</small></button>
+  <button class="nav-item" data-screen="training"><span>▦</span><small>Treinos</small></button>
+  <button class="nav-item" data-screen="games"><span>⚽</span><small>Jogos</small></button>
+  <button class="nav-item" data-screen="more"><span>•••</span><small>Mais</small></button>
+</nav>
+</div>
+
+<script>
+(function(){
+  var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'];
+  var appStarted=false;
+  function loadApp(){if(appStarted)return;appStarted=true;var s=document.createElement('script');s.src='app.js?v=41';s.async=false;s.onerror=function(){var e=document.getElementById('globalLoginError');if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}};document.body.appendChild(s)}
+  function load(i){if(i>=sources.length){loadApp();return}var done=false;var timer=setTimeout(function(){if(done)return;done=true;load(i+1)},1800);var s=document.createElement('script');s.src=sources[i];s.async=false;s.onload=function(){if(done)return;done=true;clearTimeout(timer);loadApp()};s.onerror=function(){if(done)return;done=true;clearTimeout(timer);load(i+1)};document.head.appendChild(s)}
+  load(0);
+})();
+</script>
+</body>
 </html>
