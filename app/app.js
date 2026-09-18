@@ -1,419 +1,230 @@
 const SUPABASE_URL='https://lvxwziztdngntoqypzga.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY';
-const SITE_URL='https://selecaobaixagrande.github.io/';
-const INSTAGRAM_URL='https://www.instagram.com/selecaobaixagrande/';
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'selecaobg-app-auth'}})||null;
-const app=document.getElementById('app'),screen=document.getElementById('screen'),installBtn=document.getElementById('installBtn'),homeUpdates=document.getElementById('homeUpdates');
-let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHistory=[];
+const app=document.getElementById('app'),dashboard=document.getElementById('dashboard'),screen=document.getElementById('screen');
+let session=null,role='coach',authBusy=false,loginBound=false,liveChannel=null;
 
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
-installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=20').catch(()=>{});
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmtDate=v=>v?new Date(v+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}):'';
+const fmtTime=v=>v?String(v).slice(0,5):'';
+const empty=m=>'<div class="empty-state">'+esc(m||'Nenhum registro encontrado.')+'</div>';
+const today=()=>new Date().toISOString().slice(0,10);
+const monthWeekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-d.getDay());return d.toISOString().slice(0,10)};
+function setSync(ok,text){const d=document.getElementById('syncDot'),t=document.getElementById('syncText');if(d)d.className=ok?'sync-ok':'sync-off';if(t)t.textContent=text}
 
-const content={
- news:['Notícias','As notícias publicadas no portal oficial aparecem aqui automaticamente.'],
- games:['Jogos','Agenda, horários, locais e competições.'],
- results:['Resultados','Partidas encerradas e placares oficiais.'],
- squad:['Elenco','Atletas publicados oficialmente e suas categorias.'],
- categories:['Categorias','Sub-13, Sub-15, Sub-17 e Sub-20.'],
- gallery:['Galeria','Fotos publicadas no acervo oficial.'],
- lineups:['Escalações','Formações, titulares, reservas e capitães.'],
- alerts:['Avisos','Comunicados e informações importantes.']
-};
+async function q(table,select='*',builder){let x=supabaseClient.from(table).select(select);if(builder)x=builder(x);return await x}
+async function save(table,row){return await supabaseClient.from(table).insert(row).select().single()}
+async function upd(table,id,row){return await supabaseClient.from(table).update(row).eq('id',id)}
+async function del(table,id){return await supabaseClient.from(table).delete().eq('id',id)}
+async function count(table,builder){let x=supabaseClient.from(table).select('*',{count:'exact',head:true});if(builder)x=builder(x);return await x}
 
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function fmtDate(v){if(!v)return '';const d=new Date(v);return Number.isNaN(d.getTime())?'':d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'})}
-function fmtTime(v){return v?String(v).slice(0,5):''}
-function image(src,alt=''){return src?'<img class="data-image" src="'+esc(src)+'" alt="'+esc(alt)+'" loading="lazy" onerror="this.remove()">':''}
-function setSync(ok,text){const dot=document.getElementById('syncDot'),label=document.getElementById('syncText');if(dot)dot.className=ok?'sync-ok':'sync-off';if(label)label.textContent=text}
-
-async function queryTable(table,select,filter=''){
-  if(!supabaseClient)return {data:null,error:new Error('Banco indisponível')};
-  let q=supabaseClient.from(table).select(select);
-  if(filter)q=filter(q);
-  return await q;
-}
-
-async function getNews(limit=10){
-  const r=await queryTable('noticias','id,titulo,resumo,conteudo,imagem,criado_em,publicado',q=>q.eq('publicado',true).order('criado_em',{ascending:false}).limit(limit));
-  if(r.error)return r;
-  return r;
-}
-async function getGames(limit=20){
-  return await queryTable('jogos','id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario,escudo_adversario,destaque,observacoes,criado_em',q=>q.order('data_jogo',{ascending:true}).limit(limit));
-}
-
-function empty(msg='Nenhum conteúdo oficial publicado ainda.'){return '<div class="empty-state">'+esc(msg)+'</div>'}
-
-async function loadData(name){
-  if(!supabaseClient){screen.insertAdjacentHTML('beforeend',empty('Conexão com o banco indisponível.'));return}
-  let r={data:null,error:null};
-  if(name==='news')r=await getNews(30);
-  if(name==='games')r=await queryTable('jogos','id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario,escudo_adversario,destaque,observacoes,criado_em',q=>q.in('status',['agendado','ao_vivo']).order('data_jogo',{ascending:true}).limit(30));
-  if(name==='results')r=await queryTable('jogos','id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario,escudo_adversario,destaque,observacoes,criado_em',q=>q.eq('status','encerrado').order('data_jogo',{ascending:false}).limit(30));
-  if(name==='squad')r=await queryTable('atletas_publicos','id,nome,categoria,posicao,numero_camisa,foto,instagram,jogos,titularidades,gols,assistencias,cartoes_amarelos,cartoes_vermelhos',q=>q.order('categoria').order('nome').limit(100));
-  if(name==='gallery')r=await queryTable('galeria','id,titulo,descricao,imagem_url,ativo,criado_em',q=>q.eq('ativo',true).order('criado_em',{ascending:false}).limit(100));
-  if(name==='alerts')r=await queryTable('avisos','id,titulo,texto,ativo,criado_em',q=>q.eq('ativo',true).order('criado_em',{ascending:false}).limit(30));
-  if(name==='lineups')r=await queryTable('escalacoes','id,jogo_id,categoria,formacao,titulares,reservas,capitao,criado_em',q=>q.order('criado_em',{ascending:false}).limit(30));
-  if(r.error){screen.insertAdjacentHTML('beforeend',empty('Não foi possível carregar os dados agora.'));return}
-  if(!r.data?.length){screen.insertAdjacentHTML('beforeend',empty());return}
-  renderList(name,r.data);
-}
-
-function renderList(name,data){
-  const box=document.createElement('div');box.className='data-list';
-  data.forEach(item=>{
-    const card=document.createElement('article');card.className='data-card';
-    if(name==='news')card.innerHTML=image(item.imagem,item.titulo)+'<div class="data-body"><small>NOTÍCIA OFICIAL</small><h3>'+esc(item.titulo)+'</h3>'+(item.resumo?'<p>'+esc(item.resumo)+'</p>':'')+'<span>'+fmtDate(item.criado_em)+'</span></div>';
-    else if(name==='squad'){const stats=[item.jogos!=null?item.jogos+' jogos':null,item.gols!=null?item.gols+' gols':null,item.assistencias!=null?item.assistencias+' assist.':null].filter(Boolean).join(' • ');card.innerHTML=image(item.foto,item.nome)+'<div class="data-body"><small>'+esc(item.categoria||'ELENCO')+'</small><h3>'+esc(item.nome)+'</h3><p>'+esc(item.posicao||'Atleta')+(item.numero_camisa!=null?' • Camisa '+esc(item.numero_camisa):'')+'</p>'+(stats?'<span>'+esc(stats)+'</span>':'')+'</div>'}
-    else if(name==='gallery')card.innerHTML=image(item.imagem_url,item.titulo||'Galeria')+'<div class="data-body"><small>GALERIA OFICIAL</small><h3>'+esc(item.titulo||'Momento da Seleção')+'</h3>'+(item.descricao?'<p>'+esc(item.descricao)+'</p>':'')+'</div>';
-    else if(name==='alerts')card.innerHTML='<div class="assistant-icon">!</div><div class="data-body"><small>COMUNICADO OFICIAL</small><h3>'+esc(item.titulo)+'</h3>'+(item.texto?'<p>'+esc(item.texto)+'</p>':'')+'<span>'+fmtDate(item.criado_em)+'</span></div>';
-    else if(name==='lineups'){const list=v=>Array.isArray(v)?v.map(x=>typeof x==='object'?(x.nome||x.name||x.jogador||'Atleta'):x).filter(Boolean).join(', '):'';card.innerHTML='<div class="assistant-icon">⚽</div><div class="data-body"><small>'+esc(item.categoria||'ESCALAÇÃO')+(item.formacao?' • '+esc(item.formacao):'')+'</small><h3>'+esc(item.capitao?'Capitão: '+item.capitao:'Escalação oficial')+'</h3><p><b>Titulares:</b> '+esc(list(item.titulares)||'Não informado')+'</p><p><b>Reservas:</b> '+esc(list(item.reservas)||'Não informado')+'</p></div>'}
-    else {const score=name==='results'?'<strong class="data-score">'+esc(item.gols_baixa_grande??'-')+' × '+esc(item.gols_adversario??'-')+'</strong>':'';const status=item.status==='ao_vivo'?'AO VIVO':(item.status==='encerrado'?'ENCERRADO':'PRÓXIMO JOGO');card.innerHTML=(item.escudo_adversario?image(item.escudo_adversario,item.adversario):'')+'<div class="data-body"><small>'+esc(item.competicao||'JOGO')+' • '+status+'</small><h3>Baixa Grande × '+esc(item.adversario)+'</h3><p>'+fmtDate(item.data_jogo)+(item.horario?' • '+fmtTime(item.horario):'')+(item.local?' • '+esc(item.local):'')+'</p>'+score+(item.destaque?'<span>'+esc(item.destaque)+'</span>':'')+'</div>'}
-    box.appendChild(card);
-  });
-  screen.appendChild(box);
-}
-
-async function loadHome(){
-  if(!homeUpdates)return;
-  homeUpdates.innerHTML=empty('Verificando conexão com o site...');
-  const [news,games,alerts]=await Promise.all([
-    getNews(1),
-    queryTable('jogos','id,adversario,data_jogo,status,gols_baixa_grande,gols_adversario',q=>q.eq('status','encerrado').order('data_jogo',{ascending:false}).limit(1)),
-    queryTable('avisos','id',q=>q.eq('ativo',true).limit(1))
+async function coachGuard(){
+  if(!session)return false;
+  const [a,s,p]=await Promise.all([
+    q('admin_users','user_id',x=>x.eq('user_id',session.user.id).maybeSingle()),
+    q('professores_app','id,nome,ativo',x=>x.eq('user_id',session.user.id).eq('ativo',true).maybeSingle()),
+    q('Perfis','Tipo',x=>x.eq('Email',session.user.email).maybeSingle())
   ]);
-  const errors=[news,games,alerts].filter(x=>x.error).length;
-  if(errors){setSync(false,'Problema na conexão');homeUpdates.innerHTML=empty('Não foi possível verificar o site agora.');return}
-  const latest=games.data?.[0];
-  homeUpdates.innerHTML=[
-    '<article class="data-card"><div class="assistant-icon">✓</div><div class="data-body"><small>CONEXÃO</small><h3>Banco de dados conectado</h3><p>O aplicativo está lendo os dados oficiais do site.</p></div></article>',
-    latest?'<article class="data-card"><div class="assistant-icon">⚽</div><div class="data-body"><small>ÚLTIMO JOGO</small><h3>Baixa Grande '+esc(latest.gols_baixa_grande??'-')+' × '+esc(latest.gols_adversario??'-')+' '+esc(latest.adversario)+'</h3><p>'+fmtDate(latest.data_jogo)+' • '+esc(latest.status)+'</p></div></article>':''
-  ].join('');
-  setSync(true,'Site sincronizado');
+  role=a.data?'admin':(s.data||String(p.data?.Tipo||'').toLowerCase()==='treinador'?'coach':'none');
+  return role!=='none';
+}
+async function categories(){const r=await q('categorias_app','id,nome,ativo',x=>x.eq('ativo',true).order('nome'));return r.data||[]}
+async function athletes(){const r=await q('Atletas','id,nome,categoria,posicao,numero_camisa,foto,jogos,gols,assistencias,presencas,faltas_treino,telefone_responsavel,status,observacoes,observacoes_treinador',x=>x.order('categoria').order('nome').limit(500));return r.data||[]}
+function catOptions(rows,selected=''){return '<option value="">Todas as categorias</option>'+rows.map(x=>'<option value="'+esc(x.id)+'" '+(x.id===selected?'selected':'')+'>'+esc(x.nome)+'</option>').join('')}
+function athleteOptions(rows,selected=[]){const set=new Set(selected);return rows.map(x=>'<option value="'+esc(x.id)+'" '+(set.has(x.id)?'selected':'')+'>'+esc(x.nome)+' — '+esc(x.categoria||'')+'</option>').join('')}
+
+async function loadDashboard(){
+  if(!dashboard)return;
+  const [a,t,c,p,n,e]=await Promise.all([
+    count('Atletas',x=>x.eq('status','Ativo')),
+    count('treinos',x=>x.gte('data_treino',today()).lt('data_treino',new Date(Date.now()+8*86400000).toISOString().slice(0,10))),
+    count('chamadas',x=>x.eq('status','aberta')),
+    count('presencas_treino',x=>x.eq('status','presente')),
+    count('avisos_internos',x=>x.eq('ativo',true)),
+    q('treinos','id,data_treino,horario,local,objetivo,status,categoria_id',x=>x.gte('data_treino',today()).neq('status','cancelado').order('data_treino').order('horario').limit(1))
+  ]);
+  const total=a.count||0, present=p.count||0;
+  dashboard.innerHTML='<div class="section-title"><h2>Painel da comissão</h2></div>'+
+    '<div class="stats-grid">'+[['⚽',total,'Atletas ativos'],['🏃',t.count||0,'Treinos próximos'],['✓',c.count||0,'Chamadas abertas'],['●',present,'Presenças registradas']].map(x=>'<article class="stat-card"><span>'+x[0]+'</span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></article>').join('')+'</div>'+
+    '<div class="dashboard-grid"><article class="panel-card"><small>PRÓXIMO TREINO</small><h3>'+(e.data?.[0]?fmtDate(e.data[0].data_treino)+' • '+fmtTime(e.data[0].horario):'Nenhum agendado')+'</h3><p>'+(e.data?.[0]?[e.data[0].local,e.data[0].objetivo].filter(Boolean).join(' • '):'Cadastre um treino para acompanhar a preparação.')+'</p><button class="mini-btn" data-screen="training">Abrir treinos</button></article><article class="panel-card"><small>AVISOS INTERNOS</small><h3>'+(n.count||0)+' ativo(s)</h3><p>Comunicados da comissão técnica.</p><button class="mini-btn" data-screen="notices">Abrir avisos</button></article></div>'+
+    '<div class="section-title recent-title"><h2>Acesso rápido</h2></div><div class="quick-grid">'+[['calls','Chamadas','Convocar atletas'],['attendance','Presença','Registrar treino'],['evaluations','Avaliações','Avaliar atletas'],['lineups','Escalações','Montar equipe'],['calendar','Calendário','Agenda interna'],['notes','Anotações','Notas técnicas']].map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div>';
+  setSync(![a,t,c,p,n,e].some(x=>x?.error),'Banco conectado');
 }
 
-async function renderCheck(){
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✓</div><div><h2>Verificar site</h2><p>Conferência automática dos dados publicados.</p></div></div><div id="checkBox" class="data-list"><div class="empty-state">Verificando...</div></div>';
-  const box=document.getElementById('checkBox');
-  if(!supabaseClient){box.innerHTML=empty('Banco indisponível.');return}
-  const checks=[];
-  const count=async(table,filter)=>{let q=supabaseClient.from(table).select('*',{count:'exact',head:true});if(filter)q=filter(q);return await q};
-  const [news,games,alerts,photos,lineups]=await Promise.all([
-    count('noticias',q=>q.eq('publicado',true)),
-    count('jogos'),
-    count('avisos',q=>q.eq('ativo',true)),
-    count('galeria',q=>q.eq('ativo',true)),
-    count('escalacoes')
-  ]);
-  const errors=[news,games,alerts,photos,lineups].filter(x=>x.error);
-  if(errors.length){box.innerHTML=empty('Não foi possível concluir a verificação.');return}
-  const latest=await queryTable('jogos','id,adversario,data_jogo,status,gols_baixa_grande,gols_adversario',q=>q.eq('status','encerrado').order('data_jogo',{ascending:false}).limit(1));
-  const latestGame=latest.data?.[0];
-  const rows=[
-    ['Notícias publicadas',news.count??0,'ok'],
-    ['Jogos cadastrados',games.count??0,'ok'],
-    ['Avisos ativos',alerts.count??0,'ok'],
-    ['Fotos na galeria',photos.count??0,'ok'],
-    ['Escalações',lineups.count??0,'ok'],
-    ['Último jogo registrado',latestGame?('Baixa Grande '+(latestGame.gols_baixa_grande??'-')+' × '+(latestGame.gols_adversario??'-')+' '+latestGame.adversario):'Nenhum','ok']
-  ];
-  box.innerHTML=rows.map(r=>'<article class="data-card"><div class="assistant-icon">'+(r[2]==='ok'?'✓':'!')+'</div><div class="data-body"><small>VERIFICAÇÃO</small><h3>'+esc(r[0])+'</h3><p>'+esc(String(r[1]))+'</p></div></article>').join('');
-}
-function renderCategories(){
-  screen.insertAdjacentHTML('beforeend','<div class="category-list">'+
-    ['Sub-13','Sub-15','Sub-17','Sub-20'].map((c,i)=>'<article class="data-card"><div class="assistant-icon">'+(i+1)+'</div><div class="data-body"><small>FUTEBOL DE BASE</small><h3>'+c+'</h3><p>Informações e novidades da categoria no portal oficial.</p></div></article>').join('')+
-    '</div>');
-}
+function shell(title,desc,body){screen.hidden=false;dashboard.hidden=true;document.querySelector('.hero').hidden=true;screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">⚽</div><div><h2>'+esc(title)+'</h2><p>'+esc(desc||'')+'</p></div></div>'+body}
+function formField(label,input){return '<label class="field"><span>'+esc(label)+'</span>'+input+'</label>}
+function actions(){return '<div class="form-actions"><button type="submit" class="primary-btn">Salvar</button><button type="button" class="mini-btn" data-screen="home">Cancelar</button></div>'}
+function normalizeMulti(select){return [...select.selectedOptions].map(x=>x.value)}
 
 async function renderAthletes(){
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Entre na área da equipe para acessar os atletas.');return}
-  const {data:trainer}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',session.user.email).maybeSingle();
-  const {data:admin}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle();
-  if(!admin && String(trainer?.Tipo||'').toLowerCase()!=='treinador'){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('A área de atletas é exclusiva para professores e treinadores autorizados.');return}
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">⚽</div><div><h2>Atletas</h2><p>Cadastro e acompanhamento da equipe.</p></div></div><div class="athlete-tools"><input id="athleteSearch" placeholder="Buscar atleta..."><select id="athleteCategory"><option value="">Todas as categorias</option><option>Sub-13</option><option>Sub-15 / Sub-17</option><option>Sub-20</option></select></div><div id="athleteList" class="data-list"><div class="empty-state">Carregando atletas...</div></div>';
-  const {data,error}=await supabaseClient.from('Atletas').select('id,nome,categoria,posicao,numero_camisa,foto,jogos,titularidades,gols,assistencias,presencas,faltas_treino,telefone_responsavel,status,observacoes').order('categoria').order('nome').limit(300);
-  if(error){document.getElementById('athleteList').innerHTML=empty('Não foi possível carregar os atletas.');return}
-  const list=document.getElementById('athleteList'),search=document.getElementById('athleteSearch'),cat=document.getElementById('athleteCategory');
-  const draw=()=>{const term=search.value.trim().toLowerCase(),category=cat.value;const rows=(data||[]).filter(x=>(!term||String(x.nome||'').toLowerCase().includes(term))&&(!category||x.categoria===category));if(!rows.length){list.innerHTML=empty('Nenhum atleta encontrado.');return}list.innerHTML=rows.map(x=>'<article class="athlete-card">'+image(x.foto,x.nome)+'<div class="data-body"><small>'+esc(x.categoria||'ATLETA')+'</small><h3>'+esc(x.nome)+'</h3><p>'+esc(x.posicao||'Posição não informada')+(x.numero_camisa?' • Camisa '+esc(x.numero_camisa):'')+'</p><div class="athlete-meta"><span>Presenças: '+esc(x.presencas??0)+'</span><span>Faltas: '+esc(x.faltas_treino??0)+'</span></div><p class="responsavel"><b>Responsável:</b> '+esc(x.telefone_responsavel||'Telefone não cadastrado')+'</p><button class="mini-btn athlete-edit" data-athlete-id="'+esc(x.id)+'">Editar telefone</button></div></article>').join('');list.querySelectorAll('.athlete-edit').forEach(btn=>btn.addEventListener('click',()=>editAthletePhone(btn.dataset.athleteId,data)));};
-  search.addEventListener('input',draw);cat.addEventListener('change',draw);draw();
+  const rows=await athletes();
+  shell('Atletas','Elenco interno da comissão técnica.','<div class="toolbar"><input id="aSearch" placeholder="Buscar atleta...">'+(role==='admin'?'<button class="mini-btn" id="newAthlete">+ Novo</button>':'')+'</div><div id="aList" class="data-list"></div>');
+  const draw=()=>{const term=(document.getElementById('aSearch').value||'').toLowerCase();const list=rows.filter(x=>String(x.nome||'').toLowerCase().includes(term));document.getElementById('aList').innerHTML=list.length?list.map(x=>'<article class="athlete-card">'+(x.foto?'<img class="data-image" src="'+esc(x.foto)+'" alt="">':'<div class="data-image placeholder">⚽</div>')+'<div class="data-body"><small>'+esc(x.categoria||'SEM CATEGORIA')+'</small><h3>'+esc(x.nome)+'</h3><p>'+esc(x.posicao||'Posição não informada')+(x.numero_camisa?' • #'+x.numero_camisa:'')+'</p><div class="athlete-meta"><span>Jogos: '+(x.jogos||0)+'</span><span>Gols: '+(x.gols||0)+'</span><span>Presenças: '+(x.presencas||0)+'</span></div><p class="responsavel"><b>Responsável:</b> '+esc(x.telefone_responsavel||'Não cadastrado')+'</p>'+(role==='admin'?'<button class="mini-btn" data-edit-athlete="'+x.id+'">Editar</button>':'')+' <button class="mini-btn" data-athlete-detail="'+x.id+'">Detalhes</button></div></article>').join(''):empty('Nenhum atleta encontrado.')};
+  document.getElementById('aSearch').addEventListener('input',draw);draw();
+  document.getElementById('newAthlete')?.addEventListener('click',()=>athleteForm());
+  document.getElementById('aList').addEventListener('click',e=>{const b=e.target.closest('[data-edit-athlete]');if(b)athleteForm(rows.find(x=>x.id===b.dataset.editAthlete));const d=e.target.closest('[data-athlete-detail]');if(d)athleteDetail(rows.find(x=>x.id===d.dataset.athleteDetail))});
 }
-async function editAthletePhone(id,rows){
-  const athlete=rows.find(x=>x.id===id);if(!athlete)return;
-  const phone=window.prompt('Telefone do responsável por '+athlete.nome,athlete.telefone_responsavel||'');
-  if(phone===null)return;
-  const {error}=await supabaseClient.from('Atletas').update({telefone_responsavel:phone.trim()||null}).eq('id',id);
-  if(error){window.alert('Não foi possível salvar o telefone.');return}
-  athlete.telefone_responsavel=phone.trim()||null;renderAthletes();
+function athleteForm(x=null){
+  shell(x?'Editar atleta':'Novo atleta','Dados internos do elenco.', '<form id="athleteForm" class="form-grid">'+formField('Nome','<input name="nome" required value="'+esc(x?.nome||'')+'">')+formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15</option><option>Sub-17</option><option>Sub-20</option></select>')+formField('Posição','<input name="posicao" value="'+esc(x?.posicao||'')+'">')+formField('Número','<input name="numero_camisa" type="number" value="'+(x?.numero_camisa??'')+'">')+formField('Telefone do responsável','<input name="telefone_responsavel" value="'+esc(x?.telefone_responsavel||'')+'">')+formField('Status','<select name="status"><option>Ativo</option><option>Inativo</option>')+'</select>'+formField('Foto URL','<input name="foto" value="'+esc(x?.foto||'')+'">')+formField('Observações internas','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>'+actions()+'</form>');
+  document.querySelector('[name=categoria]').value=x?.categoria||'Sub-13';document.querySelector('[name=status]').value=x?.status||'Ativo';
+  document.getElementById('athleteForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row=Object.fromEntries(f.entries());row.numero_camisa=row.numero_camisa?Number(row.numero_camisa):null;if(x){const r=await upd('Atletas',x.id,row);if(r.error)return alert(r.error.message)}else{const r=await save('Atletas',row);if(r.error)return alert(r.error.message)}await renderAthletes()};
 }
+function athleteDetail(x){shell(x.nome,'Ficha interna do atleta.','<div class="detail-grid"><div><small>CATEGORIA</small><strong>'+esc(x.categoria||'-')+'</strong></div><div><small>POSIÇÃO</small><strong>'+esc(x.posicao||'-')+'</strong></div><div><small>JOGOS</small><strong>'+(x.jogos||0)+'</strong></div><div><small>GOLS</small><strong>'+(x.gols||0)+'</strong></div><div><small>ASSISTÊNCIAS</small><strong>'+(x.assistencias||0)+'</strong></div><div><small>PRESENÇAS</small><strong>'+(x.presencas||0)+'</strong></div></div><div class="coach-private-card"><strong>Dados privados</strong><span>Responsável: '+esc(x.telefone_responsavel||'Não cadastrado')+'</span><span>Observações: '+esc(x.observacoes||x.observacoes_treinador||'Nenhuma')+'</span></div><div class="quick-grid"><button class="tile" data-screen="evaluations"><b>Avaliações</b><small>Histórico técnico</small></button><button class="tile" data-screen="notes"><b>Anotações</b><small>Observações internas</small></button><button class="tile" data-screen="performance"><b>Desempenho</b><small>Estatísticas da temporada</small></button></div>')}
 
-function renderMore(){
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>Área dos treinadores</h2><p>Ferramentas internas da comissão técnica.</p><div class="grid more-grid">'+
-  '<button class="tile" data-screen="athletes"><b>Atletas</b><small>Cadastro e acompanhamento</small></button>'+
-  '<button class="tile" data-screen="calls"><b>Chamadas</b><small>Convocações para treinos e jogos</small></button>'+
-  '<button class="tile" data-screen="attendance"><b>Presença</b><small>Controle de presença e faltas</small></button>'+
-  '<button class="tile" data-screen="training"><b>Treinos</b><small>Organização da preparação</small></button>'+
-  '<button class="tile" data-screen="lineups"><b>Escalações</b><small>Montagem das equipes</small></button>'+
-  '<button class="tile" data-screen="notes"><b>Anotações técnicas</b><small>Observações internas dos atletas</small></button></div>';
+async function renderCalls(){
+  const [cats,ats,calls]=await Promise.all([categories(),athletes(),q('chamadas','id,tipo,data_chamada,horario,local,observacoes,status,categoria_id,created_at',x=>x.order('data_chamada',{ascending:false}).limit(100))]);
+  shell('Chamadas','Convocações internas para treinos e jogos.','<button class="primary-btn" id="newCall">+ Nova chamada</button><div id="callList" class="data-list"></div>');
+  const list=document.getElementById('callList');list.innerHTML=calls.data?.length?calls.data.map(x=>'<article class="data-card"><div class="assistant-icon">✓</div><div class="data-body"><small>'+esc(x.tipo.toUpperCase())+' • '+esc(x.status)+'</small><h3>'+fmtDate(x.data_chamada)+' • '+fmtTime(x.horario)+'</h3><p>'+esc([x.local,x.observacoes].filter(Boolean).join(' • '))+'</p><button class="mini-btn" data-call="'+x.id+'">Abrir</button></div></article>').join(''):empty('Nenhuma chamada criada.');
+  document.getElementById('newCall').onclick=()=>callForm(cats,ats);
+  list.onclick=e=>{const b=e.target.closest('[data-call]');if(b)callDetail(b.dataset.call,calls.data||[],ats)};
 }
-async function renderAssistant(){
-  if(!supabaseClient){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Conexão com o banco indisponível.');return}
-  const{data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){chatHistory=[];screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Área administrativa</h2><p>Entre para usar o Assistente da Seleção.</p></div></div><form id="loginForm" class="chat-form" style="display:flex;flex-direction:column"><input id="loginEmail" type="email" autocomplete="username" placeholder="E-mail"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Senha"><button type="submit" style="height:44px">Entrar</button><div id="loginError" class="empty-state" hidden></div></form>';document.getElementById('loginForm').addEventListener('submit',loginAdmin);return}
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><div id="imagePreview" class="image-preview" hidden></div><form class="chat-form" id="chatForm"><label class="attach-btn" id="attachBtn" title="Adicionar fotos" aria-label="Adicionar fotos">＋<input id="imageInput" class="image-input" type="file" accept="image/*" multiple></label><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await signOutAndShowLogin()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));document.getElementById('imageInput').addEventListener('change',async e=>{for(const file of [...e.target.files].slice(0,6-chatImages.length)){if(file.type.startsWith('image/'))chatImages.push(await prepareImage(file));}renderImagePreview();e.target.value='';});
+async function callForm(cats,ats,x=null){
+  shell(x?'Editar chamada':'Nova chamada','Selecione os atletas convocados.','<form id="callForm" class="form-grid">'+formField('Tipo','<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+formField('Categoria','<select name="categoria_id">'+cats.map(c=>'<option value="'+c.id+'">'+esc(c.nome)+'</option>').join('')+'</select>')+formField('Data','<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+formField('Horário','<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+formField('Local','<input name="local" value="'+esc(x?.local||'')+'">')+formField('Observações','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+formField('Atletas convocados','<select name="atletas" multiple size="8">'+athleteOptions(ats,x?.athleteIds||[])+'</select>')+actions()+'</form>');
+  document.getElementById('callForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),ids=normalizeMulti(e.target.atletas);const row={tipo:f.get('tipo'),categoria_id:f.get('categoria_id')||null,data_chamada:f.get('data_chamada'),horario:f.get('horario')||null,local:f.get('local')||null,observacoes:f.get('observacoes')||null,criado_por:session.user.id};let id=x?.id;if(x){const r=await upd('chamadas',id,row);if(r.error)return alert(r.error.message);await del('chamada_atletas',x.id).catch(()=>{})}else{const r=await save('chamadas',row);if(r.error)return alert(r.error.message);id=r.data.id}if(ids.length){const rr=await supabaseClient.from('chamada_atletas').insert(ids.map(a=>({chamada_id:id,atleta_id:a,status:'pendente'})));if(rr.error)return alert(rr.error.message)}renderCalls()};
+  document.querySelector('[name=tipo]').value=x?.tipo||'treino';if(x)document.querySelector('[name=categoria_id]').value=x.categoria_id;
+}
+async function callDetail(id,all,ats){
+  const x=all.find(y=>y.id===id);const m=await q('chamada_atletas','id,atleta_id,status,observacao',z=>z.eq('chamada_id',id));const selected=m.data||[];
+  shell('Chamada','Convocação de '+fmtDate(x.data_chamada)+'.','<div class="panel-card"><small>LOCAL</small><h3>'+esc(x.local||'Não informado')+'</h3><p>'+esc(x.observacoes||'')+'</p></div><div class="data-list">'+selected.map(s=>{const a=ats.find(y=>y.id===s.atleta_id);return '<article class="data-card"><div class="data-body"><h3>'+esc(a?.nome||'Atleta')+'</h3><p>'+esc(a?.categoria||'')+'</p><select class="status-select" data-call-athlete="'+s.id+'"><option value="pendente" '+(s.status==='pendente'?'selected':'')+'>Pendente</option><option value="confirmado" '+(s.status==='confirmado'?'selected':'')+'>Confirmado</option><option value="nao_confirmado" '+(s.status==='nao_confirmado'?'selected':'')+'>Não confirmado</option></select></div></article>'}).join('')+'</div><button class="mini-btn" data-cancel-call="'+id+'">Cancelar chamada</button>');
+  screen.querySelectorAll('[data-call-athlete]').forEach(s=>s.onchange=async()=>{await upd('chamada_atletas',s.dataset.callAthlete,{status:s.value,responded_at:new Date().toISOString()})});
+  screen.querySelector('[data-cancel-call]').onclick=async()=>{await upd('chamadas',id,{status:'cancelada'});renderCalls()};
 }
 
-async function authenticateTeam(email,password,errorBox){
-  const{data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error||!data?.session){if(errorBox){errorBox.hidden=false;errorBox.textContent='Não foi possível entrar. Verifique o e-mail e a senha.';}return false}
-  const{data:allowed}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',data.session.user.id).maybeSingle();
-  const{data:slot}=await supabaseClient.from('professores_app').select('id,nome,ativo').eq('email',data.session.user.email).eq('ativo',true).maybeSingle();
-  const{data:profile}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',data.session.user.email).maybeSingle();
-  const isTrainer=String(profile?.Tipo||'').toLowerCase()==='treinador';
-  if(!allowed&&!slot&&!isTrainer){
-    await supabaseClient.auth.signOut();
-    if(errorBox){errorBox.hidden=false;errorBox.textContent='Esta conta não possui acesso ao aplicativo da equipe.';}
-    return false;
-  }
-  return true;
+async function renderTraining(){
+  const [cats,r]=await Promise.all([categories(),q('treinos','id,data_treino,horario,local,objetivo,observacoes,status,categoria_id',x=>x.order('data_treino',{ascending:false}).limit(100))]);
+  shell('Treinos','Planejamento e histórico da preparação.','<button class="primary-btn" id="newTraining">+ Novo treino</button><div id="trainingList" class="data-list"></div>');
+  document.getElementById('trainingList').innerHTML=r.data?.length?r.data.map(x=>'<article class="data-card"><div class="assistant-icon">🏃</div><div class="data-body"><small>'+esc(x.status)+'</small><h3>'+fmtDate(x.data_treino)+' • '+fmtTime(x.horario)+'</h3><p>'+esc([x.local,x.objetivo].filter(Boolean).join(' • '))+'</p><button class="mini-btn" data-training="'+x.id+'">Editar</button> <button class="mini-btn" data-presence="'+x.id+'">Presença</button></div></article>').join(''):empty('Nenhum treino cadastrado.');
+  document.getElementById('newTraining').onclick=()=>trainingForm(cats);
+  document.getElementById('trainingList').onclick=e=>{const ed=e.target.closest('[data-training]');if(ed)trainingForm(cats,r.data.find(x=>x.id===ed.dataset.training));const p=e.target.closest('[data-presence]');if(p)presenceForm(p.dataset.presence)};
 }
-async function loginAdmin(e){
-  e.preventDefault();
-  const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value,errorBox=document.getElementById('loginError');
-  if(await authenticateTeam(email,password,errorBox))renderAssistant();
+async function trainingForm(cats,x=null){
+  shell(x?'Editar treino':'Novo treino','Registre a atividade da comissão.','<form id="trainingForm" class="form-grid">'+formField('Categoria','<select name="categoria_id">'+cats.map(c=>'<option value="'+c.id+'">'+esc(c.nome)+'</option>').join('')+'</select>')+formField('Data','<input name="data_treino" type="date" required value="'+(x?.data_treino||today())+'">')+formField('Horário','<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+formField('Local','<input name="local" value="'+esc(x?.local||'')+'">')+formField('Objetivo','<input name="objetivo" value="'+esc(x?.objetivo||'')+'">')+formField('Status','<select name="status"><option>agendado</option><option>realizado</option><option>cancelado</option></select>')+formField('Observações','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+actions()+'</form>');
+  if(x){document.querySelector('[name=categoria_id]').value=x.categoria_id;document.querySelector('[name=status]').value=x.status}
+  document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row={categoria_id:f.get('categoria_id')||null,data_treino:f.get('data_treino'),horario:f.get('horario')||null,local:f.get('local')||null,objetivo:f.get('objetivo')||null,status:f.get('status'),observacoes:f.get('observacoes')||null,responsavel_id:session.user.id};const r=x?await upd('treinos',x.id,row):await save('treinos',row);if(r.error)return alert(r.error.message);renderTraining()};
 }
-let authBusy=false;
-let loginBound=false;
-let appReady=false;
-
-function setGateVisible(){
-  appReady=false;
-  const gate=document.getElementById('authGate');
-  const splash=document.getElementById('splashScreen');
-  const login=document.getElementById('loginScreen');
-  const shell=document.getElementById('appShell');
-  if(shell)shell.hidden=true;
-  if(gate){gate.hidden=false;gate.style.display='grid';}
-  if(splash){splash.hidden=true;}
-  if(login){login.hidden=false;}
-  document.body.classList.add('auth-locked');
+async function presenceForm(treinoId){
+  const ats=await athletes(),r=await q('presencas_treino','id,atleta_id,status,observacao',x=>x.eq('treino_id',treinoId));const map=new Map((r.data||[]).map(x=>[x.atleta_id,x]));shell('Presença','Registre a situação de cada atleta.','<div class="presence-list">'+ats.map(a=>{const p=map.get(a.id);return '<article class="data-card"><div class="data-body"><h3>'+esc(a.nome)+'</h3><small>'+esc(a.categoria||'')+'</small><select class="status-select presence-status" data-athlete="'+a.id+'"><option value="presente" '+(p?.status==='presente'?'selected':'')+'>Presente</option><option value="falta" '+(p?.status==='falta'?'selected':'')+'>Falta</option><option value="justificada" '+(p?.status==='justificada'?'selected':'')+'>Falta justificada</option></select></div></article>'}).join('')+'</div><button class="primary-btn" id="savePresence">Salvar presença</button>');
+  document.getElementById('savePresence').onclick=async()=>{for(const s of screen.querySelectorAll('.presence-status')){const row=map.get(s.dataset.athlete);const payload={treino_id:treinoId,atleta_id:s.dataset.athlete,status:s.value,registrado_por:session.user.id};const r=row?await upd('presencas_treino',row.id,payload):await save('presencas_treino',payload);if(r.error)return alert(r.error.message)}await loadDashboard();presenceForm(treinoId)};
 }
 
-function bindGlobalLogin(){
-  if(loginBound)return;
-  const form=document.getElementById('globalLoginForm');
-  if(!form)return;
-  loginBound=true;
-  form.addEventListener('submit',async e=>{
-    e.preventDefault();
-    if(authBusy)return;
-    const errorBox=document.getElementById('globalLoginError');
-    const email=document.getElementById('globalLoginEmail')?.value.trim()||'';
-    const password=document.getElementById('globalLoginPassword')?.value||'';
-    const button=form.querySelector('button');
-    if(errorBox){errorBox.hidden=true;errorBox.textContent='';}
-    authBusy=true;
-    if(button){button.disabled=true;button.textContent='Entrando…';}
-    const ok=await authenticateTeam(email,password,errorBox);
-    if(ok){
-      const {data:{session}}=await supabaseClient.auth.getSession();
-      await showAuthenticatedApp(session);
-    }
-    authBusy=false;
-    if(button){button.disabled=false;button.textContent='Entrar';}
-  });
+async function renderEvaluations(){
+  const ats=await athletes(),r=await q('avaliacoes_atletas','id,atleta_id,tecnica,tatica,fisico,disciplina,evolucao,observacoes,created_at',x=>x.order('created_at',{ascending:false}).limit(100));
+  shell('Avaliações','Avaliação técnica privada dos atletas.','<button class="primary-btn" id="newEval">+ Nova avaliação</button><div class="data-list">'+(r.data||[]).map(x=>{const a=ats.find(y=>y.id===x.atleta_id);return '<article class="data-card"><div class="data-body"><small>'+fmtDate(x.created_at.slice(0,10))+'</small><h3>'+esc(a?.nome||'Atleta')+'</h3><p>Técnica '+x.tecnica+' • Tática '+x.tatica+' • Físico '+x.fisico+' • Disciplina '+x.disciplina+' • Evolução '+x.evolucao+'</p><span>'+esc(x.observacoes||'')+'</span></div></article>'}).join('')||empty('Nenhuma avaliação registrada.')+'</div>');
+  document.getElementById('newEval').onclick=()=>evaluationForm(ats);
+}
+function evaluationForm(ats,x=null){
+  shell('Nova avaliação','Notas de 0 a 10.','<form id="evalForm" class="form-grid">'+formField('Atleta','<select name="atleta_id" required>'+athleteOptions(ats)+'</select>')+['tecnica','tatica','fisico','disciplina','evolucao'].map(k=>formField(k[0].toUpperCase()+k.slice(1),'<input name="'+k+'" type="number" min="0" max="10" required>')).join('')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
+  document.getElementById('evalForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row=Object.fromEntries(f.entries());['tecnica','tatica','fisico','disciplina','evolucao'].forEach(k=>row[k]=Number(row[k]));row.treinador_id=session.user.id;const r=await save('avaliacoes_atletas',row);if(r.error)return alert(r.error.message);renderEvaluations()};
 }
 
-async function showAuthenticatedApp(session){
-  if(!session)return false;
-  if(appReady)return true;
-  const gate=document.getElementById('authGate');
-  const splash=document.getElementById('splashScreen');
-  const login=document.getElementById('loginScreen');
-  const shell=document.getElementById('appShell');
-  const badge=document.getElementById('userBadge');
-  const email=(session.user.email||'').trim();
-
-  const [{data:allowed},{data:slot},{data:profile}]=await Promise.all([
-    supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle(),
-    supabaseClient.from('professores_app').select('id,nome,ativo').eq('email',email).eq('ativo',true).maybeSingle(),
-    supabaseClient.from('Perfis').select('Tipo').eq('Email',email).maybeSingle()
-  ]);
-  const isTrainer=String(profile?.Tipo||'').toLowerCase()==='treinador';
-  const ok=!!allowed||!!slot||isTrainer;
-  if(!ok)return false;
-
-  if(badge){
-    badge.textContent=slot?.nome||(isTrainer?'Treinador':'Administrador');
-    badge.title=email;
-  }
-  if(splash)splash.hidden=true;
-  if(login)login.hidden=true;
-  if(gate){gate.hidden=true;gate.style.display='none';}
-  if(shell){shell.hidden=false;shell.style.display='block';}
-  appReady=true;
-  document.body.classList.remove('auth-locked');
-  loadHome();
-  setupLiveSync();
-  return true;
+async function renderPerformance(){
+  const ats=await athletes(),r=await q('desempenho_atletas','id,atleta_id,temporada,jogos,gols,assistencias,observacoes,updated_at',x=>x.order('temporada',{ascending:false}).limit(200));
+  shell('Desempenho','Estatísticas internas por temporada.','<button class="primary-btn" id="newPerf">+ Registrar desempenho</button><div class="data-list">'+(r.data||[]).map(x=>{const a=ats.find(y=>y.id===x.atleta_id);return '<article class="data-card"><div class="data-body"><small>'+esc(x.temporada)+'</small><h3>'+esc(a?.nome||'Atleta')+'</h3><p>'+x.jogos+' jogos • '+x.gols+' gols • '+x.assistencias+' assistências</p><span>'+esc(x.observacoes||'')+'</span></div></article>'}).join('')||empty('Nenhum desempenho registrado.')+'</div>');
+  document.getElementById('newPerf').onclick=()=>performanceForm(ats);
+}
+function performanceForm(ats){
+  shell('Registrar desempenho','Dados da temporada.','<form id="perfForm" class="form-grid">'+formField('Atleta','<select name="atleta_id" required>'+athleteOptions(ats)+'</select>')+formField('Temporada','<input name="temporada" value="'+new Date().getFullYear()+'" required>')+formField('Jogos','<input name="jogos" type="number" min="0" value="0">')+formField('Gols','<input name="gols" type="number" min="0" value="0">')+formField('Assistências','<input name="assistencias" type="number" min="0" value="0">')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
+  document.getElementById('perfForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row={atleta_id:f.get('atleta_id'),temporada:f.get('temporada'),jogos:Number(f.get('jogos')),gols:Number(f.get('gols')),assistencias:Number(f.get('assistencias')),observacoes:f.get('observacoes')||null,updated_by:session.user.id};const r=await supabaseClient.from('desempenho_atletas').upsert(row,{onConflict:'atleta_id,temporada'});if(r.error)return alert(r.error.message);renderPerformance()};
 }
 
-async function signOutAndShowLogin(){
-  if(liveChannel){try{await supabaseClient.removeChannel(liveChannel)}catch(_e){}liveChannel=null;}
-  await supabaseClient.auth.signOut();
-  appReady=false;
-  const shell=document.getElementById('appShell');
-  const gate=document.getElementById('authGate');
-  const splash=document.getElementById('splashScreen');
-  const login=document.getElementById('loginScreen');
-  if(shell){shell.hidden=true;shell.style.display='none';}
-  if(screen){screen.hidden=true;}
-  document.querySelector('.hero')?.removeAttribute('hidden');
-  document.querySelectorAll('.section').forEach(x=>x.removeAttribute('hidden'));
-  if(gate){gate.hidden=false;gate.style.display='grid';}
-  if(splash)splash.hidden=true;
-  if(login)login.hidden=false;
-  document.body.classList.add('auth-locked');
-  const form=document.getElementById('globalLoginForm');
-  if(form)form.reset();
-  const errorBox=document.getElementById('globalLoginError');
-  if(errorBox)errorBox.hidden=true;
-  bindGlobalLogin();
+async function renderNotes(){
+  const ats=await athletes(),r=await q('anotacoes_tecnicas','id,atleta_id,titulo,texto,created_at',x=>x.order('created_at',{ascending:false}).limit(200));
+  shell('Anotações técnicas','Observações privadas da comissão.','<button class="primary-btn" id="newNote">+ Nova anotação</button><div class="data-list">'+(r.data||[]).map(x=>{const a=ats.find(y=>y.id===x.atleta_id);return '<article class="data-card"><div class="data-body"><small>'+fmtDate(x.created_at.slice(0,10))+'</small><h3>'+esc(a?.nome||'Atleta')+' — '+esc(x.titulo||'Anotação')+'</h3><p>'+esc(x.texto)+'</p><button class="mini-btn" data-del-note="'+x.id+'">Excluir</button></div></article>'}).join('')||empty('Nenhuma anotação.')+'</div>');
+  document.getElementById('newNote').onclick=()=>noteForm(ats);screen.querySelectorAll('[data-del-note]').forEach(b=>b.onclick=async()=>{if(role==='admin'||confirm('Excluir esta anotação?')){await del('anotacoes_tecnicas',b.dataset.delNote);renderNotes()}});
+}
+function noteForm(ats){
+  shell('Nova anotação','Registro privado sobre um atleta.','<form id="noteForm" class="form-grid">'+formField('Atleta','<select name="atleta_id" required>'+athleteOptions(ats)+'</select>')+formField('Título','<input name="titulo" placeholder="Ex.: Evolução">')+formField('Anotação','<textarea name="texto" required rows="6"></textarea>')+actions()+'</form>');
+  document.getElementById('noteForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const r=await save('anotacoes_tecnicas',{atleta_id:f.get('atleta_id'),titulo:f.get('titulo')||null,texto:f.get('texto'),autor_id:session.user.id});if(r.error)return alert(r.error.message);renderNotes()};
 }
 
-async function enterApp(){
-  const gate=document.getElementById('authGate');
-  const splash=document.getElementById('splashScreen');
-  const login=document.getElementById('loginScreen');
-  const shell=document.getElementById('appShell');
-  if(!gate||!supabaseClient){
-    if(gate){gate.hidden=false;gate.style.display='grid';}
-    return;
-  }
-
-  document.body.classList.add('auth-locked');
-  if(shell)shell.hidden=true;
-  if(login)login.hidden=true;
-  if(splash)splash.hidden=false;
-
-  await new Promise(r=>setTimeout(r,1800));
-
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(session){
-    const ok=await showAuthenticatedApp(session);
-    if(ok)return;
-    await supabaseClient.auth.signOut();
-  }
-
-  if(splash)splash.hidden=true;
-  if(login)login.hidden=false;
-  bindGlobalLogin();
-
-  supabaseClient.auth.onAuthStateChange(async(event,newSession)=>{
-    if(event==='SIGNED_IN'&&newSession&&!document.getElementById('authGate')?.hidden){
-      await showAuthenticatedApp(newSession);
-    }else if(event==='SIGNED_OUT'){
-      setGateVisible();
-      bindGlobalLogin();
-    }
-  });
+async function renderCalendar(){
+  const cats=await categories(),r=await q('calendario_comissao','id,titulo,tipo,data_evento,horario,local,categoria_id,observacoes',x=>x.order('data_evento',{ascending:true}).limit(200));
+  shell('Calendário','Agenda interna da comissão.','<button class="primary-btn" id="newEvent">+ Novo evento</button><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">•</div><div class="data-body"><small>'+esc(x.tipo.toUpperCase())+'</small><h3>'+fmtDate(x.data_evento)+' • '+fmtTime(x.horario)+'</h3><p><b>'+esc(x.titulo)+'</b> '+esc([x.local,x.observacoes].filter(Boolean).join(' • '))+'</p><button class="mini-btn" data-event="'+x.id+'">Excluir</button></div></article>').join('')||empty('Nenhum evento.')+'</div>');
+  document.getElementById('newEvent').onclick=()=>calendarForm(cats);screen.querySelectorAll('[data-event]').forEach(b=>b.onclick=async()=>{await del('calendario_comissao',b.dataset.event);renderCalendar()});
 }
-async function openScreen(name){{
-  if(['calls','attendance','training','lineups','notes'].includes(name)){
-    document.querySelector('.hero')?.setAttribute('hidden','');
-    document.querySelectorAll('.section').forEach(x=>x.setAttribute('hidden',''));
-    screen.hidden=false;
-    const titles={calls:'Chamadas',attendance:'Presença nos treinos',training:'Treinos',lineups:'Escalações',notes:'Anotações técnicas'};
-    const desc={calls:'Convocação interna de atletas para treinos e partidas.',attendance:'Controle interno de presença e faltas.',training:'Organização das atividades da comissão técnica.',lineups:'Montagem e consulta das escalações.',notes:'Observações internas sobre os atletas.'};
-    screen.innerHTML='<button class="back" data-screen="more">‹ Voltar</button><h2>'+titles[name]+'</h2><p>'+desc[name]+'</p><div class="coach-private-card"><strong>Área exclusiva dos treinadores</strong><span>Informações internas da comissão técnica.</span></div>';
-    return;
-  }
-  if(name==='home'){
-    screen.hidden=true;document.querySelector('.hero').hidden=false;document.querySelectorAll('.section').forEach(x=>x.hidden=false);loadHome();
-  }else if(name==='more'){
-    document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;renderMore();
-  }else if(name==='check'){document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;await renderCheck();
-  }else if(name==='assistant'){
-    document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;await renderAssistant();
-  }else{
-    document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>'+esc(content[name][0])+'</h2><p>'+esc(content[name][1])+'</p>';
-    if(name==='categories')renderCategories();else await loadData(name);
-  }
+function calendarForm(cats){
+  shell('Novo evento','Compromisso interno da comissão.','<form id="eventForm" class="form-grid">'+formField('Título','<input name="titulo" required>')+formField('Tipo','<select name="tipo"><option>treino</option><option>jogo</option><option>avaliacao</option><option>reuniao</option><option>convocacao</option><option>outro</option></select>')+formField('Data','<input name="data_evento" type="date" required value="'+today()+'">')+formField('Horário','<input name="horario" type="time">')+formField('Local','<input name="local">')+formField('Categoria','<select name="categoria_id">'+cats.map(c=>'<option value="'+c.id+'">'+esc(c.nome)+'</option>').join('')+'</select>')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
+  document.getElementById('eventForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const r=await save('calendario_comissao',{titulo:f.get('titulo'),tipo:f.get('tipo'),data_evento:f.get('data_evento'),horario:f.get('horario')||null,local:f.get('local')||null,categoria_id:f.get('categoria_id')||null,observacoes:f.get('observacoes')||null,criado_por:session.user.id});if(r.error)return alert(r.error.message);renderCalendar()};
+}
+
+async function renderNotices(){
+  const r=await q('avisos_internos','id,titulo,texto,prioridade,ativo,created_at',x=>x.eq('ativo',true).order('created_at',{ascending:false}));
+  shell('Avisos internos','Comunicados exclusivos da comissão.','<button class="primary-btn" id="newNotice">+ Novo aviso</button><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">'+(x.prioridade==='urgente'?'!':'i')+'</div><div class="data-body"><small>'+esc(x.prioridade.toUpperCase())+'</small><h3>'+esc(x.titulo)+'</h3><p>'+esc(x.texto||'')+'</p><button class="mini-btn" data-read="'+x.id+'">Marcar como lido</button>'+(role==='admin'?'<button class="mini-btn" data-del-notice="'+x.id+'">Excluir</button>':'')+'</div></article>').join('')||empty('Nenhum aviso ativo.')+'</div>');
+  document.getElementById('newNotice').onclick=()=>noticeForm();screen.querySelectorAll('[data-read]').forEach(b=>b.onclick=async()=>{await supabaseClient.from('avisos_internos_lidos').upsert({aviso_id:b.dataset.read,user_id:session.user.id},{onConflict:'aviso_id,user_id'});b.textContent='Lido ✓';b.disabled=true});screen.querySelectorAll('[data-del-notice]').forEach(b=>b.onclick=async()=>{await upd('avisos_internos',b.dataset.delNotice,{ativo:false});renderNotices()});
+}
+function noticeForm(){
+  shell('Novo aviso','Mensagem interna para a equipe.','<form id="noticeForm" class="form-grid">'+formField('Título','<input name="titulo" required>')+formField('Prioridade','<select name="prioridade"><option>normal</option><option>baixa</option><option>alta</option><option>urgente</option></select>')+formField('Texto','<textarea name="texto" rows="5"></textarea>')+actions()+'</form>');
+  document.getElementById('noticeForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const r=await save('avisos_internos',{titulo:f.get('titulo'),texto:f.get('texto')||null,prioridade:f.get('prioridade'),criado_por:session.user.id});if(r.error)return alert(r.error.message);renderNotices()};
+}
+
+async function renderLineups(){
+  const [games,ats]=await Promise.all([q('jogos','id,adversario,data_jogo,categoria',x=>x.order('data_jogo',{ascending:false}).limit(100)),athletes()]);
+  const r=await q('escalacoes','id,jogo_id,categoria,formacao,titulares,reservas,capitao,observacoes,criado_em',x=>x.order('criado_em',{ascending:false}));
+  shell('Escalações','Montagem interna das equipes.','<button class="primary-btn" id="newLineup">+ Nova escalação</button><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">⚽</div><div class="data-body"><small>'+esc(x.categoria||'')+' • '+esc(x.formacao||'')+'</small><h3>'+esc(x.capitao?'Capitão: '+x.capitao:'Escalação')+'</h3><p>Titulares: '+esc((x.titulares||[]).map(a=>a.nome||a.name||a).join(', '))+'</p></div></article>').join('')||empty('Nenhuma escalação criada.')+'</div>');
+  document.getElementById('newLineup').onclick=()=>lineupForm(games.data||[],ats);
+}
+function lineupForm(games,ats){
+  shell('Nova escalação','Defina titulares e reservas.','<form id="lineupForm" class="form-grid">'+formField('Jogo','<select name="jogo_id">'+games.map(g=>'<option value="'+g.id+'">'+fmtDate(g.data_jogo)+' — Baixa Grande x '+esc(g.adversario)+'</option>').join('')+'</select>')+formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15</option><option>Sub-17</option><option>Sub-20</option></select>')+formField('Esquema','<input name="formacao" placeholder="Ex.: 4-3-3">')+formField('Titulares','<select name="titulares" multiple size="7">'+athleteOptions(ats)+'</select>')+formField('Reservas','<select name="reservas" multiple size="7">'+athleteOptions(ats)+'</select>')+formField('Capitão','<input name="capitao">')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
+  document.getElementById('lineupForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),s=e.target;const byId=id=>ats.find(a=>a.id===id)||{id};const r=await save('escalacoes',{jogo_id:f.get('jogo_id')||null,categoria:f.get('categoria'),formacao:f.get('formacao')||null,titulares:normalizeMulti(s.titulares).map(byId),reservas:normalizeMulti(s.reservas).map(byId),capitao:f.get('capitao')||null,observacoes:f.get('observacoes')||null,treinador_id:session.user.id});if(r.error)return alert(r.error.message);renderLineups()};
+}
+
+async function renderMore(){
+  const items=[['training','Treinos','Planejamento da preparação'],['attendance','Presença','Controle de frequência'],['evaluations','Avaliações','Avaliação técnica privada'],['performance','Desempenho','Estatísticas por temporada'],['calendar','Calendário','Agenda da comissão'],['notes','Anotações técnicas','Registros privados'],['notices','Avisos internos','Comunicados da equipe'],['lineups','Escalações','Montagem das equipes']];
+  if(role==='admin')items.push(['admin','Administração','Professores, categorias e acessos']);
+  shell('Área da comissão','Ferramentas internas dos treinadores.','<div class="quick-grid">'+items.map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div>');
+}
+
+async function renderAdmin(){
+  const r=await q('professores_app','id,nome,email,user_id,ativo',x=>x.order('id'));
+  shell('Administração','Gerenciamento dos acessos da comissão.','<p class="admin-warning">O administrador deve cadastrar o e-mail de cada professor após a conta Auth existir. O aplicativo não cria senhas automaticamente.</p><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">'+x.id+'</div><div class="data-body"><h3>'+esc(x.nome||'Professor '+x.id)+'</h3><p>'+esc(x.email||'E-mail não vinculado')+'</p><small>'+((x.ativo)?'ATIVO':'INATIVO')+'</small><button class="mini-btn" data-prof="'+x.id+'">Editar</button></div></article>').join('')+'</div>');
+  screen.querySelectorAll('[data-prof]').forEach(b=>b.onclick=()=>profForm((r.data||[]).find(x=>String(x.id)===b.dataset.prof)));
+}
+function profForm(x){
+  shell('Editar professor','Vincule a conta autorizada.','<form id="profForm" class="form-grid">'+formField('Nome','<input name="nome" value="'+esc(x.nome||'')+'" required>')+formField('E-mail da conta Auth','<input name="email" type="email" value="'+esc(x.email||'')+'" required>')+formField('Status','<select name="ativo"><option value="true">Ativo</option><option value="false">Inativo</option></select>')+actions()+'</form>');
+  document.querySelector('[name=ativo]').value=String(x.ativo);
+  document.getElementById('profForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const r=await upd('professores_app',x.id,{nome:f.get('nome'),email:f.get('email').trim().toLowerCase(),ativo:f.get('ativo')==='true'});if(r.error)return alert(r.error.message);renderAdmin()};
+}
+
+async function openScreen(name){
+  if(name==='home'){screen.hidden=true;dashboard.hidden=false;document.querySelector('.hero').hidden=false;loadDashboard()}
+  else if(name==='athletes')await renderAthletes();
+  else if(name==='calls')await renderCalls();
+  else if(name==='training')await renderTraining();
+  else if(name==='attendance'){const r=await q('treinos','id,data_treino,horario,local,status',x=>x.order('data_treino',{ascending:false}).limit(50));shell('Presença','Escolha o treino para registrar a frequência.','<div class="data-list">'+(r.data||[]).map(t=>'<article class="data-card"><div class="data-body"><small>'+esc(t.status)+'</small><h3>'+fmtDate(t.data_treino)+' • '+fmtTime(t.horario)+'</h3><p>'+esc(t.local||'')+'</p><button class="mini-btn" data-pres="'+t.id+'">Registrar presença</button></div></article>').join('')||empty('Nenhum treino cadastrado.')+'</div>');screen.querySelectorAll('[data-pres]').forEach(b=>b.onclick=()=>presenceForm(b.dataset.pres))}
+  else if(name==='evaluations')await renderEvaluations();
+  else if(name==='performance')await renderPerformance();
+  else if(name==='calendar')await renderCalendar();
+  else if(name==='notes')await renderNotes();
+  else if(name==='notices')await renderNotices();
+  else if(name==='lineups')await renderLineups();
+  else if(name==='admin'&&role==='admin')await renderAdmin();
+  else if(name==='more')await renderMore();
+  else return;
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-async function prepareImage(file){
-  return await new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1600,scale=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve({name:file.name,data:c.toDataURL('image/jpeg',.82)});};img.onerror=reject;img.src=reader.result;};reader.onerror=reject;reader.readAsDataURL(file);
-  });
+async function showAuthenticatedApp(s){
+  session=s;if(!(await coachGuard())){await supabaseClient.auth.signOut();return false}
+  const badge=document.getElementById('userBadge');badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||'';
+  document.getElementById('splashScreen').hidden=true;document.getElementById('loginScreen').hidden=true;document.getElementById('authGate').hidden=true;document.getElementById('appShell').hidden=false;document.body.classList.remove('auth-locked');
+  await loadDashboard();setupLiveSync();return true;
 }
-function renderImagePreview(){
-  const box=document.getElementById('imagePreview');if(!box)return;
-  box.hidden=!chatImages.length;
-  box.innerHTML=chatImages.map((x,i)=>'<div class="image-chip"><img src="'+x.data+'" alt="Imagem '+(i+1)+'"><button type="button" data-remove-image="'+i+'">×</button><small>Imagem '+(i+1)+'</small></div>').join('');
-  box.querySelectorAll('[data-remove-image]').forEach(b=>b.addEventListener('click',()=>{chatImages.splice(Number(b.dataset.removeImage),1);renderImagePreview();}));
+function bindLogin(){
+  if(loginBound)return;loginBound=true;const f=document.getElementById('globalLoginForm');
+  f.addEventListener('submit',async e=>{e.preventDefault();if(authBusy)return;authBusy=true;const err=document.getElementById('globalLoginError'),b=f.querySelector('button');err.hidden=true;b.disabled=true;b.textContent='Entrando…';const {data,error}=await supabaseClient.auth.signInWithPassword({email:document.getElementById('globalLoginEmail').value.trim(),password:document.getElementById('globalLoginPassword').value});if(error||!data.session||!(await showAuthenticatedApp(data.session))){err.hidden=false;err.textContent=error?'E-mail ou senha inválidos.':'Esta conta não está autorizada para a comissão.';if(data?.session)await supabaseClient.auth.signOut()}b.disabled=false;b.textContent='Entrar';authBusy=false})
 }
-async function sendChat(e){
-  e.preventDefault();const input=document.getElementById('chatInput'),text=input.value.trim();if(!text&&!chatImages.length)return;
-  const chat=document.getElementById('chat');const me=document.createElement('div');me.className='bubble me';me.textContent=(text||'Analise as fotos que enviei.')+(chatImages.length?'\n\n📷 '+chatImages.length+' foto(s) enviada(s).':'');chat.appendChild(me);input.value='';
-  const loading=document.createElement('div');loading.className='bubble';loading.textContent='Analisando…';chat.appendChild(loading);
-  const images=chatImages.map(x=>x.data);chatImages=[];renderImagePreview();
-  const historyForRequest=chatHistory.slice(-12);
-  try{
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),30000);
-    let result;
-    try{
-      result=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images,history:historyForRequest},signal:controller.signal});
-    }finally{clearTimeout(timeout)}
-    const{data,error}=result;
-    if(error){
-      let detail=error.message||'Não foi possível conectar ao Assistente.';
-      try{if(error.context){const body=await error.context.json();detail=body?.detail||body?.error||detail;}}catch(_e){}
-      throw new Error(detail);
-    }
-    if(data?.ok===false){
-      loading.textContent='Erro da IA: '+(data.detail||data.error||'erro desconhecido');
-      return;
-    }
-    const answer=data?.answer||'Não recebi uma resposta.';
-    loading.textContent=answer;
-    chatHistory.push({role:'user',content:text||'Analise as fotos enviadas.'},{role:'assistant',content:answer});
-    chatHistory=chatHistory.slice(-12);
-  }catch(err){
-    console.error(err);
-    let detail=err?.message||'erro desconhecido';
-    try{if(err?.context){const body=await err.context.json();detail=body?.detail||body?.error||detail;}}catch(_e){}
-    loading.textContent='Erro do Assistente: '+detail;
-  }
-}
-
-function setupLiveSync(){
+async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveChannel).catch(()=>{});liveChannel=null;await supabaseClient.auth.signOut();location.reload()}
+function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen)}});
+document.getElementById('logoutBtn').onclick=signOut;
+if(supabaseClient)supabaseClient.auth.onAuthStateChange(async(e,s)=>{if(e==='SIGNED_IN'&&s&&!document.getElementById('appShell').hidden)await showAuthenticatedApp(s)});
+async function boot(){
   if(!supabaseClient)return;
-  try{
-    liveChannel=supabaseClient.channel('app-live-sync')
-      .on('postgres_changes',{event:'*',schema:'public',table:'noticias'},()=>{setSync(true,'Atualizado agora');loadHome()})
-      .on('postgres_changes',{event:'*',schema:'public',table:'jogos'},()=>{setSync(true,'Atualizado agora');loadHome()})
-      .on('postgres_changes',{event:'*',schema:'public',table:'avisos'},()=>{setSync(true,'Atualizado agora');loadHome()})
-      .on('postgres_changes',{event:'*',schema:'public',table:'galeria'},()=>{setSync(true,'Atualizado agora');loadHome()})
-      .on('postgres_changes',{event:'*',schema:'public',table:'escalacoes'},()=>{setSync(true,'Atualizado agora');loadHome()})
-      .subscribe();
-  }catch(e){}
+  document.body.classList.add('auth-locked');
+  await new Promise(r=>setTimeout(r,1500));
+  const {data:{session:s}}=await supabaseClient.auth.getSession();
+  if(s&&await showAuthenticatedApp(s))return;
+  document.getElementById('splashScreen').hidden=true;document.getElementById('loginScreen').hidden=false;bindLogin();
 }
-
-async function refreshAll(){
-  setSync(false,'Atualizando...');
-  await loadHome();
-  setSync(true,'Sincronizado com o site');
-}
-
-document.getElementById('refreshBtn')?.addEventListener('click',async()=>{await refreshAll();if(!screen.hidden&&document.querySelector('.nav-item[data-screen="check"]')?.classList.contains('active'))await renderCheck();});
-document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen);return}
-  const u=e.target.closest('[data-url]');if(u){window.location.href=u.dataset.url}
-});
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshAll()});
-window.addEventListener('online',refreshAll);
-enterApp();setInterval(()=>{if(document.visibilityState==='visible'&&document.getElementById('authGate')?.hidden)refreshAll()},60000);
+boot();
