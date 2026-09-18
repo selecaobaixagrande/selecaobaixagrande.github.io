@@ -10,6 +10,7 @@ const fmtTime=v=>v?String(v).slice(0,5):'';
 const empty=m=>'<div class="empty-state">'+esc(m||'Nenhum registro encontrado.')+'</div>';
 const today=()=>new Date().toISOString().slice(0,10);
 const monthWeekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-d.getDay());return d.toISOString().slice(0,10)};
+const CALL_GROUPS={A:{label:'Grupo A'},B:{label:'Grupo B'},C:{label:'Grupo C'},D:{label:'Grupo D'}};
 function setSync(ok,text){const d=document.getElementById('syncDot'),t=document.getElementById('syncText');if(d)d.className=ok?'sync-ok':'sync-off';if(t)t.textContent=text}
 
 async function q(table,select='*',builder){let x=supabaseClient.from(table).select(select);if(builder)x=builder(x);return await x}
@@ -35,21 +36,58 @@ function athleteOptions(rows,selected=[]){const set=new Set(selected);return row
 
 async function loadDashboard(){
   if(!dashboard)return;
-  const [a,t,c,p,ptotal,n,e]=await Promise.all([
-    count('Atletas',x=>x.eq('status','Ativo')),
-    count('treinos',x=>x.gte('data_treino',today()).lt('data_treino',new Date(Date.now()+8*86400000).toISOString().slice(0,10))),
-    count('chamadas',x=>x.eq('status','aberta')),
-    count('presencas_treino',x=>x.eq('status','presente')),
-    count('presencas_treino'),
-    count('avisos_internos',x=>x.eq('ativo',true)),
-    q('treinos','id,data_treino,horario,local,objetivo,status,categoria_id',x=>x.gte('data_treino',today()).neq('status','cancelado').order('data_treino').order('horario').limit(1))
-  ]);
-  const total=a.count||0, present=p.count||0, freq=ptotal.count?Math.round((present/ptotal.count)*100):0;
-  dashboard.innerHTML='<div class="section-title"><h2>Painel da comissão</h2></div>'+
-    '<div class="stats-grid">'+[['⚽',total,'Atletas ativos'],['🏃',t.count||0,'Treinos próximos'],['✓',c.count||0,'Chamadas abertas'],['●',freq+'%','Frequência registrada']].map(x=>'<article class="stat-card"><span>'+x[0]+'</span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></article>').join('')+'</div>'+
-    '<div class="dashboard-grid"><article class="panel-card"><small>PRÓXIMO TREINO</small><h3>'+(e.data?.[0]?fmtDate(e.data[0].data_treino)+' • '+fmtTime(e.data[0].horario):'Nenhum agendado')+'</h3><p>'+(e.data?.[0]?[e.data[0].local,e.data[0].objetivo].filter(Boolean).join(' • '):'Cadastre um treino para acompanhar a preparação.')+'</p><button class="mini-btn" data-screen="training">Abrir treinos</button></article><article class="panel-card"><small>AVISOS INTERNOS</small><h3>'+(n.count||0)+' ativo(s)</h3><p>Comunicados da comissão técnica.</p><button class="mini-btn" data-screen="notices">Abrir avisos</button></article></div>'+
-    '<div class="section-title recent-title"><h2>Acesso rápido</h2></div><div class="quick-grid">'+[['calls','Chamadas','Convocar atletas'],['attendance','Presença','Registrar treino'],['evaluations','Avaliações','Avaliar atletas'],['lineups','Escalações','Montar equipe'],['calendar','Calendário','Agenda interna'],['notes','Anotações','Notas técnicas']].map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div>';
-  setSync(![a,t,c,p,ptotal,n,e].some(x=>x?.error),'Banco conectado');
+  try{
+    const [a,t,calls,p,ptotal,n,trainings,games]=await Promise.all([
+      count('Atletas',x=>x.eq('status','Ativo')),
+      count('treinos',x=>x.gte('data_treino',today()).lt('data_treino',new Date(Date.now()+8*86400000).toISOString().slice(0,10)).neq('status','cancelado')),
+      count('chamadas',x=>x.eq('status','aberta')),
+      count('presencas_treino',x=>x.eq('status','presente')),
+      count('presencas_treino'),
+      count('avisos_internos',x=>x.eq('ativo',true)),
+      q('treinos','id,data_treino,horario,local,objetivo,status,categoria_id',x=>x.gte('data_treino',today()).neq('status','cancelado').order('data_treino').order('horario').limit(1)),
+      q('jogos','id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario',x=>x.gte('data_jogo',today()).order('data_jogo').order('horario').limit(1))
+    ]);
+    const total=a.count||0;
+    const present=p.count||0;
+    const freq=ptotal.count?Math.round((present/ptotal.count)*100):0;
+    const nextTraining=trainings.data?.[0]||null;
+    const nextGame=games.data?.[0]||null;
+    const dataErrors=[a,t,calls,p,ptotal,n,trainings,games].filter(x=>x?.error);
+    const trainingText=nextTraining
+      ? fmtDate(nextTraining.data_treino)+' • '+fmtTime(nextTraining.horario)
+      : 'Nenhum treino agendado';
+    const gameText=nextGame
+      ? fmtDate(nextGame.data_jogo)+' • '+fmtTime(nextGame.horario)
+      : 'Nenhum jogo agendado';
+
+    dashboard.innerHTML=
+      '<div class="section-title"><h2>Visão da comissão</h2><span class="section-caption">Controle interno</span></div>'+
+      '<div class="stats-grid">'+[
+        ['👥',total,'Atletas ativos'],
+        ['▦',t.count||0,'Treinos próximos'],
+        ['✓',calls.count||0,'Chamadas abertas'],
+        ['●',freq+'%','Frequência']
+      ].map(x=>'<article class="stat-card"><span>'+x[0]+'</span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></article>').join('')+
+      '<div class="dashboard-grid">'+
+        '<article class="panel-card"><small>PRÓXIMO TREINO</small><h3>'+esc(trainingText)+'</h3><p>'+esc(nextTraining?[nextTraining.local,nextTraining.objetivo].filter(Boolean).join(' • '):'Planeje a próxima atividade da equipe.')+'</p><button class="mini-btn" data-screen="training">Ver detalhes →</button></article>'+
+        '<article class="panel-card"><small>PRÓXIMO JOGO</small><h3>'+esc(gameText)+'</h3><p>'+esc(nextGame?[nextGame.adversario,nextGame.local,nextGame.competicao].filter(Boolean).join(' • '):'Nenhum jogo futuro cadastrado.')+'</p><button class="mini-btn" data-screen="games">Ver detalhes →</button></article>'+
+      '</div>'+
+      '<div class="section-title recent-title"><h2>Acesso rápido</h2></div>'+
+      '<div class="quick-grid">'+[
+        ['calls','Chamadas','Convocar e controlar presença'],
+        ['athletes','Atletas','Perfis e acompanhamento'],
+        ['notices','Avisos da Comissão','Comunicação interna'],
+        ['performance','Relatórios','Evolução e estatísticas'],
+        ['evaluations','Avaliações','Avaliação técnica privada'],
+        ['calendar','Calendário','Agenda da comissão']
+      ].map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+
+      '<article class="panel-card commission-footer"><small>SELEÇÃO DE BAIXA GRANDE</small><h3>Juntos pelo mesmo objetivo.</h3><p>Disciplina • Trabalho • Evolução</p></article>';
+    setSync(!dataErrors.length,'Banco conectado');
+  }catch(err){
+    console.error('Falha ao carregar painel:',err);
+    setSync(false,'Não foi possível atualizar os dados');
+    dashboard.innerHTML='<div class="empty-state">Não foi possível atualizar o painel agora. As funções da comissão continuam disponíveis para tentar novamente.</div>';
+  }
 }
 
 function shell(title,desc,body){screen.hidden=false;dashboard.hidden=true;document.querySelector('.hero').hidden=true;screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">⚽</div><div><h2>'+esc(title)+'</h2><p>'+esc(desc||'')+'</p></div></div>'+body}
@@ -325,10 +363,44 @@ function lineupForm(games,ats){
   document.getElementById('lineupForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),s=e.target;const byId=id=>ats.find(a=>a.id===id)||{id};const r=await save('escalacoes',{jogo_id:f.get('jogo_id')||null,categoria:f.get('categoria'),formacao:f.get('formacao')||null,titulares:normalizeMulti(s.titulares).map(byId),reservas:normalizeMulti(s.reservas).map(byId),capitao:f.get('capitao')||null,observacoes:f.get('observacoes')||null,treinador_id:session.user.id});if(r.error)return alert(r.error.message);renderLineups()};
 }
 
+async function renderGames(){
+  const r=await q('jogos','id,adversario,competicao,data_jogo,horario,local,status,gols_baixa_grande,gols_adversario,observacoes',x=>x.order('data_jogo',{ascending:false}).limit(100));
+  shell('Jogos','Partidas e preparação da comissão.','<button class="primary-btn" id="newGame">+ Novo jogo</button><div class="data-list">'+(r.data||[]).map(x=>{
+    const score=x.status==='encerrado'?'<b> '+(x.gols_baixa_grande??0)+' × '+(x.gols_adversario??0)+'</b>':'';
+    return '<article class="data-card"><div class="assistant-icon">⚽</div><div class="data-body"><small>'+esc((x.status||'agendado').toUpperCase())+' • '+esc(x.competicao||'JOGO')+'</small><h3>Baixa Grande x '+esc(x.adversario)+score+'</h3><p>'+esc([fmtDate(x.data_jogo),fmtTime(x.horario),x.local].filter(Boolean).join(' • '))+'</p><button class="mini-btn" data-edit-game="'+x.id+'">Editar</button> <button class="mini-btn" data-del-game="'+x.id+'">Excluir</button></div></article>';
+  }).join('')||empty('Nenhum jogo cadastrado.')+'</div>');
+  document.getElementById('newGame').onclick=()=>gameForm();
+  screen.querySelectorAll('[data-edit-game]').forEach(b=>b.onclick=()=>gameForm((r.data||[]).find(x=>x.id===b.dataset.editGame)));
+  screen.querySelectorAll('[data-del-game]').forEach(b=>b.onclick=async()=>{if(confirm('Excluir este jogo?')){const z=await del('jogos',b.dataset.delGame);if(z.error)alert(z.error.message);else renderGames()}});
+}
+function gameForm(x=null){
+  shell(x?'Editar jogo':'Novo jogo','Cadastre uma partida para a comissão acompanhar.','<form id="gameForm" class="form-grid">'+
+    formField('Adversário','<input name="adversario" required value="'+esc(x?.adversario||'')+'">')+
+    formField('Competição','<input name="competicao" value="'+esc(x?.competicao||'')+'">')+
+    formField('Data','<input name="data_jogo" type="date" required value="'+(x?.data_jogo||today())+'">')+
+    formField('Horário','<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
+    formField('Local','<input name="local" value="'+esc(x?.local||'')+'">')+
+    formField('Status','<select name="status"><option value="agendado">Agendado</option><option value="ao_vivo">Ao vivo</option><option value="encerrado">Encerrado</option></select>')+
+    formField('Gols da Baixa Grande','<input name="gols_baixa_grande" type="number" min="0" value="'+(x?.gols_baixa_grande??0)+'">')+
+    formField('Gols do adversário','<input name="gols_adversario" type="number" min="0" value="'+(x?.gols_adversario??0)+'">')+
+    formField('Observações','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+
+    actions()+'</form>');
+  document.querySelector('[name=status]').value=x?.status||'agendado';
+  document.getElementById('gameForm').onsubmit=async e=>{
+    e.preventDefault();
+    const f=new FormData(e.target);
+    const row={adversario:f.get('adversario'),competicao:f.get('competicao')||null,data_jogo:f.get('data_jogo'),horario:f.get('horario')||null,local:f.get('local')||null,status:f.get('status'),gols_baixa_grande:Number(f.get('gols_baixa_grande')||0),gols_adversario:Number(f.get('gols_adversario')||0),observacoes:f.get('observacoes')||null};
+    const z=x?await upd('jogos',x.id,row):await save('jogos',row);
+    if(z.error)return alert(z.error.message);
+    renderGames();
+  };
+}
+
 async function renderMore(){
-  const items=[['training','Treinos','Planejamento da preparação'],['attendance','Presença','Controle de frequência'],['evaluations','Avaliações','Avaliação técnica privada'],['performance','Desempenho','Estatísticas por temporada'],['calendar','Calendário','Agenda da comissão'],['notes','Anotações técnicas','Registros privados'],['notices','Avisos internos','Comunicados da equipe'],['lineups','Escalações','Montagem das equipes']];
+  const items=[['training','Treinos','Planejamento da preparação'],['attendance','Presença','Controle de frequência'],['evaluations','Avaliações','Avaliação técnica privada'],['performance','Relatórios','Evolução e estatísticas'],['calendar','Calendário','Agenda da comissão'],['notes','Anotações técnicas','Registros privados'],['notices','Avisos da Comissão','Comunicados da equipe'],['lineups','Escalações','Montagem das equipes'],['games','Jogos','Partidas e preparação']];
   if(role==='admin')items.push(['admin','Administração','Professores, categorias e acessos']);
-  shell('Área da comissão','Ferramentas internas dos treinadores.','<div class="quick-grid">'+items.map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div>');
+  shell('Mais','Ferramentas internas dos treinadores.','<div class="quick-grid">'+items.map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div><div class="panel-card" style="margin-top:12px"><small>SESSÃO</small><h3>Acesso restrito</h3><p>Você está em um ambiente privado da comissão técnica.</p><button class="primary-btn" id="logoutAction">Sair do aplicativo</button></div>');
+  document.getElementById('logoutAction').onclick=signOut;
 }
 
 async function renderCategoriesAdmin(){
@@ -351,6 +423,7 @@ async function openScreen(name){
   if(name==='home'){screen.hidden=true;dashboard.hidden=false;document.querySelector('.hero').hidden=false;loadDashboard()}
   else if(name==='athletes')await renderAthletes();
   else if(name==='calls')await renderCalls();
+  else if(name==='games')await renderGames();
   else if(name==='training')await renderTraining();
   else if(name==='attendance'){const r=await q('treinos','id,data_treino,horario,local,status',x=>x.order('data_treino',{ascending:false}).limit(50));shell('Presença','Escolha o treino para registrar a frequência.','<div class="data-list">'+(r.data||[]).map(t=>'<article class="data-card"><div class="data-body"><small>'+esc(t.status)+'</small><h3>'+fmtDate(t.data_treino)+' • '+fmtTime(t.horario)+'</h3><p>'+esc(t.local||'')+'</p><button class="mini-btn" data-pres="'+t.id+'">Registrar presença</button></div></article>').join('')||empty('Nenhum treino cadastrado.')+'</div>');screen.querySelectorAll('[data-pres]').forEach(b=>b.onclick=()=>presenceForm(b.dataset.pres))}
   else if(name==='evaluations')await renderEvaluations();
@@ -499,7 +572,7 @@ function bindLogin(){
 async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveChannel).catch(()=>{});liveChannel=null;await supabaseClient.auth.signOut();location.reload()}
 function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen)}});
-document.getElementById('logoutBtn').onclick=signOut;
+document.getElementById('logoutBtn').onclick=()=>openScreen('more');
 // O login é controlado diretamente por bindLogin(). Não executamos chamadas
 // assíncronas em onAuthStateChange, evitando corrida/deadlock na entrada.
 function boot(){
