@@ -175,11 +175,8 @@ async function renderCalls(){
 }
 
 async function callForm(cats,ats,x=null){
-  const selectedGroup=x?.grupo||"";
-  shell(x?"Editar chamada":"Nova chamada","Selecione um grupo. Somente os atletas desse grupo serão incluídos.",
+  shell(x?"Editar chamada":"Nova chamada","Todos os atletas ativos serão incluídos automaticamente, separados por categoria.",
     '<form id="callForm" class="form-grid">'+
-    formField("Grupo",'<select name="grupo" id="callGroup" required>'+groupOptions(selectedGroup)+'</select>')+
-    '<div class="panel-card" id="groupPreview"><strong>Selecione um grupo para carregar os atletas.</strong></div>'+
     formField("Tipo",'<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+
     formField("Data",'<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+
     formField("Horário",'<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
@@ -187,31 +184,16 @@ async function callForm(cats,ats,x=null){
     formField("Observações",'<textarea name="observacoes">'+esc(x?.observacoes||"")+'</textarea>')+
     actions()+"</form>");
 
-  const groupSelect=document.getElementById("callGroup");
-  const preview=document.getElementById("groupPreview");
-  const updatePreview=()=>{
-    const rows=athletesForCallGroup(ats,groupSelect.value);
-    preview.innerHTML=groupSelect.value
-      ? "<strong>"+esc(CALL_GROUPS[groupSelect.value].label)+"</strong><br><small>"+rows.length+" atleta(s) ativo(s) serão incluídos. Nomes repetidos são removidos automaticamente.</small>"
-      : "<strong>Selecione um grupo para carregar os atletas.</strong>";
-  };
-  groupSelect.addEventListener("change",updatePreview);
-  updatePreview();
-
   document.getElementById("callForm").onsubmit=async e=>{
     e.preventDefault();
     const f=new FormData(e.target);
-    const groupKey=String(f.get("grupo")||"");
-    if(!CALL_GROUPS[groupKey])return alert("Selecione um grupo antes de salvar.");
-    const selectedAthletes=athletesForCallGroup(ats,groupKey);
-    if(!selectedAthletes.length)return alert("Nenhum atleta ativo foi encontrado neste grupo.");
+    const active=uniqueAthletes(ats.filter(a=>String(a.status||"Ativo").toLowerCase()==="ativo"));
+    if(!active.length)return alert("Nenhum atleta ativo foi encontrado.");
 
-    const group=CALL_GROUPS[groupKey];
-    const category=group.category?cats.find(c=>normName(c.nome)===normName(group.category)):null;
     const row={
       tipo:f.get("tipo"),
-      categoria_id:category?.id||null,
-      grupo:groupKey,
+      categoria_id:null,
+      grupo:null,
       data_chamada:f.get("data_chamada"),
       horario:f.get("horario")||null,
       local:f.get("local")||null,
@@ -230,15 +212,13 @@ async function callForm(cats,ats,x=null){
       id=r.data.id;
     }
 
-    const links=uniqueAthletes(selectedAthletes).map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"}));
+    const links=active.map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"}));
     const rr=await supabaseClient.from("chamada_atletas").insert(links);
     if(rr.error)return alert("A chamada não foi salva: "+rr.error.message);
-    alert("Chamada salva com "+links.length+" atleta(s) do grupo "+group.label+".");
     renderCalls();
   };
   document.querySelector("[name=tipo]").value=x?.tipo||"treino";
 }
-
 async function callDetail(id,all,ats){
   const x=all.find(y=>y.id===id);
   if(!x)return;
