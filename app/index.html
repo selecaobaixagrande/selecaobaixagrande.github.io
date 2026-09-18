@@ -61,7 +61,18 @@
     </nav>
   </div>
 
+  <script>
+    // Fallback visual: a tela de abertura nunca fica presa indefinidamente.
+    setTimeout(function(){
+      var splash=document.getElementById('splashScreen');
+      var login=document.getElementById('loginScreen');
+      if(splash && !splash.hidden && login){
+        splash.hidden=true;
+        login.hidden=false;
+      }
+    },5000);
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=30"></script>
+  <script src="app.js?v=31"></script>
   </body>
 </html>
