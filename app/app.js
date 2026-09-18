@@ -8,7 +8,7 @@ let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHis
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
 installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=9').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=10').catch(()=>{});
 
 const content={
  news:['Notícias','As notícias publicadas no portal oficial aparecem aqui automaticamente.'],
@@ -77,17 +77,49 @@ function renderList(name,data){
 
 async function loadHome(){
   if(!homeUpdates)return;
-  homeUpdates.innerHTML=empty('Atualizando informações...');
-  const [news,games,alerts]=await Promise.all([getNews(4),getGames(4),queryTable('avisos','id,titulo,texto,ativo,criado_em',q=>q.eq('ativo',true).order('criado_em',{ascending:false}).limit(4))]);
-  const items=[];
-  (news.data||[]).forEach(x=>items.push({kind:'NOTÍCIA',title:x.titulo,date:x.criado_em,screen:'news'}));
-  (games.data||[]).forEach(x=>items.push({kind:x.status==='ao_vivo'?'AO VIVO':'JOGO',title:'Baixa Grande × '+x.adversario,date:x.data_jogo,screen:'games'}));
-  (alerts.data||[]).forEach(x=>items.push({kind:'AVISO',title:x.titulo,date:x.criado_em,screen:'alerts'}));
-  items.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(!items.length){homeUpdates.innerHTML=empty();return}
-  homeUpdates.innerHTML=items.slice(0,8).map(x=>'<button class="update-row" data-screen="'+x.screen+'"><span class="update-kind">'+esc(x.kind)+'</span><strong>'+esc(x.title)+'</strong><small>'+fmtDate(x.date)+'</small></button>').join('');
+  homeUpdates.innerHTML=empty('Verificando conexão com o site...');
+  const [news,games,alerts]=await Promise.all([
+    getNews(1),
+    queryTable('jogos','id,adversario,data_jogo,status,gols_baixa_grande,gols_adversario',q=>q.eq('status','encerrado').order('data_jogo',{ascending:false}).limit(1)),
+    queryTable('avisos','id',q=>q.eq('ativo',true).limit(1))
+  ]);
+  const errors=[news,games,alerts].filter(x=>x.error).length;
+  if(errors){setSync(false,'Problema na conexão');homeUpdates.innerHTML=empty('Não foi possível verificar o site agora.');return}
+  const latest=games.data?.[0];
+  homeUpdates.innerHTML=[
+    '<article class="data-card"><div class="assistant-icon">✓</div><div class="data-body"><small>CONEXÃO</small><h3>Banco de dados conectado</h3><p>O aplicativo está lendo os dados oficiais do site.</p></div></article>',
+    latest?'<article class="data-card"><div class="assistant-icon">⚽</div><div class="data-body"><small>ÚLTIMO JOGO</small><h3>Baixa Grande '+esc(latest.gols_baixa_grande??'-')+' × '+esc(latest.gols_adversario??'-')+' '+esc(latest.adversario)+'</h3><p>'+fmtDate(latest.data_jogo)+' • '+esc(latest.status)+'</p></div></article>':''
+  ].join('');
+  setSync(true,'Site sincronizado');
 }
 
+async function renderCheck(){
+  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✓</div><div><h2>Verificar site</h2><p>Conferência automática dos dados publicados.</p></div></div><div id="checkBox" class="data-list"><div class="empty-state">Verificando...</div></div>';
+  const box=document.getElementById('checkBox');
+  if(!supabaseClient){box.innerHTML=empty('Banco indisponível.');return}
+  const checks=[];
+  const count=async(table,filter)=>{let q=supabaseClient.from(table).select('*',{count:'exact',head:true});if(filter)q=filter(q);return await q};
+  const [news,games,alerts,photos,lineups]=await Promise.all([
+    count('noticias',q=>q.eq('publicado',true)),
+    count('jogos'),
+    count('avisos',q=>q.eq('ativo',true)),
+    count('galeria',q=>q.eq('ativo',true)),
+    count('escalacoes')
+  ]);
+  const errors=[news,games,alerts,photos,lineups].filter(x=>x.error);
+  if(errors.length){box.innerHTML=empty('Não foi possível concluir a verificação.');return}
+  const latest=await queryTable('jogos','id,adversario,data_jogo,status,gols_baixa_grande,gols_adversario',q=>q.eq('status','encerrado').order('data_jogo',{ascending:false}).limit(1));
+  const latestGame=latest.data?.[0];
+  const rows=[
+    ['Notícias publicadas',news.count??0,'ok'],
+    ['Jogos cadastrados',games.count??0,'ok'],
+    ['Avisos ativos',alerts.count??0,'ok'],
+    ['Fotos na galeria',photos.count??0,'ok'],
+    ['Escalações',lineups.count??0,'ok'],
+    ['Último jogo registrado',latestGame?('Baixa Grande '+(latestGame.gols_baixa_grande??'-')+' × '+(latestGame.gols_adversario??'-')+' '+latestGame.adversario):'Nenhum','ok']
+  ];
+  box.innerHTML=rows.map(r=>'<article class="data-card"><div class="assistant-icon">'+(r[2]==='ok'?'✓':'!')+'</div><div class="data-body"><small>VERIFICAÇÃO</small><h3>'+esc(r[0])+'</h3><p>'+esc(String(r[1]))+'</p></div></article>').join('');
+}
 function renderCategories(){
   screen.insertAdjacentHTML('beforeend','<div class="category-list">'+
     ['Sub-13','Sub-15','Sub-17','Sub-20'].map((c,i)=>'<article class="data-card"><div class="assistant-icon">'+(i+1)+'</div><div class="data-body"><small>FUTEBOL DE BASE</small><h3>'+c+'</h3><p>Informações e novidades da categoria no portal oficial.</p></div></article>').join('')+
@@ -95,13 +127,9 @@ function renderCategories(){
 }
 
 function renderMore(){
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>Mais</h2><p>Acesso às áreas complementares do aplicativo.</p><div class="grid more-grid">'+
-    '<button class="tile" data-screen="categories"><b>Categorias</b><small>Sub-13, Sub-15, Sub-17 e Sub-20</small></button>'+
-    '<button class="tile" data-screen="results"><b>Resultados</b><small>Placar das partidas</small></button>'+
-    '<button class="tile" data-screen="squad"><b>Elenco</b><small>Atletas publicados</small></button>'+
-    '<button class="tile" data-screen="gallery"><b>Galeria</b><small>Fotos oficiais</small></button>'+
-    '<button class="tile" data-screen="lineups"><b>Escalações</b><small>Formações e relacionados</small></button>'+
-    '<button class="tile" data-screen="alerts"><b>Avisos</b><small>Comunicados oficiais</small></button>'+
+  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>Mais</h2><p>Ferramentas do aplicativo.</p><div class="grid more-grid">'+
+    '<button class="tile" data-screen="assistant"><b>Assistente</b><small>Produção e comandos do site</small></button>'+
+    '<button class="tile" data-screen="check"><b>Verificar site</b><small>Conferência automática</small></button>'+
     '<button class="tile" data-url="'+SITE_URL+'"><b>Site oficial</b><small>Abrir portal completo</small></button>'+
     '<button class="tile" data-url="'+INSTAGRAM_URL+'"><b>Instagram</b><small>@selecaobaixagrande</small></button>'+
     '</div>';
@@ -129,6 +157,7 @@ async function openScreen(name){
     screen.hidden=true;document.querySelector('.hero').hidden=false;document.querySelectorAll('.section').forEach(x=>x.hidden=false);loadHome();
   }else if(name==='more'){
     document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;renderMore();
+  }else if(name==='check'){document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;await renderCheck();
   }else if(name==='assistant'){
     document.querySelector('.hero').hidden=true;document.querySelectorAll('.section').forEach(x=>x.hidden=true);screen.hidden=false;await renderAssistant();
   }else{
@@ -204,7 +233,7 @@ async function refreshAll(){
   setSync(true,'Sincronizado com o site');
 }
 
-document.getElementById('refreshBtn')?.addEventListener('click',refreshAll);
+document.getElementById('refreshBtn')?.addEventListener('click',async()=>{await refreshAll();if(!screen.hidden&&document.querySelector('.nav-item[data-screen="check"]')?.classList.contains('active'))await renderCheck();});
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen);return}
   const u=e.target.closest('[data-url]');if(u){window.location.href=u.dataset.url}
