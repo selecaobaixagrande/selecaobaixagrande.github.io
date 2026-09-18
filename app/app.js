@@ -100,23 +100,98 @@ async function renderCalls(){
   list.onclick=e=>{const b=e.target.closest('[data-call]');if(b)callDetail(b.dataset.call,calls.data||[],ats)};
 }
 async function callForm(cats,ats,x=null){
-  shell(x?'Editar chamada':'Nova chamada','Selecione os atletas convocados.','<form id="callForm" class="form-grid">'+formField('Tipo','<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+formField('Categoria','<select name="categoria_id">'+cats.map(c=>'<option value="'+c.id+'">'+esc(c.nome)+'</option>').join('')+'</select>')+formField('Data','<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+formField('Horário','<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+formField('Local','<input name="local" value="'+esc(x?.local||'')+'">')+formField('Observações','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+formField('Atletas convocados','<select name="atletas" multiple size="8">'+athleteOptions(ats,x?.athleteIds||[])+'</select>')+actions()+'</form>');
-  document.getElementById('callForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),ids=normalizeMulti(e.target.atletas);const row={tipo:f.get('tipo'),categoria_id:f.get('categoria_id')||null,data_chamada:f.get('data_chamada'),horario:f.get('horario')||null,local:f.get('local')||null,observacoes:f.get('observacoes')||null,criado_por:session.user.id};let id=x?.id;if(x){const r=await upd('chamadas',id,row);if(r.error)return alert(r.error.message);await del('chamada_atletas',x.id).catch(()=>{})}else{const r=await save('chamadas',row);if(r.error)return alert(r.error.message);id=r.data.id}if(ids.length){const rr=await supabaseClient.from('chamada_atletas').insert(ids.map(a=>({chamada_id:id,atleta_id:a,status:'pendente'})));if(rr.error)return alert(rr.error.message)}renderCalls()};
-  document.querySelector('[name=tipo]').value=x?.tipo||'treino';if(x)document.querySelector('[name=categoria_id]').value=x.categoria_id;
+  shell(x?'Editar chamada':'Nova chamada','A chamada será criada com todos os atletas ativos, organizados por categoria.','<form id="callForm" class="form-grid">'+
+    formField('Tipo','<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+
+    formField('Data','<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+
+    formField('Horário','<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
+    formField('Local','<input name="local" value="'+esc(x?.local||'')+'">')+
+    formField('Observações','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+
+    '<div class="admin-warning" style="grid-column:1/-1">Não é mais necessário selecionar atletas convocados. Ao abrir a chamada, todos os atletas ativos aparecerão automaticamente, separados por categoria, com os botões PRESENTE e FALTOU.</div>'+
+    actions()+'</form>');
+  document.getElementById('callForm').onsubmit=async e=>{
+    e.preventDefault();
+    const f=new FormData(e.target);
+    const row={
+      tipo:f.get('tipo'),
+      categoria_id:null,
+      data_chamada:f.get('data_chamada'),
+      horario:f.get('horario')||null,
+      local:f.get('local')||null,
+      observacoes:f.get('observacoes')||null,
+      criado_por:session.user.id
+    };
+    let id=x?.id;
+    if(x){
+      const r=await upd('chamadas',id,row);
+      if(r.error)return alert(r.error.message);
+    }else{
+      const r=await save('chamadas',row);
+      if(r.error)return alert(r.error.message);
+      id=r.data.id;
+    }
+    const active=ats.filter(a=>String(a.status||'Ativo').toLowerCase()==='ativo');
+    const current=await q('chamada_atletas','atleta_id',z=>z.eq('chamada_id',id));
+    const currentIds=new Set((current.data||[]).map(a=>a.atleta_id));
+    const missing=active.filter(a=>!currentIds.has(a.id));
+    if(missing.length){
+      const rr=await supabaseClient.from('chamada_atletas').insert(missing.map(a=>({chamada_id:id,atleta_id:a.id,status:'pendente'})));
+      if(rr.error)return alert(rr.error.message);
+    }
+    renderCalls();
+  };
+  document.querySelector('[name=tipo]').value=x?.tipo||'treino';
 }
 async function callDetail(id,all,ats){
   const x=all.find(y=>y.id===id);
   if(!x)return;
-  const m=await q('chamada_atletas','id,atleta_id,status,observacao',z=>z.eq('chamada_id',id));
-  const selected=m.data||[];
+
+  let m=await q('chamada_atletas','id,atleta_id,status,observacao',z=>z.eq('chamada_id',id));
+  let selected=m.data||[];
+
+  // Garante que chamadas antigas também recebam todos os atletas ativos.
+  const active=ats.filter(a=>String(a.status||'Ativo').toLowerCase()==='ativo');
+  const currentIds=new Set(selected.map(s=>s.atleta_id));
+  const missing=active.filter(a=>!currentIds.has(a.id));
+  if(missing.length){
+    const rr=await supabaseClient.from('chamada_atletas').insert(missing.map(a=>({chamada_id:id,atleta_id:a.id,status:'pendente'})));
+    if(rr.error)return alert(rr.error.message);
+    m=await q('chamada_atletas','id,atleta_id,status,observacao',z=>z.eq('chamada_id',id));
+    selected=m.data||[];
+  }
+
   const present=selected.filter(s=>s.status==='presente').length;
   const absent=selected.filter(s=>s.status==='faltou').length;
 
-  shell('Chamada','Marque a presença de cada atleta.',
+  const grouped={};
+  selected.forEach(s=>{
+    const a=ats.find(y=>y.id===s.atleta_id);
+    if(!a)return;
+    const cat=a.categoria||'Sem categoria';
+    if(!grouped[cat])grouped[cat]=[];
+    grouped[cat].push({s,a});
+  });
+
+  const categoryOrder=['Sub-13','Sub-15','Sub-17','Sub-20'];
+  const orderedCategories=Object.keys(grouped).sort((a,b)=>{
+    const ia=categoryOrder.indexOf(a),ib=categoryOrder.indexOf(b);
+    if(ia!==-1&&ib!==-1)return ia-ib;
+    if(ia!==-1)return -1;
+    if(ib!==-1)return 1;
+    return a.localeCompare(b,'pt-BR');
+  });
+
+  const categoryHtml=orderedCategories.map(cat=>{
+    const rows=grouped[cat].sort((u,v)=>String(u.a.nome||'').localeCompare(String(v.a.nome||''),'pt-BR'));
+    return '<section class="call-category"><div class="section-title"><h2>'+esc(cat)+'</h2><small>'+rows.length+' atleta(s)</small></div><div class="data-list">'+rows.map(({s,a})=>
+      '<article class="data-card call-athlete-row" data-row="'+s.id+'"><div class="data-body"><h3>'+esc(a.nome||'Atleta')+'</h3><div class="attendance-actions"><button type="button" class="attendance-btn present '+(s.status==='presente'?'selected':'')+'" data-presente="'+s.id+'">✓ PRESENTE</button><button type="button" class="attendance-btn absent '+(s.status==='faltou'?'selected':'')+'" data-faltou="'+s.id+'">✕ FALTOU</button></div></div></article>'
+    ).join('')+'</div></section>';
+  }).join('');
+
+  shell('Chamada','Todos os atletas ativos, separados por categoria.',
     '<div class="panel-card call-summary"><small>'+esc((x.tipo||'').toUpperCase())+' • '+fmtDate(x.data_chamada)+' • '+fmtTime(x.horario)+'</small>'+
     '<h3>'+esc(x.local||'Local não informado')+'</h3>'+
     '<div class="call-counters"><span class="call-count present"><b id="callPresent">'+present+'</b> Presentes</span><span class="call-count absent"><b id="callAbsent">'+absent+'</b> Faltaram</span><span class="call-count pending"><b id="callPending">'+(selected.length-present-absent)+'</b> Pendentes</span></div></div>'+
-    '<div class="data-list call-athletes">'+selected.map(s=>{const a=ats.find(y=>y.id===s.atleta_id);return '<article class="data-card call-athlete-row" data-row="'+s.id+'"><div class="data-body"><h3>'+esc(a?.nome||'Atleta')+'</h3><p>'+esc(a?.categoria||'')+'</p><div class="attendance-actions"><button type="button" class="attendance-btn present '+(s.status==='presente'?'selected':'')+'" data-presente="'+s.id+'">✓ PRESENTE</button><button type="button" class="attendance-btn absent '+(s.status==='faltou'?'selected':'')+'" data-faltou="'+s.id+'">✕ FALTOU</button></div></div></article>'}).join('')+'</div>'+
+    '<div class="call-athletes">'+categoryHtml+'</div>'+
     '<div class="call-footer-actions"><button class="primary-btn" id="finishCall">Encerrar chamada</button><button class="mini-btn" data-cancel-call="'+id+'">Cancelar chamada</button></div>'
   );
 
@@ -154,7 +229,6 @@ async function callDetail(id,all,ats){
     renderCalls();
   };
 }
-
 async function renderTraining(){
   const [cats,r]=await Promise.all([categories(),q('treinos','id,data_treino,horario,local,objetivo,observacoes,status,categoria_id',x=>x.order('data_treino',{ascending:false}).limit(100))]);
   shell('Treinos','Planejamento e histórico da preparação.','<button class="primary-btn" id="newTraining">+ Novo treino</button><div id="trainingList" class="data-list"></div>');
