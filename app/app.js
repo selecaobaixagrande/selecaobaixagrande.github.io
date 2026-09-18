@@ -4,11 +4,11 @@ const SITE_URL='https://selecaobaixagrande.github.io/';
 const INSTAGRAM_URL='https://www.instagram.com/selecaobaixagrande/';
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)||null;
 const app=document.getElementById('app'),screen=document.getElementById('screen'),installBtn=document.getElementById('installBtn'),homeUpdates=document.getElementById('homeUpdates');
-let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[];
+let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHistory=[];
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
 installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=7').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=9').catch(()=>{});
 
 const content={
  news:['Notícias','As notícias publicadas no portal oficial aparecem aqui automaticamente.'],
@@ -110,7 +110,7 @@ function renderMore(){
 async function renderAssistant(){
   if(!supabaseClient){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Conexão com o banco indisponível.');return}
   const{data:{session}}=await supabaseClient.auth.getSession();
-  if(!session){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Área administrativa</h2><p>Entre para usar o Assistente da Seleção.</p></div></div><form id="loginForm" class="chat-form" style="display:flex;flex-direction:column"><input id="loginEmail" type="email" autocomplete="username" placeholder="E-mail"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Senha"><button type="submit" style="height:44px">Entrar</button><div id="loginError" class="empty-state" hidden></div></form>';document.getElementById('loginForm').addEventListener('submit',loginAdmin);return}
+  if(!session){chatHistory=[];screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Área administrativa</h2><p>Entre para usar o Assistente da Seleção.</p></div></div><form id="loginForm" class="chat-form" style="display:flex;flex-direction:column"><input id="loginEmail" type="email" autocomplete="username" placeholder="E-mail"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Senha"><button type="submit" style="height:44px">Entrar</button><div id="loginError" class="empty-state" hidden></div></form>';document.getElementById('loginForm').addEventListener('submit',loginAdmin);return}
   screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><div id="imagePreview" class="image-preview" hidden></div><form class="chat-form" id="chatForm"><button type="button" class="attach-btn" id="attachBtn" title="Adicionar fotos">＋</button><input id="imageInput" type="file" accept="image/*" multiple hidden><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await supabaseClient.auth.signOut();renderAssistant()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));document.getElementById('attachBtn').addEventListener('click',()=>document.getElementById('imageInput').click());document.getElementById('imageInput').addEventListener('change',async e=>{for(const file of [...e.target.files].slice(0,6-chatImages.length)){if(file.type.startsWith('image/'))chatImages.push(await prepareImage(file));}renderImagePreview();e.target.value='';});
 }
 
@@ -155,12 +155,13 @@ async function sendChat(e){
   const chat=document.getElementById('chat');const me=document.createElement('div');me.className='bubble me';me.textContent=(text||'Analise as fotos que enviei.')+(chatImages.length?'\n\n📷 '+chatImages.length+' foto(s) enviada(s).':'');chat.appendChild(me);input.value='';
   const loading=document.createElement('div');loading.className='bubble';loading.textContent='Analisando…';chat.appendChild(loading);
   const images=chatImages.map(x=>x.data);chatImages=[];renderImagePreview();
+  const historyForRequest=chatHistory.slice(-12);
   try{
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),30000);
     let result;
     try{
-      result=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images},signal:controller.signal});
+      result=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images,history:historyForRequest},signal:controller.signal});
     }finally{clearTimeout(timeout)}
     const{data,error}=result;
     if(error){
@@ -172,7 +173,10 @@ async function sendChat(e){
       loading.textContent='Erro da IA: '+(data.detail||data.error||'erro desconhecido');
       return;
     }
-    loading.textContent=data?.answer||'Não recebi uma resposta.';
+    const answer=data?.answer||'Não recebi uma resposta.';
+    loading.textContent=answer;
+    chatHistory.push({role:'user',content:text||'Analise as fotos enviadas.'},{role:'assistant',content:answer});
+    chatHistory=chatHistory.slice(-12);
   }catch(err){
     console.error(err);
     let detail=err?.message||'erro desconhecido';
