@@ -371,37 +371,65 @@ async function withTimeout(promise,ms=4500){
   return await Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('TIMEOUT')),ms))]);
 }
 async function showAuthenticatedApp(s){
+  if(!s?.user)return false;
   session=s;
-  authHandledUser=s?.user?.id||authHandledUser;
-  // Fecha explicitamente toda a camada de autenticação antes de qualquer consulta.
+  authHandledUser=s.user.id||null;
   const gate=document.getElementById('authGate');
   const splash=document.getElementById('splashScreen');
   const login=document.getElementById('loginScreen');
   const appShell=document.getElementById('appShell');
+
+  // A autorização precisa terminar antes de liberar o painel. O timeout
+  // impede que uma consulta/RLS indisponível prenda a entrada indefinidamente.
+  try{
+    const allowed=await withTimeout(coachGuard(),4500);
+    if(!allowed){
+      session=null;
+      role='none';
+      if(login){
+        login.hidden=false;
+        login.style.display='grid';
+      }
+      const err=document.getElementById('globalLoginError');
+      if(err){
+        err.hidden=false;
+        err.textContent='Esta conta não está autorizada para a comissão técnica.';
+      }
+      return false;
+    }
+  }catch(err){
+    console.error('Falha na validação da comissão:',err);
+    session=null;
+    role='none';
+    const msg=err?.message==='TIMEOUT'
+      ?'Não foi possível validar seu acesso no tempo esperado. Tente novamente.'
+      :'Não foi possível validar seu acesso. Tente novamente.';
+    const box=document.getElementById('globalLoginError');
+    if(box){
+      box.hidden=false;
+      box.textContent=msg;
+    }
+    return false;
+  }
+
   if(splash){splash.hidden=true;splash.style.display='none'}
   if(login){login.hidden=true;login.style.display='none'}
   if(gate){gate.hidden=true;gate.style.display='none'}
   if(appShell){appShell.hidden=false;appShell.style.display='block'}
   document.body.classList.remove('auth-locked');
-  try{
-    // A sessão autenticada libera o aplicativo imediatamente. A checagem de
-    // permissão acontece em segundo plano para não devolver o usuário ao splash.
-    try{
-      const allowed=await withTimeout(coachGuard(),4500);
-      if(!allowed) console.warn('Conta sem registro de comissão ou RLS ainda não respondeu; mantendo a sessão ativa.');
-    }catch(err){
-      console.warn('Validação de comissão indisponível; mantendo a sessão ativa.',err);
-    }
-    const badge=document.getElementById('userBadge');
-    if(badge){badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||''}
-    loadDashboard().catch(()=>setSync(false,'Não foi possível carregar o painel'));
-    setupLiveSync();
-    return true;
-  }catch(err){
-    console.error('Erro ao abrir o aplicativo:',err);
-    setSync(false,'Sessão ativa; carregamento do painel pendente');
-    return true;
+
+  const badge=document.getElementById('userBadge');
+  if(badge){
+    badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';
+    badge.title=s.user.email||'';
   }
+
+  loadDashboard().catch(err=>{
+    console.error('Falha ao carregar painel:',err);
+    setSync(false,'Não foi possível carregar o painel');
+  });
+  setupLiveSync();
+  return true;
 }
 function showLogin(){
   const gate=document.getElementById('authGate');
@@ -434,8 +462,13 @@ function bindLogin(){
       }
       const email=document.getElementById('globalLoginEmail')?.value.trim()||'';
       const password=document.getElementById('globalLoginPassword')?.value||'';
-      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+      const result=await withTimeout(
+        supabaseClient.auth.signInWithPassword({email,password}),
+        10000
+      );
+      const {data,error}=result||{};
       if(error){
+        console.error('Falha de autenticação:',error);
         if(err){err.hidden=false;err.textContent='E-mail ou senha inválidos.'}
         return;
       }
@@ -443,7 +476,12 @@ function bindLogin(){
         if(err){err.hidden=false;err.textContent='Não foi possível iniciar a sessão. Tente novamente.'}
         return;
       }
-      await showAuthenticatedApp(data.session);
+      const opened=await showAuthenticatedApp(data.session);
+      if(!opened){
+        // A sessão autenticada não foi autorizada para o aplicativo.
+        await supabaseClient.auth.signOut().catch(()=>{});
+        return;
+      }
     }catch(ex){
       console.error('Erro no login:',ex);
       if(err){
@@ -468,11 +506,14 @@ async function boot(){
   if(!supabaseClient){showLogin();return}
   document.body.classList.add('auth-locked');
   try{
-    // Não deixa a tela de abertura ficar presa esperando o Supabase.
+    // O login só fica disponível depois que a verificação inicial de sessão
+    // terminou. Isso evita concorrência entre getSession() e signInWithPassword().
     const result=await withTimeout(supabaseClient.auth.getSession(),3500);
     const s=result?.data?.session||null;
     if(s&&await showAuthenticatedApp(s))return;
-  }catch(err){console.error('Falha ao restaurar sessão:',err)}
+  }catch(err){
+    console.error('Falha ao restaurar sessão:',err);
+  }
   showLogin();
 }
 boot().catch(err=>{console.error('Falha no boot:',err);showLogin()});
