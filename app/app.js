@@ -149,15 +149,14 @@ async function editAthletePhone(id,rows){
 }
 
 function renderMore(){
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>Mais</h2><p>Ferramentas do aplicativo.</p><div class="grid more-grid">'+
-    '<button class="tile" data-screen="assistant"><b>Assistente</b><small>Produção e comandos do site</small></button>'+
-    '<button class="tile" data-screen="check"><b>Verificar site</b><small>Conferência automática</small></button>'+
-    '<button class="tile" data-screen="athletes"><b>Atletas</b><small>Equipe, presenças e responsáveis</small></button>'+
-    '<button class="tile" data-url="'+SITE_URL+'"><b>Site oficial</b><small>Abrir portal completo</small></button>'+
-    '<button class="tile" data-url="'+INSTAGRAM_URL+'"><b>Instagram</b><small>@selecaobaixagrande</small></button>'+
-    '</div>';
+  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>Área dos treinadores</h2><p>Ferramentas internas da comissão técnica.</p><div class="grid more-grid">'+
+  '<button class="tile" data-screen="athletes"><b>Atletas</b><small>Cadastro e acompanhamento</small></button>'+
+  '<button class="tile" data-screen="calls"><b>Chamadas</b><small>Convocações para treinos e jogos</small></button>'+
+  '<button class="tile" data-screen="attendance"><b>Presença</b><small>Controle de presença e faltas</small></button>'+
+  '<button class="tile" data-screen="training"><b>Treinos</b><small>Organização da preparação</small></button>'+
+  '<button class="tile" data-screen="lineups"><b>Escalações</b><small>Montagem das equipes</small></button>'+
+  '<button class="tile" data-screen="notes"><b>Anotações técnicas</b><small>Observações internas dos atletas</small></button></div>';
 }
-
 async function renderAssistant(){
   if(!supabaseClient){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Conexão com o banco indisponível.');return}
   const{data:{session}}=await supabaseClient.auth.getSession();
@@ -320,7 +319,16 @@ async function enterApp(){
     }
   });
 }
-async function openScreen(name){
+async function openScreen(name){{
+  if(['calls','attendance','training','lineups','notes'].includes(name)){
+    document.querySelector('.hero')?.setAttribute('hidden','');
+    document.querySelectorAll('.section').forEach(x=>x.setAttribute('hidden',''));
+    screen.hidden=false;
+    const titles={calls:'Chamadas',attendance:'Presença nos treinos',training:'Treinos',lineups:'Escalações',notes:'Anotações técnicas'};
+    const desc={calls:'Convocação interna de atletas para treinos e partidas.',attendance:'Controle interno de presença e faltas.',training:'Organização das atividades da comissão técnica.',lineups:'Montagem e consulta das escalações.',notes:'Observações internas sobre os atletas.'};
+    screen.innerHTML='<button class="back" data-screen="more">‹ Voltar</button><h2>'+titles[name]+'</h2><p>'+desc[name]+'</p><div class="coach-private-card"><strong>Área exclusiva dos treinadores</strong><span>Informações internas da comissão técnica.</span></div>';
+    return;
+  }
   if(name==='home'){
     screen.hidden=true;document.querySelector('.hero').hidden=false;document.querySelectorAll('.section').forEach(x=>x.hidden=false);loadHome();
   }else if(name==='more'){
