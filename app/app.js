@@ -373,11 +373,15 @@ async function withTimeout(promise,ms=4500){
 async function showAuthenticatedApp(s){
   session=s;
   authHandledUser=s?.user?.id||authHandledUser;
-  // Libera a interface assim que a sessão existir; a validação de permissão não bloqueia a entrada.
-  document.getElementById('splashScreen').hidden=true;
-  document.getElementById('loginScreen').hidden=true;
-  document.getElementById('authGate').hidden=true;
-  document.getElementById('appShell').hidden=false;
+  // Fecha explicitamente toda a camada de autenticação antes de qualquer consulta.
+  const gate=document.getElementById('authGate');
+  const splash=document.getElementById('splashScreen');
+  const login=document.getElementById('loginScreen');
+  const appShell=document.getElementById('appShell');
+  if(splash){splash.hidden=true;splash.style.display='none'}
+  if(login){login.hidden=true;login.style.display='none'}
+  if(gate){gate.hidden=true;gate.style.display='none'}
+  if(appShell){appShell.hidden=false;appShell.style.display='block'}
   document.body.classList.remove('auth-locked');
   try{
     // A sessão autenticada libera o aplicativo imediatamente. A checagem de
@@ -400,10 +404,14 @@ async function showAuthenticatedApp(s){
   }
 }
 function showLogin(){
-  document.getElementById('splashScreen').hidden=true;
-  document.getElementById('loginScreen').hidden=false;
-  document.getElementById('authGate').hidden=false;
-  document.getElementById('appShell').hidden=true;
+  const gate=document.getElementById('authGate');
+  const splash=document.getElementById('splashScreen');
+  const login=document.getElementById('loginScreen');
+  const appShell=document.getElementById('appShell');
+  if(splash){splash.hidden=true;splash.style.display='none'}
+  if(login){login.hidden=false;login.style.display='grid'}
+  if(gate){gate.hidden=false;gate.style.display='grid'}
+  if(appShell){appShell.hidden=true;appShell.style.display='none'}
   document.body.classList.remove('auth-locked');
   bindLogin();
 }
