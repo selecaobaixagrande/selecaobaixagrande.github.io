@@ -8,7 +8,7 @@ let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHis
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
 installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=19').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=20').catch(()=>{});
 
 const content={
  news:['Notícias','As notícias publicadas no portal oficial aparecem aqui automaticamente.'],
@@ -186,6 +186,7 @@ async function loginAdmin(e){
 }
 let authBusy=false;
 let loginBound=false;
+let appReady=false;
 
 function setGateVisible(){
   const gate=document.getElementById('authGate');
@@ -225,7 +226,8 @@ function bindGlobalLogin(){
 }
 
 async function showAuthenticatedApp(session){
-  if(!session||authBusy&&document.getElementById('appShell')?.hidden===false)return false;
+  if(!session)return false;
+  if(appReady)return true;
   const gate=document.getElementById('authGate');
   const splash=document.getElementById('splashScreen');
   const login=document.getElementById('loginScreen');
@@ -250,6 +252,7 @@ async function showAuthenticatedApp(session){
   if(login)login.hidden=true;
   if(gate){gate.hidden=true;gate.style.display='none';}
   if(shell){shell.hidden=false;shell.style.display='block';}
+  appReady=true;
   document.body.classList.remove('auth-locked');
   loadHome();
   setupLiveSync();
@@ -259,11 +262,15 @@ async function showAuthenticatedApp(session){
 async function signOutAndShowLogin(){
   if(liveChannel){try{await supabaseClient.removeChannel(liveChannel)}catch(_e){}liveChannel=null;}
   await supabaseClient.auth.signOut();
+  appReady=false;
   const shell=document.getElementById('appShell');
   const gate=document.getElementById('authGate');
   const splash=document.getElementById('splashScreen');
   const login=document.getElementById('loginScreen');
   if(shell){shell.hidden=true;shell.style.display='none';}
+  if(screen){screen.hidden=true;}
+  document.querySelector('.hero')?.removeAttribute('hidden');
+  document.querySelectorAll('.section').forEach(x=>x.removeAttribute('hidden'));
   if(gate){gate.hidden=false;gate.style.display='grid';}
   if(splash)splash.hidden=true;
   if(login)login.hidden=false;
