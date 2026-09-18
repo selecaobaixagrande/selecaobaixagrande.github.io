@@ -169,9 +169,10 @@ async function authenticateTeam(email,password,errorBox){
   const{data,error}=await supabaseClient.auth.signInWithPassword({email,password});
   if(error||!data?.session){if(errorBox){errorBox.hidden=false;errorBox.textContent='Não foi possível entrar. Verifique o e-mail e a senha.';}return false}
   const{data:allowed}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',data.session.user.id).maybeSingle();
+  const{data:slot}=await supabaseClient.from('professores_app').select('id,nome,ativo').eq('email',data.session.user.email).eq('ativo',true).maybeSingle();
   const{data:profile}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',data.session.user.email).maybeSingle();
   const isTrainer=String(profile?.Tipo||'').toLowerCase()==='treinador';
-  if(!allowed&&!isTrainer){
+  if(!allowed&&!slot&&!isTrainer){
     await supabaseClient.auth.signOut();
     if(errorBox){errorBox.hidden=false;errorBox.textContent='Esta conta não possui acesso ao aplicativo da equipe.';}
     return false;
@@ -191,8 +192,9 @@ async function enterApp(){
   const{data:{session}}=await supabaseClient.auth.getSession();
   if(session){
     const{data:allowed}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle();
+    const{data:slot}=await supabaseClient.from('professores_app').select('id,nome,ativo').eq('email',session.user.email).eq('ativo',true).maybeSingle();
     const{data:profile}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',session.user.email).maybeSingle();
-    const ok=!!allowed||String(profile?.Tipo||'').toLowerCase()==='treinador';
+    const ok=!!allowed||!!slot||String(profile?.Tipo||'').toLowerCase()==='treinador';
     if(ok){gate.remove();document.body.classList.remove('auth-locked');return}
     await supabaseClient.auth.signOut();
   }
