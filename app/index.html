@@ -72,7 +72,34 @@
       }
     },1200);
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=33"></script>
+  <script>
+    // Carrega o Supabase antes do aplicativo, com uma segunda CDN como fallback.
+    (function(){
+      var sources=[
+        'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+        'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'
+      ];
+      function loadApp(){
+        var s=document.createElement('script');
+        s.src='app.js?v=34';
+        s.async=false;
+        s.onerror=function(){
+          var e=document.getElementById('globalLoginError');
+          if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}
+        };
+        document.body.appendChild(s);
+      }
+      function load(i){
+        if(i>=sources.length){loadApp();return}
+        var s=document.createElement('script');
+        s.src=sources[i];
+        s.async=false;
+        s.onload=loadApp;
+        s.onerror=function(){load(i+1)};
+        document.head.appendChild(s);
+      }
+      load(0);
+    })();
+  </script>
   </body>
 </html>
