@@ -165,3 +165,85 @@ body{min-height:100dvh}
 .attendance-btn:active{transform:scale(.98)}
 .call-footer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 @media(max-width:420px){.attendance-actions{grid-template-columns:1fr}.call-count{flex:1;text-align:center}}
+
+
+/* REESTRUTURAÇÃO DA COMISSÃO — v37 */
+body{background:radial-gradient(circle at 50% -15%,rgba(181,18,27,.12),transparent 34%),#060607}
+.app-shell{max-width:980px;padding-bottom:94px}
+.topbar{height:78px;padding:10px 22px}
+.brand img{width:48px;height:48px}
+.brand strong{font-size:15px;letter-spacing:.2px;text-transform:none}
+.brand span{font-size:11px;letter-spacing:.1px;text-transform:none;color:#a8abb3}
+.content{padding:18px 18px 26px}
+.home-hero{position:relative;min-height:390px;border-radius:26px;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:#101116;box-shadow:0 22px 60px rgba(0,0,0,.3)}
+.home-hero-photo{position:absolute;inset:0}
+.home-hero-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,5,7,.9) 0%,rgba(4,5,7,.58) 42%,rgba(4,5,7,.08) 100%),linear-gradient(0deg,rgba(4,5,7,.52),transparent 48%)}
+.home-hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;filter:saturate(.98)}
+.home-hero-copy{position:relative;z-index:2;padding:42px 30px;max-width:520px}
+.home-hero-copy .eyebrow{color:#ff3945}
+.home-hero-copy h1{font-size:38px;line-height:1.05;margin:12px 0 12px;text-shadow:0 4px 20px rgba(0,0,0,.35)}
+.home-hero-copy h1 span{color:#fff}
+.home-hero-copy p{font-size:13px;color:#d8dae0;max-width:390px}
+.section{margin-top:20px}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dashboard-grid .panel-card{min-height:185px}
+.panel-card{background:linear-gradient(145deg,#121419,#0d0e12);border:1px solid rgba(255,255,255,.075);border-radius:21px;padding:20px;box-shadow:0 12px 32px rgba(0,0,0,.16)}
+.panel-card small{display:block;color:#ff3542;font-weight:900;font-size:10px;letter-spacing:1.7px}
+.panel-card h3{font-size:18px;margin:10px 0 8px}
+.panel-card p{color:#9ea1a9;font-size:12px;line-height:1.45;margin:0 0 16px}
+.panel-card .mini-btn{margin-top:auto}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat-card{padding:16px;border-radius:18px;background:#101115;border:1px solid rgba(255,255,255,.07)}
+.stat-card span{display:block;color:#ed2733;font-size:18px;margin-bottom:7px}
+.stat-card strong{display:block;font-size:22px}
+.stat-card small{display:block;color:#888b94;font-size:9px;margin-top:3px}
+.section-title{display:flex;align-items:end;justify-content:space-between;margin:0 0 11px}
+.section-title h2{font-size:18px;margin:0}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick-grid .tile{min-height:108px}
+.tile b{font-size:14px}
+.tile small{font-size:10px}
+.bottom-nav{width:min(980px,100%);height:78px;grid-template-columns:repeat(6,1fr);padding:4px 4px env(safe-area-inset-bottom);background:rgba(7,8,10,.97)}
+.nav-item span{font-size:21px}
+.nav-item small{font-size:9px}
+.nav-item.active{color:#fff}
+.nav-item.active span{color:#ed2733}
+.screen{margin-top:20px}
+.toolbar{display:flex;gap:8px;align-items:center}
+.toolbar input{flex:1;min-width:0}
+.form-grid{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field>span{font-size:10px;color:#b9bbc2;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.field input,.field select,.field textarea{width:100%;border:1px solid rgba(255,255,255,.09);background:#0a0b0e;color:#fff;border-radius:14px;padding:13px;outline:none}
+.field textarea{resize:vertical}
+.primary-btn{border:0;border-radius:14px;background:#b5121b;color:#fff;padding:12px 16px;font-weight:900;cursor:pointer}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.attendance-actions{display:flex;gap:8px;margin-top:10px}
+.attendance-btn{border:1px solid rgba(255,255,255,.09);background:#0b0c0f;border-radius:12px;padding:8px 10px;font-size:10px;font-weight:900}
+.attendance-btn.selected.present{background:#145b35;border-color:#2a9b5d}
+.attendance-btn.selected.absent{background:#5c1b20;border-color:#d33b46}
+.call-counters{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.call-count{padding:7px 9px;border-radius:999px;background:#191a1f;color:#bfc1c8;font-size:10px}
+.call-count b{color:#fff;margin-right:3px}
+@media(max-width:700px){
+  .topbar{padding:10px 14px}
+  .content{padding:14px 14px 22px}
+  .home-hero{min-height:340px}
+  .home-hero-copy{padding:30px 22px}
+  .home-hero-copy h1{font-size:31px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .dashboard-grid{grid-template-columns:1fr}
+  .quick-grid{grid-template-columns:1fr 1fr}
+  .panel-card{padding:17px}
+}
+@media(max-width:430px){
+  .brand strong{font-size:13px}
+  .brand span{font-size:9px}
+  .user-badge{display:none}
+  .home-hero{min-height:325px}
+  .home-hero-copy h1{font-size:29px}
+  .quick-grid{gap:8px}
+  .quick-grid .tile{min-height:98px;padding:14px}
+  .nav-item span{font-size:19px}
+  .nav-item small{font-size:8px}
+}
