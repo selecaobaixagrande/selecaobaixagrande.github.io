@@ -8,7 +8,7 @@ let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHis
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
 installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=16').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=18').catch(()=>{});
 
 const content={
  news:['Notícias','As notícias publicadas no portal oficial aparecem aqui automaticamente.'],
