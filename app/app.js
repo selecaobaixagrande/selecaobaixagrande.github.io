@@ -373,16 +373,28 @@ async function withTimeout(promise,ms=4500){
 async function showAuthenticatedApp(s){
   session=s;
   authHandledUser=s?.user?.id||authHandledUser;
+  // Libera a interface assim que a sessão existir; a validação de permissão não bloqueia a entrada.
+  document.getElementById('splashScreen').hidden=true;
+  document.getElementById('loginScreen').hidden=true;
+  document.getElementById('authGate').hidden=true;
+  document.getElementById('appShell').hidden=false;
+  document.body.classList.remove('auth-locked');
   try{
-    const allowed=await withTimeout(coachGuard(),7000);
-    if(!allowed){await supabaseClient.auth.signOut();return false}
-    const badge=document.getElementById('userBadge');if(badge){badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||''}
-    document.getElementById('splashScreen').hidden=true;document.getElementById('loginScreen').hidden=true;document.getElementById('authGate').hidden=true;document.getElementById('appShell').hidden=false;document.body.classList.remove('auth-locked');
+    const allowed=await withTimeout(coachGuard(),4500);
+    if(!allowed){
+      await supabaseClient.auth.signOut().catch(()=>{});
+      showLogin();
+      return false;
+    }
+    const badge=document.getElementById('userBadge');
+    if(badge){badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||''}
     loadDashboard().catch(()=>setSync(false,'Não foi possível carregar o painel'));
-    setupLiveSync();return true;
+    setupLiveSync();
+    return true;
   }catch(err){
     console.error('Erro ao validar acesso:',err);
     await supabaseClient.auth.signOut().catch(()=>{});
+    showLogin();
     return false;
   }
 }
