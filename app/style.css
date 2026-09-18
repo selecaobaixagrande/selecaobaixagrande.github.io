@@ -139,3 +139,17 @@ body{min-height:100dvh}
 .coach-private-card{margin:18px 0;padding:18px;border:1px solid rgba(237,39,51,.22);border-radius:18px;background:linear-gradient(145deg,rgba(181,18,27,.10),rgba(255,255,255,.025));display:flex;flex-direction:column;gap:6px}
 .coach-private-card strong{font-size:14px}
 .coach-private-card span{font-size:11px;color:#9699a2;line-height:1.45}
+
+/* COMISSÃO TÉCNICA — v21 */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.stat-card,.panel-card{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#151519,#101012);padding:15px;box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.stat-card span{display:block;color:#ed2733;font-size:15px;margin-bottom:8px}.stat-card strong{display:block;font-size:24px;line-height:1}.stat-card small{display:block;color:#858891;font-size:9px;margin-top:6px}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.panel-card small{color:#ff5962;font-size:9px;font-weight:900;letter-spacing:1px}.panel-card h3{font-size:15px;margin:8px 0 5px}.panel-card p{font-size:11px;color:#8e9098;line-height:1.45;min-height:30px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.recent-title{margin-top:22px}
+.toolbar{display:flex;gap:8px;margin-bottom:14px}.toolbar input{flex:1;min-width:0}
+.toolbar input,.field input,.field select,.field textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);background:#09090b;color:#fff;border-radius:13px;padding:12px;outline:none}.field textarea{min-height:92px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus,.toolbar input:focus{border-color:rgba(237,39,51,.65);box-shadow:0 0 0 3px rgba(181,18,27,.08)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{display:flex;flex-direction:column;gap:6px}.field>span{font-size:10px;color:#9b9da5;font-weight:800}.field select[multiple]{min-height:150px}.field textarea{grid-column:auto}.form-actions{grid-column:1/-1;display:flex;gap:8px;margin-top:4px}.primary-btn{border:0;border-radius:13px;background:linear-gradient(135deg,#c51620,#9e1018);color:#fff;padding:12px 16px;font-weight:900;cursor:pointer;box-shadow:0 9px 24px rgba(181,18,27,.18)}
+.status-select{margin-top:8px;border:1px solid var(--line);background:#0a0a0c;color:#fff;border-radius:11px;padding:9px}.presence-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.detail-grid>div{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}.detail-grid small{display:block;color:#ff5962;font-size:8px;font-weight:900}.detail-grid strong{display:block;margin-top:5px;font-size:17px}.admin-warning{padding:12px;border-radius:14px;border:1px solid rgba(237,39,51,.22);background:rgba(181,18,27,.08);color:#bfc1c7;font-size:11px;line-height:1.5}
+.placeholder{display:grid;place-items:center;color:#777;background:var(--surface2)}.athlete-card{box-shadow:0 8px 24px rgba(0,0,0,.12)}
+@media(max-width:700px){.stats-grid{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.form-actions{grid-column:1}.detail-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.stats-grid{gap:8px}.stat-card{padding:12px}.stat-card strong{font-size:22px}.quick-grid{gap:8px}.tile{min-height:96px}}
