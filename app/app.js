@@ -92,69 +92,6 @@ function athleteForm(x=null){
 }
 function athleteDetail(x){shell(x.nome,'Ficha interna do atleta.','<div class="detail-grid"><div><small>CATEGORIA</small><strong>'+esc(x.categoria||'-')+'</strong></div><div><small>POSIÇÃO</small><strong>'+esc(x.posicao||'-')+'</strong></div><div><small>JOGOS</small><strong>'+(x.jogos||0)+'</strong></div><div><small>GOLS</small><strong>'+(x.gols||0)+'</strong></div><div><small>ASSISTÊNCIAS</small><strong>'+(x.assistencias||0)+'</strong></div><div><small>PRESENÇAS</small><strong>'+(x.presencas||0)+'</strong></div></div><div class="coach-private-card"><strong>Dados privados</strong><span>Responsável: '+esc(x.telefone_responsavel||'Não cadastrado')+'</span><span>Observações: '+esc(x.observacoes||x.observacoes_treinador||'Nenhuma')+'</span></div><div class="quick-grid"><button class="tile" data-screen="evaluations"><b>Avaliações</b><small>Histórico técnico</small></button><button class="tile" data-screen="notes"><b>Anotações</b><small>Observações internas</small></button><button class="tile" data-screen="performance"><b>Desempenho</b><small>Estatísticas da temporada</small></button></div>')}
 
-const CALL_GROUPS={
-  "sub13-a":{
-    label:"Sub-13 — Grupo A",
-    category:"Sub-13",
-    names:[
-      "Gabriel Rios Fernandes","Vinícius Alves Pinho","Rian Pedreira Lima","Nycolas Santana Silva",
-      "Miguel Santos Oliveira","Willyam Kervem da Silva Purificação de Jesus","Henrique Oliveira Santos",
-      "Davi Lucas Santana de Jesus","Lazaro Pessoa Rodrigues","Benjamin Nunes Sena","Igor Ferreira Moreira",
-      "Rafael Almeida da Silva Boaventura","Mateus Machado de Jesus","Luanderson Gonçalves de Lima",
-      "Joanderson Gonçalves de Lima","Luís Miranda Rezende","Nicolas Pereira de Souza Oliveira",
-      "Bruno Victor Justino Santiago","Riquelme de Jesus Lopes","David Lucas de Souza Nepomuceno",
-      "Andrey Conceição da Silva","Henry Nunes da Silva","Paulo Vitor Bastos Xavier Santos",
-      "Jacob Neto Sena Carneiro","Vinicius Araújo Santos","Messias Nascimento Lima Oliveira",
-      "Miguel Messi Ribeiro Barbosa","Lázaro Sodré dos Santos","Moisés Souza da Silva","Kelven Souza Santos",
-      "Kleber Xavier Silva","Andrey da Silva Belo Sodré","Nathan de Jesus Oliveira","Pyetro dos Santos Ribeiro"
-    ]
-  },
-  "sub13-b":{
-    label:"Sub-13 — Grupo B",
-    category:"Sub-13",
-    names:[
-      "Arthur Santana da Silva","Gustavo Almeida Santos","Levi Muritiba Carneiro França","Wesle Santos Sudré",
-      "Vitor Manoel Jesus da Silva","Vicente Queiroz Oliveira","Amadeu Laurindo Oliveira Souza Neto Filho",
-      "Igor Ferreira Moreira","Wallacy Silva Santana","Yuri Silva Oliveira","Welison Santos de Araújo",
-      "Davi Ferreira Antunes","Lorenzo Vicente dos Santos Ferreira da Silva","Isabelly Vitória Santana Assis",
-      "Anael Breno Souza de Melo","Miguel Silva Cintra","Danillo Fagundes Bela","Izak Soares de Matos",
-      "Brenno Kauan Sena da Silva","Pedro Pamponet Fernandes","José Miguel dos Santos Suzart Paz",
-      "Gabriel Pereira da Cruz","Aldo Miguel da Silva Nascimento","Enzo Gabriel Santana Macêdo",
-      "Pedro Lucas Cerqueira dos Santos","Heitor Rios Carneiro Macedo","Isaac Santana de Araújo",
-      "Moisés Souza Santiago","Miguel Costa Melo","Davi Lucca Sousa Silva","Joaquim Sena Carneiro",
-      "Moisés Souza da Silva","Arthur Silva Santa Bárbara de Brito","Miguel Henrique Almeida Santos",
-      "Andrey da Silva Belo Sodré","Vitor Gabriel Oliveira Mendes","Pyetro dos Santos Ribeiro","Inácio Ferreira Silva"
-    ]
-  },
-  "sub15-17":{
-    label:"Sub-15 / Sub-17",
-    category:null
-  }
-};
-
-const normName=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
-const uniqueAthletes=rows=>{
-  const seen=new Set();
-  return rows.filter(a=>{
-    const key=normName(a.nome);
-    if(!key||seen.has(key))return false;
-    seen.add(key);return true;
-  });
-};
-function athletesForCallGroup(ats,groupKey){
-  const group=CALL_GROUPS[groupKey];
-  if(!group)return[];
-  const active=ats.filter(a=>String(a.status||"Ativo").toLowerCase()==="ativo");
-  if(groupKey==="sub15-17"){
-    return uniqueAthletes(active.filter(a=>/sub[- ]?15|sub[- ]?17/i.test(String(a.categoria||""))));
-  }
-  const wanted=new Set(group.names.map(normName));
-  return uniqueAthletes(active.filter(a=>String(a.categoria||"").toLowerCase().includes("sub-13")&&wanted.has(normName(a.nome))));
-}
-function groupOptions(selected=""){
-  return '<option value="">Selecionar grupo…</option>'+Object.entries(CALL_GROUPS).map(([key,g])=>'<option value="'+key+'" '+(key===selected?"selected":"")+'>'+esc(g.label)+'</option>').join("");
-}
-
 async function renderCalls(){
   const [cats,ats,calls]=await Promise.all([
     categories(),athletes(),
@@ -175,7 +112,7 @@ async function renderCalls(){
 }
 
 async function callForm(cats,ats,x=null){
-  shell(x?"Editar chamada":"Nova chamada","Todos os atletas ativos serão incluídos automaticamente, separados por categoria.",
+  shell(x?"Editar chamada":"Nova chamada","Todos os atletas ativos serão incluídos automaticamente.",
     '<form id="callForm" class="form-grid">'+
     formField("Tipo",'<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+
     formField("Data",'<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+
@@ -187,7 +124,7 @@ async function callForm(cats,ats,x=null){
   document.getElementById("callForm").onsubmit=async e=>{
     e.preventDefault();
     const f=new FormData(e.target);
-    const active=uniqueAthletes(ats.filter(a=>String(a.status||"Ativo").toLowerCase()==="ativo"));
+    const active=ats.filter(a=>String(a.status||"Ativo").toLowerCase()==="ativo");
     if(!active.length)return alert("Nenhum atleta ativo foi encontrado.");
 
     const row={
@@ -215,10 +152,12 @@ async function callForm(cats,ats,x=null){
     const links=active.map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"}));
     const rr=await supabaseClient.from("chamada_atletas").insert(links);
     if(rr.error)return alert("A chamada não foi salva: "+rr.error.message);
+    alert("Chamada salva com "+links.length+" atleta(s) ativo(s).");
     renderCalls();
   };
   document.querySelector("[name=tipo]").value=x?.tipo||"treino";
 }
+
 async function callDetail(id,all,ats){
   const x=all.find(y=>y.id===id);
   if(!x)return;
@@ -226,18 +165,19 @@ async function callDetail(id,all,ats){
   let m=await q("chamada_atletas","id,atleta_id,status,observacao",z=>z.eq("chamada_id",id));
   let selected=m.data||[];
 
-  // Chamadas novas usam exclusivamente o grupo salvo. Chamadas antigas, sem grupo, preservam os atletas já registrados.
-  if(x.grupo&&CALL_GROUPS[x.grupo]){
-    const allowed=new Set(athletesForCallGroup(ats,x.grupo).map(a=>a.id));
-    selected=selected.filter(s=>allowed.has(s.atleta_id));
+  // Garante que todos os atletas ativos apareçam também em chamadas antigas.
+  const active=ats.filter(a=>String(a.status||"Ativo").toLowerCase()==="ativo");
+  const existingIds=new Set(selected.map(s=>s.atleta_id));
+  const missing=active.filter(a=>!existingIds.has(a.id));
+  if(missing.length){
+    const rr=await supabaseClient.from("chamada_atletas").insert(missing.map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"})));
+    if(!rr.error)selected=[...selected,...missing.map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"}))];
   }
 
-  const present=selected.filter(s=>s.status==="presente").length;
-  const absent=selected.filter(s=>s.status==="faltou").length;
   const grouped={};
   selected.forEach(s=>{
     const a=ats.find(y=>y.id===s.atleta_id);
-    if(!a)return;
+    if(!a||String(a.status||"Ativo").toLowerCase()!=="ativo")return;
     const cat=a.categoria||"Sem categoria";
     if(!grouped[cat])grouped[cat]=[];
     grouped[cat].push({s,a});
@@ -253,10 +193,7 @@ async function callDetail(id,all,ats){
   });
 
   const categoryHtml=orderedCategories.map(cat=>{
-    const rows=uniqueAthletes(grouped[cat]).sort((u,v)=>String(u.nome||"").localeCompare(String(v.nome||""),"pt-BR")).map(a=>{
-      const s=selected.find(item=>item.atleta_id===a.id);
-      return {s,a};
-    });
+    const rows=grouped[cat].sort((u,v)=>String(u.a.nome||"").localeCompare(String(v.a.nome||""),"pt-BR"));
     return '<section class="call-category"><div class="section-title"><h2>'+esc(cat)+'</h2><small>'+rows.length+" atleta(s)</small></div><div class="data-list">"+
       rows.map(({s,a})=>'<article class="data-card call-athlete-row" data-row="'+s.id+'"><div class="data-body"><h3>'+esc(a.nome||"Atleta")+
       '</h3><div class="attendance-actions"><button type="button" class="attendance-btn present '+(s.status==="presente"?"selected":"")+'" data-presente="'+s.id+'">✓ PRESENTE</button>'+
@@ -264,7 +201,9 @@ async function callDetail(id,all,ats){
       "</div></section>";
   }).join("");
 
-  shell("Chamada",x.grupo&&CALL_GROUPS[x.grupo]?CALL_GROUPS[x.grupo].label:"Chamada existente",
+  const present=selected.filter(s=>s.status==="presente").length;
+  const absent=selected.filter(s=>s.status==="faltou").length;
+  shell("Chamada","Todos os atletas ativos, separados por categoria.",
     '<div class="panel-card call-summary"><small>'+esc((x.tipo||"").toUpperCase())+" • "+fmtDate(x.data_chamada)+" • "+fmtTime(x.horario)+
     '</small><h3>'+esc(x.local||"Local não informado")+'</h3>'+
     '<div class="call-counters"><span class="call-count present"><b id="callPresent">'+present+
@@ -397,8 +336,7 @@ async function renderCategoriesAdmin(){
   shell('Categorias','Categorias internas da comissão.','<button class="primary-btn" id="newCategory">+ Nova categoria</button><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">•</div><div class="data-body"><h3>'+esc(x.nome)+'</h3><p>'+esc(x.descricao||'')+'</p><small>'+((x.ativo)?'ATIVA':'INATIVA')+'</small><button class="mini-btn" data-cat-edit="'+x.id+'">Editar</button> <button class="mini-btn" data-cat-del="'+x.id+'">Excluir</button></div></article>').join('')||empty('Nenhuma categoria.')+'</div>');
   document.getElementById('newCategory').onclick=()=>categoryForm();
   screen.querySelectorAll('[data-cat-edit]').forEach(b=>b.onclick=()=>categoryForm((r.data||[]).find(x=>x.id===b.dataset.catEdit)));
-  screen.querySelectorAll('[data-cat-del]').forEach(b=>b.onclick=async()=>{if(confirm('Excluir esta categoria?')){const z=await del('categorias_app',b.dataset.catDel);if(z.error)alert(z.error.message);else renderCategoriesAdmin()}});
-}
+  screen.querySelectorAll('[data-cat-del]').forEach(b=>b.onclick=async()=>{if(confirm('Excluir esta categoria?')){const z=await del('categorias_app',b.dataset.catDel);if(z.error)alert(z.error.message);else renderCategoriesAdmin()}});}
 function categoryForm(x=null){
   shell(x?'Editar categoria':'Nova categoria','Somente o administrador pode gerenciar categorias.','<form id="categoryForm" class="form-grid">'+formField('Nome','<input name="nome" required value="'+esc(x?.nome||'')+'">')+formField('Descrição','<textarea name="descricao">'+esc(x?.descricao||'')+'</textarea>')+formField('Status','<select name="ativo"><option value="true">Ativa</option><option value="false">Inativa</option></select>')+actions()+'</form>');
   document.querySelector('[name=ativo]').value=String(x?.ativo??true);
