@@ -104,3 +104,34 @@ body{background:radial-gradient(circle at 50% -10%,rgba(181,18,27,.10),transpare
  .tile{min-height:108px;padding:15px}
  .user-badge{max-width:88px}
 }
+
+/* CORREÇÃO FINAL E POLIMENTO — v20 */
+.auth-gate[hidden],.app-shell[hidden],#loginScreen[hidden],#splashScreen[hidden]{display:none!important}
+body{min-height:100dvh}
+.app-shell{opacity:1;transition:opacity .3s ease,transform .3s ease}
+.app-shell .content{animation:dashboardIn .45s ease both}
+.hero,.tile,.data-card,.assistant-card,.screen{will-change:transform}
+.hero{box-shadow:0 22px 70px rgba(0,0,0,.26)}
+.hero .sync-line{position:relative;z-index:2}
+.tile{min-height:118px}
+.tile b{font-weight:900}
+.tile small{font-size:10.5px}
+.tile:focus-visible,.nav-item:focus-visible,.mini-btn:focus-visible,.login-form input:focus-visible,.login-form button:focus-visible{outline:2px solid rgba(237,39,51,.7);outline-offset:2px}
+.data-card{box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.data-card:hover{border-color:rgba(255,255,255,.12);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.screen{animation:screenIn .32s ease both}
+.login-screen{overflow:auto}
+.login-card{backdrop-filter:blur(18px)}
+.login-card h1{font-weight:900}
+.login-form button{cursor:pointer}
+.login-form button:disabled{opacity:.65;cursor:wait}
+.splash-screen:after{pointer-events:none}
+@keyframes dashboardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes screenIn{from{opacity:0;transform:translateY(8px) scale(.995)}to{opacity:1;transform:none}}
+@media(max-width:480px){
+ .topbar{padding-left:14px;padding-right:14px}
+ .content{padding-left:14px;padding-right:14px}
+ .hero{border-radius:22px}
+ .grid{gap:10px}
+ .tile{min-height:106px}
+}
