@@ -1,5 +1,5 @@
-const CACHE='selecaobg-app-v35';
-const SHELL=['./','./index.html','./style.css?v=34','./app.js?v=34','./manifest.json','../1000001685.png'];
+const CACHE='selecaobg-app-v36';
+const SHELL=['./','./index.html','./style.css?v=36','./app.js?v=36','./manifest.json','../1000001685.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{
