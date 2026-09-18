@@ -29,7 +29,7 @@ async function coachGuard(){
   return role!=='none';
 }
 async function categories(){const r=await q('categorias_app','id,nome,ativo',x=>x.eq('ativo',true).order('nome'));return r.data||[]}
-async function athletes(){const r=await q('Atletas','id,nome,categoria,posicao,numero_camisa,foto,jogos,gols,assistencias,presencas,faltas_treino,telefone_responsavel,status,observacoes,observacoes_treinador',x=>x.order('categoria').order('nome').limit(500));return r.data||[]}
+async function athletes(){const r=await q('Atletas','id,nome,categoria,posicao,numero_camisa,foto,jogos,gols,assistencias,presencas,faltas_treino,telefone_responsavel,status,observacoes,observacoes_treinador',x=>x.order('categoria').order('nome').limit(500));if(!r.error&&r.data?.length)return r.data;const p=await q('atletas_publicos','id,nome,categoria,posicao,numero_camisa,foto,jogos,titularidades,gols,assistencias',x=>x.order('categoria').order('nome').limit(500));return (p.data||[]).map(a=>({...a,presencas:0,faltas_treino:0,status:'Ativo'}))}
 function catOptions(rows,selected=''){return '<option value="">Todas as categorias</option>'+rows.map(x=>'<option value="'+esc(x.id)+'" '+(x.id===selected?'selected':'')+'>'+esc(x.nome)+'</option>').join('')}
 function athleteOptions(rows,selected=[]){const set=new Set(selected);return rows.map(x=>'<option value="'+esc(x.id)+'" '+(set.has(x.id)?'selected':'')+'>'+esc(x.nome)+' — '+esc(x.categoria||'')+'</option>').join('')}
 
