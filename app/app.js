@@ -189,6 +189,7 @@ let loginBound=false;
 let appReady=false;
 
 function setGateVisible(){
+  appReady=false;
   const gate=document.getElementById('authGate');
   const splash=document.getElementById('splashScreen');
   const login=document.getElementById('loginScreen');
