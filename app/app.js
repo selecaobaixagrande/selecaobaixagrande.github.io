@@ -126,10 +126,33 @@ function renderCategories(){
     '</div>');
 }
 
+async function renderAthletes(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Entre na área da equipe para acessar os atletas.');return}
+  const {data:trainer}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',session.user.email).maybeSingle();
+  const {data:admin}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle();
+  if(!admin && String(trainer?.Tipo||'').toLowerCase()!=='treinador'){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('A área de atletas é exclusiva para professores e treinadores autorizados.');return}
+  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">⚽</div><div><h2>Atletas</h2><p>Cadastro e acompanhamento da equipe.</p></div></div><div class="athlete-tools"><input id="athleteSearch" placeholder="Buscar atleta..."><select id="athleteCategory"><option value="">Todas as categorias</option><option>Sub-13</option><option>Sub-15 / Sub-17</option><option>Sub-20</option></select></div><div id="athleteList" class="data-list"><div class="empty-state">Carregando atletas...</div></div>';
+  const {data,error}=await supabaseClient.from('Atletas').select('id,nome,categoria,posicao,numero_camisa,foto,jogos,titularidades,gols,assistencias,presencas,faltas_treino,telefone_responsavel,status,observacoes').order('categoria').order('nome').limit(300);
+  if(error){document.getElementById('athleteList').innerHTML=empty('Não foi possível carregar os atletas.');return}
+  const list=document.getElementById('athleteList'),search=document.getElementById('athleteSearch'),cat=document.getElementById('athleteCategory');
+  const draw=()=>{const term=search.value.trim().toLowerCase(),category=cat.value;const rows=(data||[]).filter(x=>(!term||String(x.nome||'').toLowerCase().includes(term))&&(!category||x.categoria===category));if(!rows.length){list.innerHTML=empty('Nenhum atleta encontrado.');return}list.innerHTML=rows.map(x=>'<article class="athlete-card">'+image(x.foto,x.nome)+'<div class="data-body"><small>'+esc(x.categoria||'ATLETA')+'</small><h3>'+esc(x.nome)+'</h3><p>'+esc(x.posicao||'Posição não informada')+(x.numero_camisa?' • Camisa '+esc(x.numero_camisa):'')+'</p><div class="athlete-meta"><span>Presenças: '+esc(x.presencas??0)+'</span><span>Faltas: '+esc(x.faltas_treino??0)+'</span></div><p class="responsavel"><b>Responsável:</b> '+esc(x.telefone_responsavel||'Telefone não cadastrado')+'</p><button class="mini-btn athlete-edit" data-athlete-id="'+esc(x.id)+'">Editar telefone</button></div></article>').join('');list.querySelectorAll('.athlete-edit').forEach(btn=>btn.addEventListener('click',()=>editAthletePhone(btn.dataset.athleteId,data)));};
+  search.addEventListener('input',draw);cat.addEventListener('change',draw);draw();
+}
+async function editAthletePhone(id,rows){
+  const athlete=rows.find(x=>x.id===id);if(!athlete)return;
+  const phone=window.prompt('Telefone do responsável por '+athlete.nome,athlete.telefone_responsavel||'');
+  if(phone===null)return;
+  const {error}=await supabaseClient.from('Atletas').update({telefone_responsavel:phone.trim()||null}).eq('id',id);
+  if(error){window.alert('Não foi possível salvar o telefone.');return}
+  athlete.telefone_responsavel=phone.trim()||null;renderAthletes();
+}
+
 function renderMore(){
   screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><h2>Mais</h2><p>Ferramentas do aplicativo.</p><div class="grid more-grid">'+
     '<button class="tile" data-screen="assistant"><b>Assistente</b><small>Produção e comandos do site</small></button>'+
     '<button class="tile" data-screen="check"><b>Verificar site</b><small>Conferência automática</small></button>'+
+    '<button class="tile" data-screen="athletes"><b>Atletas</b><small>Equipe, presenças e responsáveis</small></button>'+
     '<button class="tile" data-url="'+SITE_URL+'"><b>Site oficial</b><small>Abrir portal completo</small></button>'+
     '<button class="tile" data-url="'+INSTAGRAM_URL+'"><b>Instagram</b><small>@selecaobaixagrande</small></button>'+
     '</div>';
@@ -148,7 +171,9 @@ async function loginAdmin(e){
   const{data,error}=await supabaseClient.auth.signInWithPassword({email,password});
   if(error||!data?.session){errorBox.hidden=false;errorBox.textContent='Não foi possível entrar. Verifique o e-mail e a senha.';return}
   const{data:allowed}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',data.session.user.id).maybeSingle();
-  if(!allowed){await supabaseClient.auth.signOut();errorBox.hidden=false;errorBox.textContent='Este usuário não possui acesso administrativo.';return}
+  const{data:profile}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',data.session.user.email).maybeSingle();
+  const isTrainer=String(profile?.Tipo||'').toLowerCase()==='treinador';
+  if(!allowed&&!isTrainer){await supabaseClient.auth.signOut();errorBox.hidden=false;errorBox.textContent='Este usuário não possui acesso à equipe técnica.';return}
   renderAssistant();
 }
 
