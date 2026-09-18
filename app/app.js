@@ -2,7 +2,7 @@ const SUPABASE_URL='https://lvxwziztdngntoqypzga.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY';
 const SITE_URL='https://selecaobaixagrande.github.io/';
 const INSTAGRAM_URL='https://www.instagram.com/selecaobaixagrande/';
-const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)||null;
+const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'selecaobg-app-auth'}})||null;
 const app=document.getElementById('app'),screen=document.getElementById('screen'),installBtn=document.getElementById('installBtn'),homeUpdates=document.getElementById('homeUpdates');
 let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHistory=[];
 
@@ -162,7 +162,7 @@ async function renderAssistant(){
   if(!supabaseClient){screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button>'+empty('Conexão com o banco indisponível.');return}
   const{data:{session}}=await supabaseClient.auth.getSession();
   if(!session){chatHistory=[];screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Área administrativa</h2><p>Entre para usar o Assistente da Seleção.</p></div></div><form id="loginForm" class="chat-form" style="display:flex;flex-direction:column"><input id="loginEmail" type="email" autocomplete="username" placeholder="E-mail"><input id="loginPassword" type="password" autocomplete="current-password" placeholder="Senha"><button type="submit" style="height:44px">Entrar</button><div id="loginError" class="empty-state" hidden></div></form>';document.getElementById('loginForm').addEventListener('submit',loginAdmin);return}
-  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><div id="imagePreview" class="image-preview" hidden></div><form class="chat-form" id="chatForm"><label class="attach-btn" id="attachBtn" title="Adicionar fotos" aria-label="Adicionar fotos">＋<input id="imageInput" class="image-input" type="file" accept="image/*" multiple></label><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await supabaseClient.auth.signOut();renderAssistant()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));document.getElementById('imageInput').addEventListener('change',async e=>{for(const file of [...e.target.files].slice(0,6-chatImages.length)){if(file.type.startsWith('image/'))chatImages.push(await prepareImage(file));}renderImagePreview();e.target.value='';});
+  screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><div id="imagePreview" class="image-preview" hidden></div><form class="chat-form" id="chatForm"><label class="attach-btn" id="attachBtn" title="Adicionar fotos" aria-label="Adicionar fotos">＋<input id="imageInput" class="image-input" type="file" accept="image/*" multiple></label><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await signOutAndShowLogin()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));document.getElementById('imageInput').addEventListener('change',async e=>{for(const file of [...e.target.files].slice(0,6-chatImages.length)){if(file.type.startsWith('image/'))chatImages.push(await prepareImage(file));}renderImagePreview();e.target.value='';});
 }
 
 async function authenticateTeam(email,password,errorBox){
@@ -184,55 +184,134 @@ async function loginAdmin(e){
   const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value,errorBox=document.getElementById('loginError');
   if(await authenticateTeam(email,password,errorBox))renderAssistant();
 }
-async function enterApp(){
-  const gate=document.getElementById('authGate'),splash=document.getElementById('splashScreen'),login=document.getElementById('loginScreen'),shell=document.getElementById('appShell'),badge=document.getElementById('userBadge');
-  if(!gate||!supabaseClient)return;
-  document.body.classList.add('auth-locked');
+let authBusy=false;
+let loginBound=false;
+
+function setGateVisible(){
+  const gate=document.getElementById('authGate');
+  const splash=document.getElementById('splashScreen');
+  const login=document.getElementById('loginScreen');
+  const shell=document.getElementById('appShell');
   if(shell)shell.hidden=true;
-  await new Promise(r=>setTimeout(r,1800));
-  const showApp=async session=>{
-    if(!session)return false;
-    const email=session.user.email||'';
-    const [{data:allowed},{data:slot},{data:profile}]=await Promise.all([
-      supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle(),
-      supabaseClient.from('professores_app').select('id,nome,ativo').eq('email',email).eq('ativo',true).maybeSingle(),
-      supabaseClient.from('Perfis').select('Tipo').eq('Email',email).maybeSingle()
-    ]);
-    const ok=!!allowed||!!slot||String(profile?.Tipo||'').toLowerCase()==='treinador';
-    if(!ok)return false;
-    if(badge)badge.textContent=slot?.nome||profile?.Tipo==='treinador'?'Equipe':'Administrador';
-    if(shell)shell.hidden=false;
-    gate.remove();
-    document.body.classList.remove('auth-locked');
-    loadHome();
-    setupLiveSync();
-    return true;
-  };
-  const {data:{session}}=await supabaseClient.auth.getSession();
-  if(await showApp(session))return;
-  if(session)await supabaseClient.auth.signOut();
-  splash.hidden=true;
-  login.hidden=false;
-  document.getElementById('globalLoginForm')?.addEventListener('submit',async e=>{
+  if(gate){gate.hidden=false;gate.style.display='grid';}
+  if(splash){splash.hidden=true;}
+  if(login){login.hidden=false;}
+  document.body.classList.add('auth-locked');
+}
+
+function bindGlobalLogin(){
+  if(loginBound)return;
+  const form=document.getElementById('globalLoginForm');
+  if(!form)return;
+  loginBound=true;
+  form.addEventListener('submit',async e=>{
     e.preventDefault();
+    if(authBusy)return;
     const errorBox=document.getElementById('globalLoginError');
-    errorBox.hidden=true;
-    const email=document.getElementById('globalLoginEmail').value.trim();
-    const password=document.getElementById('globalLoginPassword').value;
-    const button=e.currentTarget.querySelector('button');
-    button.disabled=true;button.textContent='Entrando…';
+    const email=document.getElementById('globalLoginEmail')?.value.trim()||'';
+    const password=document.getElementById('globalLoginPassword')?.value||'';
+    const button=form.querySelector('button');
+    if(errorBox){errorBox.hidden=true;errorBox.textContent='';}
+    authBusy=true;
+    if(button){button.disabled=true;button.textContent='Entrando…';}
     const ok=await authenticateTeam(email,password,errorBox);
     if(ok){
-      const {data:{session:newSession}}=await supabaseClient.auth.getSession();
-      await showApp(newSession);
+      const {data:{session}}=await supabaseClient.auth.getSession();
+      await showAuthenticatedApp(session);
     }
-    button.disabled=false;button.textContent='Entrar';
-  });
-  supabaseClient.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session&&document.body.classList.contains('auth-locked'))await showApp(session);
+    authBusy=false;
+    if(button){button.disabled=false;button.textContent='Entrar';}
   });
 }
 
+async function showAuthenticatedApp(session){
+  if(!session||authBusy&&document.getElementById('appShell')?.hidden===false)return false;
+  const gate=document.getElementById('authGate');
+  const splash=document.getElementById('splashScreen');
+  const login=document.getElementById('loginScreen');
+  const shell=document.getElementById('appShell');
+  const badge=document.getElementById('userBadge');
+  const email=(session.user.email||'').trim();
+
+  const [{data:allowed},{data:slot},{data:profile}]=await Promise.all([
+    supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle(),
+    supabaseClient.from('professores_app').select('id,nome,ativo').eq('email',email).eq('ativo',true).maybeSingle(),
+    supabaseClient.from('Perfis').select('Tipo').eq('Email',email).maybeSingle()
+  ]);
+  const isTrainer=String(profile?.Tipo||'').toLowerCase()==='treinador';
+  const ok=!!allowed||!!slot||isTrainer;
+  if(!ok)return false;
+
+  if(badge){
+    badge.textContent=slot?.nome||(isTrainer?'Treinador':'Administrador');
+    badge.title=email;
+  }
+  if(splash)splash.hidden=true;
+  if(login)login.hidden=true;
+  if(gate){gate.hidden=true;gate.style.display='none';}
+  if(shell){shell.hidden=false;shell.style.display='block';}
+  document.body.classList.remove('auth-locked');
+  loadHome();
+  setupLiveSync();
+  return true;
+}
+
+async function signOutAndShowLogin(){
+  if(liveChannel){try{await supabaseClient.removeChannel(liveChannel)}catch(_e){}liveChannel=null;}
+  await supabaseClient.auth.signOut();
+  const shell=document.getElementById('appShell');
+  const gate=document.getElementById('authGate');
+  const splash=document.getElementById('splashScreen');
+  const login=document.getElementById('loginScreen');
+  if(shell){shell.hidden=true;shell.style.display='none';}
+  if(gate){gate.hidden=false;gate.style.display='grid';}
+  if(splash)splash.hidden=true;
+  if(login)login.hidden=false;
+  document.body.classList.add('auth-locked');
+  const form=document.getElementById('globalLoginForm');
+  if(form)form.reset();
+  const errorBox=document.getElementById('globalLoginError');
+  if(errorBox)errorBox.hidden=true;
+  bindGlobalLogin();
+}
+
+async function enterApp(){
+  const gate=document.getElementById('authGate');
+  const splash=document.getElementById('splashScreen');
+  const login=document.getElementById('loginScreen');
+  const shell=document.getElementById('appShell');
+  if(!gate||!supabaseClient){
+    if(gate){gate.hidden=false;gate.style.display='grid';}
+    return;
+  }
+
+  document.body.classList.add('auth-locked');
+  if(shell)shell.hidden=true;
+  if(login)login.hidden=true;
+  if(splash)splash.hidden=false;
+
+  await new Promise(r=>setTimeout(r,1800));
+
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(session){
+    const ok=await showAuthenticatedApp(session);
+    if(ok)return;
+    await supabaseClient.auth.signOut();
+  }
+
+  if(splash)splash.hidden=true;
+  if(login)login.hidden=false;
+  bindGlobalLogin();
+
+  supabaseClient.auth.onAuthStateChange(async(event,newSession)=>{
+    if(event==='SIGNED_IN'&&newSession&&!document.getElementById('authGate')?.hidden){
+      await showAuthenticatedApp(newSession);
+    }else if(event==='SIGNED_OUT'){
+      setGateVisible();
+      bindGlobalLogin();
+    }
+  });
+}
 async function openScreen(name){
   if(name==='home'){
     screen.hidden=true;document.querySelector('.hero').hidden=false;document.querySelectorAll('.section').forEach(x=>x.hidden=false);loadHome();
