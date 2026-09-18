@@ -2,7 +2,7 @@ const SUPABASE_URL='https://lvxwziztdngntoqypzga.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_iCXNkHI8bgQ4c9BEVE9M3A_wOY1tvzY';
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'selecaobg-app-auth'}})||null;
 const app=document.getElementById('app'),dashboard=document.getElementById('dashboard'),screen=document.getElementById('screen');
-let session=null,role='coach',authBusy=false,loginBound=false,liveChannel=null;
+let session=null,role='coach',authBusy=false,loginBound=false,liveChannel=null,authHandling=false,authHandledUser=null;
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const fmtDate=v=>v?new Date(v+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}):'';
@@ -454,6 +454,7 @@ async function withTimeout(promise,ms=7000){
 }
 async function showAuthenticatedApp(s){
   session=s;
+  authHandledUser=s?.user?.id||authHandledUser;
   try{
     const allowed=await withTimeout(coachGuard(),7000);
     if(!allowed){await supabaseClient.auth.signOut();return false}
@@ -483,7 +484,7 @@ async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveC
 function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen)}});
 document.getElementById('logoutBtn').onclick=signOut;
-if(supabaseClient)supabaseClient.auth.onAuthStateChange(async(e,s)=>{if(e==='SIGNED_IN'&&s&&!document.getElementById('appShell').hidden)await showAuthenticatedApp(s)});
+if(supabaseClient)supabaseClient.auth.onAuthStateChange(async(e,s)=>{if(e!=='SIGNED_IN'||!s||authHandling)return;const uid=s.user?.id;if(uid&&authHandledUser===uid)return;authHandledUser=uid;authHandling=true;try{if(document.getElementById('appShell').hidden)await showAuthenticatedApp(s)}finally{authHandling=false}});
 async function boot(){
   if(!supabaseClient){showLogin();return}
   document.body.classList.add('auth-locked');
