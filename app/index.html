@@ -12,6 +12,29 @@
   <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
+  <div id="authGate" class="auth-gate">
+    <div id="splashScreen" class="splash-screen">
+      <div class="splash-glow"></div>
+      <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="splash-crest">
+      <div class="splash-title">SELEÇÃO<br><span>BAIXA GRANDE</span></div>
+      <div class="splash-loader"><span></span></div>
+    </div>
+    <div id="loginScreen" class="login-screen" hidden>
+      <div class="login-card">
+        <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="login-crest">
+        <div class="eyebrow">ACESSO DA EQUIPE</div>
+        <h1>Aplicativo Oficial</h1>
+        <p>Entre com seu acesso de professor ou treinador para continuar.</p>
+        <form id="globalLoginForm" class="login-form">
+          <input id="globalLoginEmail" type="email" autocomplete="username" placeholder="E-mail" required>
+          <input id="globalLoginPassword" type="password" autocomplete="current-password" placeholder="Senha" required>
+          <button type="submit">Entrar</button>
+          <div id="globalLoginError" class="login-error" hidden></div>
+        </form>
+        <small class="login-note">Acesso individual. Cada professor usa sua própria conta.</small>
+      </div>
+    </div>
+  </div>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand"><img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande"><div><strong>SELEÇÃO</strong><span>BAIXA GRANDE</span></div></div>
@@ -50,6 +73,6 @@
       <button class="nav-item" data-screen="more"><span>☰</span><small>Mais</small></button>
     </nav>  </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=15"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>
