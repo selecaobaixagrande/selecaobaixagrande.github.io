@@ -106,7 +106,7 @@ async function callForm(cats,ats,x=null){
     formField('Horário','<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
     formField('Local','<input name="local" value="'+esc(x?.local||'')+'">')+
     formField('Observações','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+
-    '<div class="admin-warning" style="grid-column:1/-1">Não é mais necessário selecionar atletas convocados. Ao abrir a chamada, todos os atletas ativos aparecerão automaticamente, separados por categoria, com os botões PRESENTE e FALTOU.</div>'+
+    ''+
     actions()+'</form>');
   document.getElementById('callForm').onsubmit=async e=>{
     e.preventDefault();
