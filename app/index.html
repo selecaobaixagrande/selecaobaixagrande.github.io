@@ -13,7 +13,7 @@
   <link rel="icon" href="../1000001685.png" type="image/png">
   <link rel="apple-touch-icon" href="../1000001685.png">
   <title>Seleção de Baixa Grande — App Oficial</title>
-  <link rel="stylesheet" href="style.css?v=18">
+  <link rel="stylesheet" href="style.css?v=19">
 </head>
 <body>
   <div id="authGate" class="auth-gate">
@@ -39,10 +39,10 @@
       </div>
     </div>
   </div>
-  <div class="app-shell">
+  <div class="app-shell" id="appShell" hidden>
     <header class="topbar">
       <div class="brand"><img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande"><div><strong>SELEÇÃO</strong><span>BAIXA GRANDE</span></div></div>
-      <button class="icon-btn" id="installBtn" hidden aria-label="Instalar aplicativo">＋</button>
+      <div class="topbar-actions"><span id="userBadge" class="user-badge">Equipe</span><button class="icon-btn" id="installBtn" hidden aria-label="Instalar aplicativo">＋</button></div>
     </header>
     <main id="app" class="content">
       <section class="hero card">
@@ -77,6 +77,6 @@
       <button class="nav-item" data-screen="more"><span>☰</span><small>Mais</small></button>
     </nav>  </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>
