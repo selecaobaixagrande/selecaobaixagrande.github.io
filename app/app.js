@@ -367,7 +367,7 @@ async function openScreen(name){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-async function withTimeout(promise,ms=7000){
+async function withTimeout(promise,ms=4500){
   return await Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('TIMEOUT')),ms))]);
 }
 async function showAuthenticatedApp(s){
@@ -407,8 +407,8 @@ async function boot(){
   if(!supabaseClient){showLogin();return}
   document.body.classList.add('auth-locked');
   try{
-    await new Promise(r=>setTimeout(r,900));
-    const result=await withTimeout(supabaseClient.auth.getSession(),7000);
+    // Não deixa a tela de abertura ficar presa esperando o Supabase.
+    const result=await withTimeout(supabaseClient.auth.getSession(),3500);
     const s=result?.data?.session||null;
     if(s&&await showAuthenticatedApp(s))return;
   }catch(err){console.error('Falha ao restaurar sessão:',err)}
