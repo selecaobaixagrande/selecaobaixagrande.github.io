@@ -65,9 +65,29 @@ async function renderAthletes(){
   document.getElementById('aList').addEventListener('click',e=>{const b=e.target.closest('[data-edit-athlete]');if(b)athleteForm(rows.find(x=>x.id===b.dataset.editAthlete));const d=e.target.closest('[data-athlete-detail]');if(d)athleteDetail(rows.find(x=>x.id===d.dataset.athleteDetail))});
 }
 function athleteForm(x=null){
-  shell(x?'Editar atleta':'Novo atleta','Dados internos do elenco.', '<form id="athleteForm" class="form-grid">'+formField('Nome','<input name="nome" required value="'+esc(x?.nome||'')+'">')+formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15</option><option>Sub-17</option><option>Sub-20</option></select>')+formField('Posição','<input name="posicao" value="'+esc(x?.posicao||'')+'">')+formField('Número','<input name="numero_camisa" type="number" value="'+(x?.numero_camisa??'')+'">')+formField('Telefone do responsável','<input name="telefone_responsavel" value="'+esc(x?.telefone_responsavel||'')+'">')+formField('Status','<select name="status"><option>Ativo</option><option>Inativo</option></select>')+formField('Foto URL','<input name="foto" value="'+esc(x?.foto||'')+'">')+formField('Observações internas','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>'+actions()+'</form>');
-  document.querySelector('[name=categoria]').value=x?.categoria||'Sub-13';document.querySelector('[name=status]').value=x?.status||'Ativo';
-  document.getElementById('athleteForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row=Object.fromEntries(f.entries());row.numero_camisa=row.numero_camisa?Number(row.numero_camisa):null;if(x){const r=await upd('Atletas',x.id,row);if(r.error)return alert(r.error.message)}else{const r=await save('Atletas',row);if(r.error)return alert(r.error.message)}await renderAthletes()};
+  shell(x?'Editar atleta':'Novo atleta','Dados internos do elenco.',
+    '<form id="athleteForm" class="form-grid">'+
+    formField('Nome','<input name="nome" required value="'+esc(x?.nome||'')+'">')+
+    formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15</option><option>Sub-17</option><option>Sub-20</option></select>')+
+    formField('Posição','<input name="posicao" value="'+esc(x?.posicao||'')+'">')+
+    formField('Número','<input name="numero_camisa" type="number" value="'+(x?.numero_camisa??'')+'">')+
+    formField('Telefone do responsável','<input name="telefone_responsavel" value="'+esc(x?.telefone_responsavel||'')+'">')+
+    formField('Status','<select name="status"><option>Ativo</option><option>Inativo</option></select>')+
+    formField('Foto URL','<input name="foto" value="'+esc(x?.foto||'')+'">')+
+    formField('Observações internas','<textarea name="observacoes">'+esc(x?.observacoes||'')+'</textarea>')+
+    actions()+
+    '</form>');
+  document.querySelector('[name=categoria]').value=x?.categoria||'Sub-13';
+  document.querySelector('[name=status]').value=x?.status||'Ativo';
+  document.getElementById('athleteForm').onsubmit=async e=>{
+    e.preventDefault();
+    const f=new FormData(e.target);
+    const row=Object.fromEntries(f.entries());
+    row.numero_camisa=row.numero_camisa?Number(row.numero_camisa):null;
+    const r=x?await upd('Atletas',x.id,row):await save('Atletas',row);
+    if(r.error){alert(r.error.message);return}
+    await renderAthletes();
+  };
 }
 function athleteDetail(x){shell(x.nome,'Ficha interna do atleta.','<div class="detail-grid"><div><small>CATEGORIA</small><strong>'+esc(x.categoria||'-')+'</strong></div><div><small>POSIÇÃO</small><strong>'+esc(x.posicao||'-')+'</strong></div><div><small>JOGOS</small><strong>'+(x.jogos||0)+'</strong></div><div><small>GOLS</small><strong>'+(x.gols||0)+'</strong></div><div><small>ASSISTÊNCIAS</small><strong>'+(x.assistencias||0)+'</strong></div><div><small>PRESENÇAS</small><strong>'+(x.presencas||0)+'</strong></div></div><div class="coach-private-card"><strong>Dados privados</strong><span>Responsável: '+esc(x.telefone_responsavel||'Não cadastrado')+'</span><span>Observações: '+esc(x.observacoes||x.observacoes_treinador||'Nenhuma')+'</span></div><div class="quick-grid"><button class="tile" data-screen="evaluations"><b>Avaliações</b><small>Histórico técnico</small></button><button class="tile" data-screen="notes"><b>Anotações</b><small>Observações internas</small></button><button class="tile" data-screen="performance"><b>Desempenho</b><small>Estatísticas da temporada</small></button></div>')}
 
