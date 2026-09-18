@@ -158,8 +158,17 @@ async function sendChat(e){
   try{
     const{data,error}=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images}});
     if(error)throw error;
+    if(data?.ok===false){
+      loading.textContent='Erro da IA: '+(data.detail||data.error||'erro desconhecido');
+      return;
+    }
     loading.textContent=data?.answer||'Não recebi uma resposta.';
-  }catch(err){console.error(err);loading.textContent='Não foi possível conectar ao Assistente agora. Tente novamente em alguns segundos.'}
+  }catch(err){
+    console.error(err);
+    let detail=err?.message||'erro desconhecido';
+    try{if(err?.context){const body=await err.context.json();detail=body?.detail||body?.error||detail;}}catch(_e){}
+    loading.textContent='Erro do Assistente: '+detail;
+  }
 }
 
 function setupLiveSync(){
