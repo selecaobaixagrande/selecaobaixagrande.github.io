@@ -416,8 +416,47 @@ function showLogin(){
   bindLogin();
 }
 function bindLogin(){
-  if(loginBound)return;loginBound=true;const f=document.getElementById('globalLoginForm');
-  f.addEventListener('submit',async e=>{e.preventDefault();if(authBusy)return;authBusy=true;const err=document.getElementById('globalLoginError'),b=f.querySelector('button');err.hidden=true;b.disabled=true;b.textContent='Entrando…';const {data,error}=await supabaseClient.auth.signInWithPassword({email:document.getElementById('globalLoginEmail').value.trim(),password:document.getElementById('globalLoginPassword').value});if(error||!data.session||!(await showAuthenticatedApp(data.session))){err.hidden=false;err.textContent=error?'E-mail ou senha inválidos.':'Esta conta não está autorizada para a comissão.';if(data?.session)await supabaseClient.auth.signOut()}b.disabled=false;b.textContent='Entrar';authBusy=false})
+  if(loginBound)return;
+  const f=document.getElementById('globalLoginForm');
+  if(!f)return;
+  loginBound=true;
+  f.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(authBusy)return;
+    const err=document.getElementById('globalLoginError');
+    const b=f.querySelector('button');
+    authBusy=true;
+    if(err){err.hidden=true;err.textContent=''}
+    if(b){b.disabled=true;b.textContent='Entrando…'}
+    try{
+      if(!supabaseClient){
+        throw new Error('AUTH_CLIENT_UNAVAILABLE');
+      }
+      const email=document.getElementById('globalLoginEmail')?.value.trim()||'';
+      const password=document.getElementById('globalLoginPassword')?.value||'';
+      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+      if(error){
+        if(err){err.hidden=false;err.textContent='E-mail ou senha inválidos.'}
+        return;
+      }
+      if(!data?.session){
+        if(err){err.hidden=false;err.textContent='Não foi possível iniciar a sessão. Tente novamente.'}
+        return;
+      }
+      await showAuthenticatedApp(data.session);
+    }catch(ex){
+      console.error('Erro no login:',ex);
+      if(err){
+        err.hidden=false;
+        err.textContent=ex?.message==='AUTH_CLIENT_UNAVAILABLE'
+          ?'Serviço de autenticação não carregou. Recarregue o aplicativo.'
+          :'Erro ao conectar ao sistema de acesso. Tente novamente.';
+      }
+    }finally{
+      if(b){b.disabled=false;b.textContent='Entrar'}
+      authBusy=false;
+    }
+  });
 }
 async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveChannel).catch(()=>{});liveChannel=null;await supabaseClient.auth.signOut();location.reload()}
 function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
