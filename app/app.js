@@ -35,20 +35,20 @@ function athleteOptions(rows,selected=[]){const set=new Set(selected);return row
 
 async function loadDashboard(){
   if(!dashboard)return;
-  const [a,t,c,p,n,e]=await Promise.all([
+  const [a,t,c,p,ptotal,n,e]=await Promise.all([
     count('Atletas',x=>x.eq('status','Ativo')),
     count('treinos',x=>x.gte('data_treino',today()).lt('data_treino',new Date(Date.now()+8*86400000).toISOString().slice(0,10))),
     count('chamadas',x=>x.eq('status','aberta')),
-    count('presencas_treino',x=>x.eq('status','presente')),
+    count('presencas_treino',x=>x.eq('status','presente')),\n    count('presencas_treino'),
     count('avisos_internos',x=>x.eq('ativo',true)),
     q('treinos','id,data_treino,horario,local,objetivo,status,categoria_id',x=>x.gte('data_treino',today()).neq('status','cancelado').order('data_treino').order('horario').limit(1))
   ]);
-  const total=a.count||0, present=p.count||0;
+  const total=a.count||0, present=p.count||0, freq=ptotal.count?Math.round((present/ptotal.count)*100):0;
   dashboard.innerHTML='<div class="section-title"><h2>Painel da comissão</h2></div>'+
-    '<div class="stats-grid">'+[['⚽',total,'Atletas ativos'],['🏃',t.count||0,'Treinos próximos'],['✓',c.count||0,'Chamadas abertas'],['●',present,'Presenças registradas']].map(x=>'<article class="stat-card"><span>'+x[0]+'</span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></article>').join('')+'</div>'+
+    '<div class="stats-grid">'+[['⚽',total,'Atletas ativos'],['🏃',t.count||0,'Treinos próximos'],['✓',c.count||0,'Chamadas abertas'],['●',freq+'%','Frequência registrada']].map(x=>'<article class="stat-card"><span>'+x[0]+'</span><strong>'+x[1]+'</strong><small>'+x[2]+'</small></article>').join('')+'</div>'+
     '<div class="dashboard-grid"><article class="panel-card"><small>PRÓXIMO TREINO</small><h3>'+(e.data?.[0]?fmtDate(e.data[0].data_treino)+' • '+fmtTime(e.data[0].horario):'Nenhum agendado')+'</h3><p>'+(e.data?.[0]?[e.data[0].local,e.data[0].objetivo].filter(Boolean).join(' • '):'Cadastre um treino para acompanhar a preparação.')+'</p><button class="mini-btn" data-screen="training">Abrir treinos</button></article><article class="panel-card"><small>AVISOS INTERNOS</small><h3>'+(n.count||0)+' ativo(s)</h3><p>Comunicados da comissão técnica.</p><button class="mini-btn" data-screen="notices">Abrir avisos</button></article></div>'+
     '<div class="section-title recent-title"><h2>Acesso rápido</h2></div><div class="quick-grid">'+[['calls','Chamadas','Convocar atletas'],['attendance','Presença','Registrar treino'],['evaluations','Avaliações','Avaliar atletas'],['lineups','Escalações','Montar equipe'],['calendar','Calendário','Agenda interna'],['notes','Anotações','Notas técnicas']].map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div>';
-  setSync(![a,t,c,p,n,e].some(x=>x?.error),'Banco conectado');
+  setSync(![a,t,c,p,ptotal,n,e].some(x=>x?.error),'Banco conectado');
 }
 
 function shell(title,desc,body){screen.hidden=false;dashboard.hidden=true;document.querySelector('.hero').hidden=true;screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">⚽</div><div><h2>'+esc(title)+'</h2><p>'+esc(desc||'')+'</p></div></div>'+body}
@@ -194,17 +194,23 @@ async function renderMore(){
   shell('Área da comissão','Ferramentas internas dos treinadores.','<div class="quick-grid">'+items.map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+'</div>');
 }
 
+async function renderCategoriesAdmin(){
+  const r=await q('categorias_app','id,nome,descricao,ativo',x=>x.order('nome'));
+  shell('Categorias','Categorias internas da comissão.','<button class="primary-btn" id="newCategory">+ Nova categoria</button><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">•</div><div class="data-body"><h3>'+esc(x.nome)+'</h3><p>'+esc(x.descricao||'')+'</p><small>'+((x.ativo)?'ATIVA':'INATIVA')+'</small><button class="mini-btn" data-cat-edit="'+x.id+'">Editar</button> <button class="mini-btn" data-cat-del="'+x.id+'">Excluir</button></div></article>').join('')||empty('Nenhuma categoria.')+'</div>');
+  document.getElementById('newCategory').onclick=()=>categoryForm();
+  screen.querySelectorAll('[data-cat-edit]').forEach(b=>b.onclick=()=>categoryForm((r.data||[]).find(x=>x.id===b.dataset.catEdit)));
+  screen.querySelectorAll('[data-cat-del]').forEach(b=>b.onclick=async()=>{if(confirm('Excluir esta categoria?')){const z=await del('categorias_app',b.dataset.catDel);if(z.error)alert(z.error.message);else renderCategoriesAdmin()}});
+}
+function categoryForm(x=null){
+  shell(x?'Editar categoria':'Nova categoria','Somente o administrador pode gerenciar categorias.','<form id="categoryForm" class="form-grid">'+formField('Nome','<input name="nome" required value="'+esc(x?.nome||'')+'">')+formField('Descrição','<textarea name="descricao">'+esc(x?.descricao||'')+'</textarea>')+formField('Status','<select name="ativo"><option value="true">Ativa</option><option value="false">Inativa</option></select>')+actions()+'</form>');
+  document.querySelector('[name=ativo]').value=String(x?.ativo??true);
+  document.getElementById('categoryForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row={nome:f.get('nome'),descricao:f.get('descricao')||null,ativo:f.get('ativo')==='true'};const z=x?await upd('categorias_app',x.id,row):await save('categorias_app',row);if(z.error)return alert(z.error.message);renderCategoriesAdmin()};
+}
 async function renderAdmin(){
   const r=await q('professores_app','id,nome,email,user_id,ativo',x=>x.order('id'));
-  shell('Administração','Gerenciamento dos acessos da comissão.','<p class="admin-warning">O administrador deve cadastrar o e-mail de cada professor após a conta Auth existir. O aplicativo não cria senhas automaticamente.</p><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">'+x.id+'</div><div class="data-body"><h3>'+esc(x.nome||'Professor '+x.id)+'</h3><p>'+esc(x.email||'E-mail não vinculado')+'</p><small>'+((x.ativo)?'ATIVO':'INATIVO')+'</small><button class="mini-btn" data-prof="'+x.id+'">Editar</button></div></article>').join('')+'</div>');
+  shell('Administração','Gerenciamento dos acessos da comissão.','<p class="admin-warning">O administrador deve cadastrar o e-mail de cada professor após a conta Auth existir. O aplicativo não cria senhas automaticamente.</p><div class="quick-grid"><button class="tile" data-screen="categories-admin"><b>Categorias</b><small>Gerenciar categorias</small></button><button class="tile" data-screen="admin"><b>Professores</b><small>Gerenciar acessos</small></button></div><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">'+x.id+'</div><div class="data-body"><h3>'+esc(x.nome||'Professor '+x.id)+'</h3><p>'+esc(x.email||'E-mail não vinculado')+'</p><small>'+((x.ativo)?'ATIVO':'INATIVO')+'</small><button class="mini-btn" data-prof="'+x.id+'">Editar</button></div></article>').join('')+'</div>');
   screen.querySelectorAll('[data-prof]').forEach(b=>b.onclick=()=>profForm((r.data||[]).find(x=>String(x.id)===b.dataset.prof)));
 }
-function profForm(x){
-  shell('Editar professor','Vincule a conta autorizada.','<form id="profForm" class="form-grid">'+formField('Nome','<input name="nome" value="'+esc(x.nome||'')+'" required>')+formField('E-mail da conta Auth','<input name="email" type="email" value="'+esc(x.email||'')+'" required>')+formField('Status','<select name="ativo"><option value="true">Ativo</option><option value="false">Inativo</option></select>')+actions()+'</form>');
-  document.querySelector('[name=ativo]').value=String(x.ativo);
-  document.getElementById('profForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const r=await upd('professores_app',x.id,{nome:f.get('nome'),email:f.get('email').trim().toLowerCase(),ativo:f.get('ativo')==='true'});if(r.error)return alert(r.error.message);renderAdmin()};
-}
-
 async function openScreen(name){
   if(name==='home'){screen.hidden=true;dashboard.hidden=false;document.querySelector('.hero').hidden=false;loadDashboard()}
   else if(name==='athletes')await renderAthletes();
@@ -217,7 +223,7 @@ async function openScreen(name){
   else if(name==='notes')await renderNotes();
   else if(name==='notices')await renderNotices();
   else if(name==='lineups')await renderLineups();
-  else if(name==='admin'&&role==='admin')await renderAdmin();
+  else if(name==='admin'&&role==='admin')await renderAdmin();\n  else if(name==='categories-admin'&&role==='admin')await renderCategoriesAdmin();
   else if(name==='more')await renderMore();
   else return;
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));
