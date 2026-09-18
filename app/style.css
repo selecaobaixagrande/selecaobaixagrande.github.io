@@ -56,3 +56,51 @@ body{background:radial-gradient(circle at 50% -10%,rgba(181,18,27,.10),transpare
 @keyframes loginLine{0%,100%{opacity:.35;transform:scaleX(.35)}50%{opacity:1;transform:scaleX(1)}}
 @keyframes loginCrest{from{opacity:0;transform:scale(.82) translateY(-8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+
+/* SISTEMA VISUAL PROFISSIONAL — v19 */
+.app-shell[hidden]{display:none!important}
+.app-shell{min-height:100dvh}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.user-badge{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035);color:#c9cbd1;font-size:9px;font-weight:800;letter-spacing:.4px}
+.content{padding-top:20px}
+.hero{background:
+  radial-gradient(circle at 92% 8%,rgba(237,39,51,.12),transparent 26%),
+  linear-gradient(145deg,#17171b 0%,#101013 58%,#0d0d0f 100%)}
+.hero h1{letter-spacing:-1.1px}
+.section-title{display:flex;align-items:center;justify-content:space-between}
+.grid{gap:12px}
+.tile{min-height:116px;background:linear-gradient(145deg,#151519,#0f0f12);box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.tile b{font-size:15px;letter-spacing:-.2px}
+.tile small{display:block;max-width:150px;line-height:1.45}
+.screen{background:linear-gradient(145deg,#151519,#0f0f12);box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.data-card{background:linear-gradient(145deg,#151519,#101012);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.data-card:active{transform:scale(.992)}
+.bottom-nav{height:78px;background:rgba(8,8,9,.92)}
+.nav-item{position:relative}
+.nav-item.active:after{content:"";position:absolute;bottom:8px;width:18px;height:2px;border-radius:99px;background:var(--red2);box-shadow:0 0 10px rgba(237,39,51,.45)}
+.auth-gate{background:#050506}
+.splash-screen{background:
+  radial-gradient(circle at 50% 42%,rgba(181,18,27,.22),transparent 30%),
+  radial-gradient(circle at 50% 50%,rgba(255,255,255,.025),transparent 46%),
+  #050506}
+.splash-screen:before{content:"";position:absolute;width:1px;height:100%;left:50%;top:0;background:linear-gradient(transparent,rgba(237,39,51,.18),transparent);opacity:.55}
+.splash-crest{width:138px;height:138px;filter:drop-shadow(0 0 32px rgba(181,18,27,.5))}
+.splash-title{font-size:21px;letter-spacing:5px}
+.splash-title span{font-size:10px;letter-spacing:3.5px}
+.splash-loader{bottom:12%;width:92px;height:2px;background:#242428}
+.login-screen{padding:18px}
+.login-card{width:min(100%,410px);padding:32px 24px 25px;border-radius:26px;background:linear-gradient(145deg,rgba(23,23,26,.98),rgba(12,12,14,.98));box-shadow:0 30px 100px rgba(0,0,0,.65)}
+.login-card h1{font-size:30px;letter-spacing:-.8px}
+.login-card p{font-size:12px}
+.login-form input{height:50px;background:#09090b;border-color:rgba(255,255,255,.09)}
+.login-form button{height:50px;background:linear-gradient(135deg,#c51620,#9e1018);box-shadow:0 10px 28px rgba(181,18,27,.18)}
+.login-note{font-size:9px}
+@keyframes professionalEnter{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes loginCrest{0%{opacity:0;transform:scale(.76) translateY(-12px)}70%{opacity:1;transform:scale(1.04)}100%{opacity:1;transform:none}}
+@media(max-width:480px){
+ .content{padding:16px;padding-bottom:18px}
+ .hero{padding:24px 19px}
+ .hero h1{font-size:29px}
+ .tile{min-height:108px;padding:15px}
+ .user-badge{max-width:88px}
+}
