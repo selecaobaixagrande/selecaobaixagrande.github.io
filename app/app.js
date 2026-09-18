@@ -156,8 +156,18 @@ async function sendChat(e){
   const loading=document.createElement('div');loading.className='bubble';loading.textContent='Analisando…';chat.appendChild(loading);
   const images=chatImages.map(x=>x.data);chatImages=[];renderImagePreview();
   try{
-    const{data,error}=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images}});
-    if(error)throw error;
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),30000);
+    let result;
+    try{
+      result=await supabaseClient.functions.invoke('selecaobot',{body:{message:text||'Analise as fotos enviadas e siga exatamente minha orientação. Identifique cada foto como Imagem 1, Imagem 2 etc. Se eu pedir para escolher uma foto para usar, diga claramente qual imagem deve ser usada e por quê.',images},signal:controller.signal});
+    }finally{clearTimeout(timeout)}
+    const{data,error}=result;
+    if(error){
+      let detail=error.message||'Não foi possível conectar ao Assistente.';
+      try{if(error.context){const body=await error.context.json();detail=body?.detail||body?.error||detail;}}catch(_e){}
+      throw new Error(detail);
+    }
     if(data?.ok===false){
       loading.textContent='Erro da IA: '+(data.detail||data.error||'erro desconhecido');
       return;
