@@ -61,17 +61,7 @@
     </nav>
   </div>
 
-  <script>
-    // Fallback visual: a tela de abertura nunca fica presa indefinidamente.
-    setTimeout(function(){
-      var splash=document.getElementById('splashScreen');
-      var login=document.getElementById('loginScreen');
-      if(splash && !splash.hidden && login){
-        splash.hidden=true;
-        login.hidden=false;
-      }
-    },1200);
-  </script>
+  <!-- A transição splash → login é controlada pelo boot do app, evitando corrida com getSession(). -->
   <script>
     // Carrega o Supabase antes do aplicativo, com uma segunda CDN como fallback.
     (function(){
@@ -81,7 +71,7 @@
       ];
       function loadApp(){
         var s=document.createElement('script');
-        s.src='app.js?v=36';
+        s.src='app.js?v=37';
         s.async=false;
         s.onerror=function(){
           var e=document.getElementById('globalLoginError');
