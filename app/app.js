@@ -232,11 +232,31 @@ async function openScreen(name){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+async function withTimeout(promise,ms=7000){
+  return await Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('TIMEOUT')),ms))]);
+}
 async function showAuthenticatedApp(s){
-  session=s;if(!(await coachGuard())){await supabaseClient.auth.signOut();return false}
-  const badge=document.getElementById('userBadge');badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||'';
-  document.getElementById('splashScreen').hidden=true;document.getElementById('loginScreen').hidden=true;document.getElementById('authGate').hidden=true;document.getElementById('appShell').hidden=false;document.body.classList.remove('auth-locked');
-  await loadDashboard();setupLiveSync();return true;
+  session=s;
+  try{
+    const allowed=await withTimeout(coachGuard(),7000);
+    if(!allowed){await supabaseClient.auth.signOut();return false}
+    const badge=document.getElementById('userBadge');if(badge){badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';badge.title=s.user.email||''}
+    document.getElementById('splashScreen').hidden=true;document.getElementById('loginScreen').hidden=true;document.getElementById('authGate').hidden=true;document.getElementById('appShell').hidden=false;document.body.classList.remove('auth-locked');
+    loadDashboard().catch(()=>setSync(false,'Não foi possível carregar o painel'));
+    setupLiveSync();return true;
+  }catch(err){
+    console.error('Erro ao validar acesso:',err);
+    await supabaseClient.auth.signOut().catch(()=>{});
+    return false;
+  }
+}
+function showLogin(){
+  document.getElementById('splashScreen').hidden=true;
+  document.getElementById('loginScreen').hidden=false;
+  document.getElementById('authGate').hidden=false;
+  document.getElementById('appShell').hidden=true;
+  document.body.classList.remove('auth-locked');
+  bindLogin();
 }
 function bindLogin(){
   if(loginBound)return;loginBound=true;const f=document.getElementById('globalLoginForm');
@@ -248,11 +268,14 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');
 document.getElementById('logoutBtn').onclick=signOut;
 if(supabaseClient)supabaseClient.auth.onAuthStateChange(async(e,s)=>{if(e==='SIGNED_IN'&&s&&!document.getElementById('appShell').hidden)await showAuthenticatedApp(s)});
 async function boot(){
-  if(!supabaseClient)return;
+  if(!supabaseClient){showLogin();return}
   document.body.classList.add('auth-locked');
-  await new Promise(r=>setTimeout(r,1500));
-  const {data:{session:s}}=await supabaseClient.auth.getSession();
-  if(s&&await showAuthenticatedApp(s))return;
-  document.getElementById('splashScreen').hidden=true;document.getElementById('loginScreen').hidden=false;bindLogin();
+  try{
+    await new Promise(r=>setTimeout(r,900));
+    const result=await withTimeout(supabaseClient.auth.getSession(),7000);
+    const s=result?.data?.session||null;
+    if(s&&await showAuthenticatedApp(s))return;
+  }catch(err){console.error('Falha ao restaurar sessão:',err)}
+  showLogin();
 }
-boot();
+boot().catch(err=>{console.error('Falha no boot:',err);showLogin()});
