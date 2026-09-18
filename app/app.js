@@ -8,7 +8,7 @@ let deferredPrompt=null,liveChannel=null,refreshTimer=null,chatImages=[],chatHis
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(installBtn)installBtn.hidden=false});
 installBtn?.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true});
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=13').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?v=16').catch(()=>{});
 
 const content={
  news:['Notícias','As notícias publicadas no portal oficial aparecem aqui automaticamente.'],
@@ -165,17 +165,51 @@ async function renderAssistant(){
   screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">✦</div><div><h2>Assistente da Seleção</h2><p>Assistente editorial oficial.</p></div><button id="logoutBtn" class="icon-btn" type="button" title="Sair">×</button></div><div class="command-list"><button data-command="/TEXT">/TEXT <small>Texto profissional</small></button><button data-command="/NEWS">/NEWS <small>Notícia</small></button><button data-command="/TITLE">/TITLE <small>Título</small></button><button data-command="/CAPTION">/CAPTION <small>Legenda</small></button><button data-command="/RESULT">/RESULT <small>Resultado</small></button><button data-command="/GAME">/GAME <small>Jogo</small></button><button data-command="/TRAINING">/TRAINING <small>Treino</small></button><button data-command="/INSTAGRAM">/INSTAGRAM <small>Instagram</small></button></div><div class="chat" id="chat"><div class="bubble">Olá! Sou o Assistente da Seleção. Escolha um comando ou escreva seu pedido.</div></div><div id="imagePreview" class="image-preview" hidden></div><form class="chat-form" id="chatForm"><label class="attach-btn" id="attachBtn" title="Adicionar fotos" aria-label="Adicionar fotos">＋<input id="imageInput" class="image-input" type="file" accept="image/*" multiple></label><input id="chatInput" autocomplete="off" placeholder="Digite seu pedido..."><button>Enviar</button></form>';document.getElementById('chatForm').addEventListener('submit',sendChat);document.getElementById('logoutBtn').addEventListener('click',async()=>{await supabaseClient.auth.signOut();renderAssistant()});document.querySelectorAll('[data-command]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('chatInput').value=b.dataset.command+' ';document.getElementById('chatInput').focus()}));document.getElementById('imageInput').addEventListener('change',async e=>{for(const file of [...e.target.files].slice(0,6-chatImages.length)){if(file.type.startsWith('image/'))chatImages.push(await prepareImage(file));}renderImagePreview();e.target.value='';});
 }
 
-async function loginAdmin(e){
-  e.preventDefault();
-  const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value,errorBox=document.getElementById('loginError');
+async function authenticateTeam(email,password,errorBox){
   const{data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-  if(error||!data?.session){errorBox.hidden=false;errorBox.textContent='Não foi possível entrar. Verifique o e-mail e a senha.';return}
+  if(error||!data?.session){if(errorBox){errorBox.hidden=false;errorBox.textContent='Não foi possível entrar. Verifique o e-mail e a senha.';}return false}
   const{data:allowed}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',data.session.user.id).maybeSingle();
   const{data:profile}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',data.session.user.email).maybeSingle();
   const isTrainer=String(profile?.Tipo||'').toLowerCase()==='treinador';
-  if(!allowed&&!isTrainer){await supabaseClient.auth.signOut();errorBox.hidden=false;errorBox.textContent='Este usuário não possui acesso à equipe técnica.';return}
-  renderAssistant();
+  if(!allowed&&!isTrainer){
+    await supabaseClient.auth.signOut();
+    if(errorBox){errorBox.hidden=false;errorBox.textContent='Esta conta não possui acesso ao aplicativo da equipe.';}
+    return false;
+  }
+  return true;
 }
+async function loginAdmin(e){
+  e.preventDefault();
+  const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value,errorBox=document.getElementById('loginError');
+  if(await authenticateTeam(email,password,errorBox))renderAssistant();
+}
+async function enterApp(){
+  const gate=document.getElementById('authGate'),splash=document.getElementById('splashScreen'),login=document.getElementById('loginScreen');
+  if(!gate)return;
+  document.body.classList.add('auth-locked');
+  await new Promise(r=>setTimeout(r,1700));
+  const{data:{session}}=await supabaseClient.auth.getSession();
+  if(session){
+    const{data:allowed}=await supabaseClient.from('admin_users').select('user_id').eq('user_id',session.user.id).maybeSingle();
+    const{data:profile}=await supabaseClient.from('Perfis').select('Tipo').eq('Email',session.user.email).maybeSingle();
+    const ok=!!allowed||String(profile?.Tipo||'').toLowerCase()==='treinador';
+    if(ok){gate.remove();document.body.classList.remove('auth-locked');return}
+    await supabaseClient.auth.signOut();
+  }
+  splash.hidden=true;login.hidden=false;
+  document.getElementById('globalLoginForm')?.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const errorBox=document.getElementById('globalLoginError');
+    errorBox.hidden=true;
+    const email=document.getElementById('globalLoginEmail').value.trim();
+    const password=document.getElementById('globalLoginPassword').value;
+    const button=e.currentTarget.querySelector('button');button.disabled=true;button.textContent='Entrando...';
+    const ok=await authenticateTeam(email,password,errorBox);
+    button.disabled=false;button.textContent='Entrar';
+    if(ok){gate.remove();document.body.classList.remove('auth-locked');loadHome();setupLiveSync();}
+  });
+}
+
 
 async function openScreen(name){
   if(name==='home'){
@@ -265,4 +299,4 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshAll()});
 window.addEventListener('online',refreshAll);
-loadHome();setupLiveSync();setSync(true,'Sincronizado com o site');setInterval(()=>{if(document.visibilityState==='visible')refreshAll()},60000);
+enterApp();setInterval(()=>{if(document.visibilityState==='visible'&&document.getElementById('authGate')?.hidden)refreshAll()},60000);
