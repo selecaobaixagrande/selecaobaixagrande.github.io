@@ -424,7 +424,7 @@ async function renderAdmin(){
   screen.querySelectorAll('[data-prof]').forEach(b=>b.onclick=()=>profForm((r.data||[]).find(x=>String(x.id)===b.dataset.prof)));
 }
 async function openScreen(name){
-  if(name==='home'){screen.hidden=true;dashboard.hidden=false;document.querySelector('.hero').hidden=false;loadDashboard()}
+  if(name==='home'){screen.hidden=true;dashboard.hidden=false;document.querySelector('.home-hero')?.removeAttribute('hidden');loadDashboard()}
   else if(name==='athletes')await renderAthletes();
   else if(name==='calls')await renderCalls();
   else if(name==='games')await renderGames();
@@ -514,7 +514,7 @@ async function signOut(){
   localStorage.removeItem('selecaobg-coach-name');
   location.reload();
 }
-async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveChannel).catch(()=>{});liveChannel=null;await supabaseClient.auth.signOut();location.reload()}
+
 function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-screen]');if(b){e.preventDefault();openScreen(b.dataset.screen)}});
 document.getElementById('logoutBtn').onclick=()=>openScreen('more');
