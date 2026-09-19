@@ -504,3 +504,69 @@ html,body{
   #appShell.app-shell{width:100vw;max-width:none}
   #appShell.app-shell>main#app{width:100vw;max-width:none;padding-left:12px;padding-right:12px}
 }
+
+
+/* CORREÇÃO REAL — FAIXA PRETA LATERAL / CONTÊINER DO APP */
+html,body{
+  width:100% !important;
+  inline-size:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow-x:hidden !important;
+}
+body{
+  display:block !important;
+}
+#appShell.app-shell{
+  position:relative !important;
+  display:block !important;
+  width:100% !important;
+  inline-size:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding-left:0 !important;
+  padding-right:0 !important;
+  transform:none !important;
+  left:0 !important;
+  right:auto !important;
+  box-sizing:border-box !important;
+  overflow-x:hidden !important;
+}
+#appShell.app-shell > .topbar,
+#appShell.app-shell > main#app,
+#appShell.app-shell > .bottom-nav{
+  width:100% !important;
+  inline-size:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+}
+#appShell.app-shell > main#app{
+  margin:0 !important;
+  padding-left:12px !important;
+  padding-right:12px !important;
+}
+#appShell.app-shell #dashboard,
+#appShell.app-shell #screen{
+  width:100% !important;
+  inline-size:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+}
+#appShell.app-shell #dashboard > *{
+  min-width:0 !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+@media(max-width:700px){
+  #appShell.app-shell,
+  #appShell.app-shell > main#app{
+    width:100% !important;
+    inline-size:100% !important;
+    max-width:none !important;
+  }
+}
