@@ -9,7 +9,7 @@
 <link rel="icon" href="../1000001685.png" type="image/png">
 <link rel="apple-touch-icon" href="../1000001685.png">
 <title>Seleção de Baixa Grande — Comissão Técnica</title>
-<link rel="stylesheet" href="style.css?v=38">
+<link rel="stylesheet" href="style.css?v=37">
 </head>
 <body>
 <div id="authGate" class="auth-gate">
@@ -78,7 +78,7 @@
 (function(){
   var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'];
   var appStarted=false;
-  function loadApp(){if(appStarted)return;appStarted=true;var s=document.createElement('script');s.src='app.js?v=42';s.async=false;s.onerror=function(){var e=document.getElementById('globalLoginError');if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}};document.body.appendChild(s)}
+  function loadApp(){if(appStarted)return;appStarted=true;var s=document.createElement('script');s.src='app.js?v=41';s.async=false;s.onerror=function(){var e=document.getElementById('globalLoginError');if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}};document.body.appendChild(s)}
   function load(i){if(i>=sources.length){loadApp();return}var done=false;var timer=setTimeout(function(){if(done)return;done=true;load(i+1)},1800);var s=document.createElement('script');s.src=sources[i];s.async=false;s.onload=function(){if(done)return;done=true;clearTimeout(timer);loadApp()};s.onerror=function(){if(done)return;done=true;clearTimeout(timer);load(i+1)};document.head.appendChild(s)}
   load(0);
 })();
