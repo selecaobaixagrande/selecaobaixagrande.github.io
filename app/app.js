@@ -580,13 +580,9 @@ document.getElementById('logoutBtn').onclick=()=>openScreen('more');
 // O login é controlado diretamente por bindLogin(). Não executamos chamadas
 // assíncronas em onAuthStateChange, evitando corrida/deadlock na entrada.
 function boot(){
+  // O login começa visível no próprio HTML. Não existe mais uma etapa
+  // assíncrona entre a abertura do app e a tela de acesso.
   document.body.classList.add('auth-locked');
-
-  // A tela de entrada não pode depender de Supabase, sessão persistida ou
-  // qualquer consulta de rede. Ela é apenas uma transição visual para o login.
-  // Assim, uma falha/latência do Supabase jamais deixa o splash preso.
-  window.setTimeout(()=>{
-    try{showLogin()}catch(err){console.error('Falha ao abrir a tela de login:',err)}
-  },900);
+  try{showLogin()}catch(err){console.error('Falha ao preparar a tela de login:',err)}
 }
 boot();
