@@ -447,15 +447,21 @@ async function openScreen(name){
 async function withTimeout(promise,ms=4500){
   return await Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('TIMEOUT')),ms))]);
 }
+const COACHES={
+  Rubens:{name:'Rubens',email:'rubens@selecaobaixagrande.local'},
+  Arlison:{name:'Arlison',email:'arlison@selecaobaixagrande.local'},
+  Ramon:{name:'Ramon',email:'ramon@selecaobaixagrande.local'},
+  Gabriel:{name:'Gabriel',email:'gabriel@selecaobaixagrande.local'}
+};
 function coachEntryId(name){
-  const ids={Rubens:'11111111-1111-4111-8111-111111111111',Arlison:'22222222-2222-4222-8222-222222222222',Ramon:'33333333-3333-4333-8333-333333333333',Gabriel:'44444444-4444-4444-8444-444444444444'};
-  return ids[name]||ids.Rubens;
+  return 'coach-'+String(name||'').toLowerCase();
 }
 function enterAsCoach(name){
-  if(!name)return;
+  const coach=COACHES[name];
+  if(!coach)return;
   role='coach';
-  session={user:{id:coachEntryId(name),email:name}};
-  localStorage.setItem('selecaobg-coach-name',name);
+  session={user:{id:coachEntryId(name),email:coach.email}};
+  localStorage.setItem('selecaobg-coach-name',coach.name);
   const gate=document.getElementById('authGate');
   const login=document.getElementById('loginScreen');
   const appShell=document.getElementById('appShell');
@@ -464,7 +470,7 @@ function enterAsCoach(name){
   if(appShell){appShell.hidden=false;appShell.style.display='block'}
   document.body.classList.remove('auth-locked');
   const badge=document.getElementById('userBadge');
-  if(badge){badge.textContent=name;badge.title='Treinador'}
+  if(badge){badge.textContent=coach.name;badge.title='Treinador'}
   loadDashboard().catch(err=>{
     console.error('Falha ao carregar painel:',err);
     setSync(false,'Não foi possível atualizar os dados');
@@ -489,9 +495,11 @@ function bindCoachEntry(){
   buttons.forEach(button=>{
     button.addEventListener('click',()=>{
       if(authBusy)return;
+      const name=button.dataset.coachEntry;
+      if(!COACHES[name])return;
       authBusy=true;
       buttons.forEach(b=>b.disabled=true);
-      try{enterAsCoach(button.dataset.coachEntry)}
+      try{enterAsCoach(name)}
       finally{
         buttons.forEach(b=>b.disabled=false);
         authBusy=false;
