@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
-        webView.loadUrl("https://selecaobaixagrande.github.io/app/");
+        webView.loadUrl("https://selecaobaixagrande.github.io/");
         setContentView(webView);
     }
     @Override public void onBackPressed() {
