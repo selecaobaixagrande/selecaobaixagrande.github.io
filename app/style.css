@@ -453,3 +453,54 @@ html,body{
     overflow:hidden!important;
   }
 }
+
+
+/* AUDITORIA REAL — LAYOUT DE VIEWPORT / SEM CONTAINER CENTRAL FIXO */
+html,body{
+  width:100%;
+  min-width:0;
+  max-width:none;
+  margin:0;
+  padding:0;
+  overflow-x:hidden;
+}
+#appShell.app-shell{
+  display:block;
+  width:100vw;
+  max-width:none;
+  min-width:0;
+  margin:0;
+  padding-left:0;
+  padding-right:0;
+  box-sizing:border-box;
+}
+#appShell.app-shell>.topbar,
+#appShell.app-shell>main#app,
+#appShell.app-shell>.bottom-nav{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  box-sizing:border-box;
+}
+#appShell.app-shell>main#app{
+  display:block;
+  flex:none;
+  margin:0;
+}
+#appShell.app-shell #dashboard{
+  display:block;
+  width:100%;
+  max-width:none;
+  min-width:0;
+  box-sizing:border-box;
+}
+#appShell.app-shell #dashboard>.dashboard-grid{
+  width:100%;
+  max-width:none;
+  min-width:0;
+  box-sizing:border-box;
+}
+@media(max-width:700px){
+  #appShell.app-shell{width:100vw;max-width:none}
+  #appShell.app-shell>main#app{width:100vw;max-width:none;padding-left:12px;padding-right:12px}
+}
