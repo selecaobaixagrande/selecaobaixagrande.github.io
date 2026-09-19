@@ -375,3 +375,49 @@ html,body{
     margin-right:0!important;
   }
 }
+
+
+/* CORREÇÃO 2/3 — remover qualquer largura intrínseca dos blocos internos */
+@media(max-width:700px){
+  #dashboard,
+  #dashboard>*,
+  #dashboard .section-title,
+  #dashboard .stats-grid,
+  #dashboard .dashboard-grid,
+  #dashboard .quick-grid,
+  #dashboard .panel-card,
+  #dashboard .stat-card,
+  #dashboard .tile,
+  #dashboard .commission-footer{
+    box-sizing:border-box!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+  #dashboard .stats-grid,
+  #dashboard .quick-grid{
+    width:100%!important;
+  }
+  #dashboard .dashboard-grid{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:10px!important;
+  }
+  #dashboard .dashboard-grid>.panel-card{
+    width:100%!important;
+    min-width:0!important;
+  }
+  #dashboard .quick-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  #dashboard .tile{
+    width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  #dashboard h1,#dashboard h2,#dashboard h3,#dashboard p,#dashboard small,#dashboard span{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+}
