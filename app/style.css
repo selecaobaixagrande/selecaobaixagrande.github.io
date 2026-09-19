@@ -421,3 +421,35 @@ html,body{
     overflow-wrap:anywhere;
   }
 }
+
+
+/* CORREÇÃO 3/3 — fechamento da auditoria mobile */
+@media(max-width:700px){
+  html,body{width:100%!important;min-width:0!important;max-width:100%!important}
+  .app-shell,
+  .app-shell>.topbar,
+  .app-shell>main#app,
+  .app-shell>.bottom-nav{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+  }
+  .app-shell>main#app{
+    padding-left:12px!important;
+    padding-right:12px!important;
+    overflow:visible!important;
+  }
+  #dashboard .stats-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  #dashboard .quick-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:8px!important;
+  }
+  #dashboard .panel-card,
+  #dashboard .stat-card,
+  #dashboard .tile{
+    overflow:hidden!important;
+  }
+}
