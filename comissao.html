@@ -26,8 +26,20 @@ button,select,input{font:inherit}.app{min-height:100vh}.top{height:72px;border-b
 
 <section id="login" class="screen active">
 <div class="login"><div class="login-card">
-<div class="eyebrow">SISTEMA OPERACIONAL DE INTELIGÊNCIA TÉCNICA</div><h1>Selecione seu perfil</h1><p class="muted">Painel de gestão para comissão técnica, categorias, grupos, presença, carga física e scouting.</p>
-<div class="profiles" id="profiles"></div><button class="btn primary enter" id="entrar" disabled>ENTRAR NO PAINEL</button>
+<div class="eyebrow">⚡ SELEÇÃO DE BAIXA GRANDE ⚡</div>
+<h1>⬜⬜⬜ ⚽ SISTEMA TÉCNICO PROFISSIONAL ⚽ ⬜⬜⬜</h1>
+<p class="muted">O painel de controle foi carregado e está pronto para uso. Selecione o perfil de acesso clicando ou digitando o nome do profissional.</p>
+<div class="profiles" id="profiles"></div>
+<div style="margin-top:16px"><input class="control" id="perfilInput" placeholder="Digite: Ramon, Rubens, Arlison ou Gabriel" autocomplete="off" style="width:100%"></div>
+<button class="btn primary enter" id="entrar" disabled>ENTRAR NO PAINEL</button>
+<div id="listaInicial" style="display:none;margin-top:24px">
+<div class="notice">📂 <b>CATEGORIAS DISPONÍVEIS PARA CHAMADA</b></div>
+<div class="cards">
+<button class="tool-card" data-lista="Sub-13|Grupo A" style="text-align:left;color:#fff;cursor:pointer">👟 <b>SUB-13 — GRUPO A</b><p>30 atletas</p></button>
+<button class="tool-card" data-lista="Sub-13|Grupo B" style="text-align:left;color:#fff;cursor:pointer">👟 <b>SUB-13 — GRUPO B</b><p>38 atletas</p></button>
+<button class="tool-card" data-lista="Sub-15|Grupo A" style="text-align:left;color:#fff;cursor:pointer">🏆 <b>SUB-15 E SUB-17 — GRUPO A</b><p>57 atletas</p></button>
+</div>
+</div>
 </div></div>
 </section>
 
@@ -55,7 +67,10 @@ const OFFICIAL_ROSTER={"Sub-13|Grupo B":["Arthur Santana da Silva","Gustavo Alme
 const groups={'Sub-13':['Grupo A','Grupo B'],'Sub-15':['Grupo A'],'Sub-17':['Grupo A'],'Sub-20':['Sem grupo definido']};
 const $=id=>document.getElementById(id), esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 $('profiles').innerHTML=profiles.map((p,i)=>'<button class="profile" data-i="'+i+'"><span class="avatar">'+p[0][0]+'</span><strong>'+p[0]+'</strong><small>'+p[1]+'</small></button>').join('');
-document.querySelectorAll('.profile').forEach(b=>b.onclick=()=>{document.querySelectorAll('.profile').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selected=+b.dataset.i;$('entrar').disabled=false});
+function selectProfile(i){document.querySelectorAll('.profile').forEach(x=>x.classList.remove('selected'));const b=document.querySelector('.profile[data-i="'+i+'"]');if(b)b.classList.add('selected');selected=i;$('entrar').disabled=false;$('perfilInput').value=profiles[i][0];$('listaInicial').style.display='block'}
+document.querySelectorAll('.profile').forEach(b=>b.onclick=()=>selectProfile(+b.dataset.i));
+$('perfilInput').oninput=()=>{const q=$('perfilInput').value.trim().toLowerCase();const i=profiles.findIndex(p=>p[0].toLowerCase()===q);if(i>=0)selectProfile(i);else if(!q){selected=null;$('entrar').disabled=true;$('listaInicial').style.display='none'}};
+document.querySelectorAll('[data-lista]').forEach(b=>b.onclick=()=>{const [cat,grp]=b.dataset.lista.split('|');category=cat;group=grp;tab='chamada';$('listaInicial').style.display='block';});
 $('entrar').onclick=()=>{if(selected===null)return;$('login').classList.remove('active');$('dashboard').classList.add('active');$('perfilPill').textContent=profiles[selected][0].toUpperCase();$('funcao').textContent=profiles[selected][1];render()};
 $('trocar').onclick=()=>{$('dashboard').classList.remove('active');$('login').classList.add('active');$('perfilPill').textContent='SESSÃO NÃO INICIADA'};
 document.querySelectorAll('.side button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('.side button[data-tab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
