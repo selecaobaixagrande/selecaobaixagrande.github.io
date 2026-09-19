@@ -72,16 +72,7 @@ async function loadDashboard(){
         '<article class="panel-card"><small>PRÓXIMO TREINO</small><h3>'+esc(trainingText)+'</h3><p>'+esc(nextTraining?[nextTraining.local,nextTraining.objetivo].filter(Boolean).join(' • '):'Planeje a próxima atividade da equipe.')+'</p><button class="mini-btn" data-screen="training">Ver detalhes →</button></article>'+
         '<article class="panel-card"><small>PRÓXIMO JOGO</small><h3>'+esc(gameText)+'</h3><p>'+esc(nextGame?[nextGame.adversario,nextGame.local,nextGame.competicao].filter(Boolean).join(' • '):'Nenhum jogo futuro cadastrado.')+'</p><button class="mini-btn" data-screen="games">Ver detalhes →</button></article>'+
       '</div>'+
-      '<div class="section-title recent-title"><h2>Acesso rápido</h2></div>'+
-      '<div class="quick-grid">'+[
-        ['calls','Chamadas','Convocar e controlar presença'],
-        ['athletes','Atletas','Perfis e acompanhamento'],
-        ['notices','Avisos da Comissão','Comunicação interna'],
-        ['performance','Relatórios','Evolução e estatísticas'],
-        ['evaluations','Avaliações','Avaliação técnica privada'],
-        ['calendar','Calendário','Agenda da comissão']
-      ].map(x=>'<button class="tile" data-screen="'+x[0]+'"><b>'+x[1]+'</b><small>'+x[2]+'</small></button>').join('')+
-      '<article class="panel-card commission-footer"><small>SELEÇÃO DE BAIXA GRANDE</small><h3>Juntos pelo mesmo objetivo.</h3><p>Disciplina • Trabalho • Evolução</p></article>';
+<article class="panel-card commission-footer"><small>SELEÇÃO DE BAIXA GRANDE</small><h3>Juntos pelo mesmo objetivo.</h3><p>Disciplina • Trabalho • Evolução</p></article>';
     setSync(!dataErrors.length,'Banco conectado');
   }catch(err){
     console.error('Falha ao carregar painel:',err);
