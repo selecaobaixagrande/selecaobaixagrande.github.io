@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
+    // ENTRADA ESCUDO 2026-09-19: APK carrega a comissao.html atualizada.
     private WebView webView;
 
     @Override public void onCreate(Bundle savedInstanceState) {
