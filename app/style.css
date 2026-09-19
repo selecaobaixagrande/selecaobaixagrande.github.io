@@ -247,3 +247,57 @@ body{background:radial-gradient(circle at 50% -15%,rgba(181,18,27,.12),transpare
   .nav-item span{font-size:19px}
   .nav-item small{font-size:8px}
 }
+
+
+/* PAINEL MOBILE — largura total + identidade por módulo */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.app-shell{width:100%;max-width:980px;min-width:0}
+.content{width:100%;max-width:100%;min-width:0}
+#dashboard{width:100%;max-width:100%;min-width:0}
+.home-hero,.stats-grid,.dashboard-grid,.quick-grid{width:100%;max-width:100%;min-width:0}
+.dashboard-grid,.quick-grid,.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dashboard-grid .panel-card,.quick-grid .tile,.stats-grid .stat-card{min-width:0}
+.dashboard-grid .panel-card{position:relative;overflow:hidden}
+.dashboard-grid .panel-card:nth-child(1){border-color:rgba(237,39,51,.5);background:linear-gradient(145deg,rgba(181,18,27,.16),#0d0e12)}
+.dashboard-grid .panel-card:nth-child(2){border-color:rgba(0,220,125,.42);background:linear-gradient(145deg,rgba(0,190,105,.12),#0d0e12)}
+.dashboard-grid .panel-card:nth-child(1) small{color:#ff3040}
+.dashboard-grid .panel-card:nth-child(2) small{color:#00e889}
+.dashboard-grid .panel-card:nth-child(1) .mini-btn{background:#ed1525;border-color:#ed1525;color:#fff}
+.dashboard-grid .panel-card:nth-child(2) .mini-btn{background:#00d879;border-color:#00d879;color:#06120c}
+.quick-grid .tile{position:relative;overflow:hidden;text-align:left;transition:.18s ease}
+.quick-grid .tile:nth-child(1){border-color:rgba(237,39,51,.58);background:linear-gradient(145deg,rgba(181,18,27,.25),#101014)}
+.quick-grid .tile:nth-child(2){border-color:rgba(50,145,255,.58);background:linear-gradient(145deg,rgba(35,110,220,.20),#101014)}
+.quick-grid .tile:nth-child(3){border-color:rgba(0,218,125,.52);background:linear-gradient(145deg,rgba(0,180,105,.18),#101014)}
+.quick-grid .tile:nth-child(4){border-color:rgba(164,75,255,.58);background:linear-gradient(145deg,rgba(120,45,220,.20),#101014)}
+.quick-grid .tile:nth-child(5){border-color:rgba(255,166,45,.52);background:linear-gradient(145deg,rgba(220,125,20,.15),#101014)}
+.quick-grid .tile:nth-child(6){border-color:rgba(0,190,220,.52);background:linear-gradient(145deg,rgba(0,145,190,.15),#101014)}
+.quick-grid .tile:nth-child(1) b,.quick-grid .tile:nth-child(1)::after{color:#ff3040}
+.quick-grid .tile:nth-child(2) b,.quick-grid .tile:nth-child(2)::after{color:#3b96ff}
+.quick-grid .tile:nth-child(3) b,.quick-grid .tile:nth-child(3)::after{color:#00e889}
+.quick-grid .tile:nth-child(4) b,.quick-grid .tile:nth-child(4)::after{color:#a94cff}
+.quick-grid .tile:nth-child(5) b,.quick-grid .tile:nth-child(5)::after{color:#ffb13b}
+.quick-grid .tile:nth-child(6) b,.quick-grid .tile:nth-child(6)::after{color:#22c8e8}
+.quick-grid .tile::after{content:'→';position:absolute;right:16px;bottom:15px;font-size:22px;font-weight:900}
+.quick-grid .tile small{display:block;max-width:78%;color:#aeb2bd}
+.primary-btn{background:linear-gradient(135deg,#ed1525,#b5121b);box-shadow:0 8px 22px rgba(181,18,27,.2)}
+.mini-btn{border:1px solid rgba(255,255,255,.1);border-radius:13px;background:#17181d;color:#fff;padding:10px 14px;font-weight:800;cursor:pointer}
+@media(max-width:700px){
+  .app-shell{width:100%;max-width:none}
+  .content{width:100%;padding:14px 14px 24px}
+  .home-hero{width:100%;min-height:330px}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .dashboard-grid .panel-card{min-height:210px;padding:16px}
+  .quick-grid .tile{min-height:128px;padding:16px}
+}
+@media(max-width:430px){
+  .content{padding-left:12px;padding-right:12px}
+  .dashboard-grid,.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .dashboard-grid .panel-card{min-height:205px;padding:14px}
+  .dashboard-grid .panel-card h3{font-size:17px}
+  .quick-grid .tile{min-height:118px;padding:13px}
+  .quick-grid .tile b{font-size:14px}
+  .quick-grid .tile small{font-size:10px;line-height:1.35}
+  .quick-grid .tile::after{right:12px;bottom:10px}
+}
