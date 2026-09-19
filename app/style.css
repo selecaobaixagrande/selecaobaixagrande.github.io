@@ -570,3 +570,14 @@ body{
     max-width:none !important;
   }
 }
+
+
+/* SELEÇÃO DE TREINADOR — entrada sem e-mail e senha */
+.coach-select-list{display:grid;gap:10px;margin-top:18px;text-align:left}
+.coach-select-btn{width:100%;min-height:64px;padding:14px 16px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:#0b0b0d;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}
+.coach-select-btn strong{font-size:14px;font-weight:900}
+.coach-select-btn small{font-size:10px;color:#777b84}
+.coach-select-btn:hover{border-color:rgba(181,18,27,.7);background:#111114;transform:translateY(-1px)}
+.coach-select-btn:active{transform:scale(.99)}
+.coach-select-btn:disabled{opacity:.65;cursor:wait}
+.coach-select-btn:focus-visible{outline:2px solid rgba(237,39,51,.7);outline-offset:2px}
