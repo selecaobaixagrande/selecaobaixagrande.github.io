@@ -447,131 +447,64 @@ async function openScreen(name){
 async function withTimeout(promise,ms=4500){
   return await Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(new Error('TIMEOUT')),ms))]);
 }
-async function showAuthenticatedApp(s){
-  if(!s?.user)return false;
-  session=s;
-  authHandledUser=s.user.id||null;
+function coachEntryId(name){
+  const ids={Rubens:'11111111-1111-4111-8111-111111111111',Arlison:'22222222-2222-4222-8222-222222222222',Ramon:'33333333-3333-4333-8333-333333333333',Gabriel:'44444444-4444-4444-8444-444444444444'};
+  return ids[name]||ids.Rubens;
+}
+function enterAsCoach(name){
+  if(!name)return;
+  role='coach';
+  session={user:{id:coachEntryId(name),email:name}};
+  localStorage.setItem('selecaobg-coach-name',name);
   const gate=document.getElementById('authGate');
-  const splash=document.getElementById('splashScreen');
   const login=document.getElementById('loginScreen');
   const appShell=document.getElementById('appShell');
-
-  // A autorização precisa terminar antes de liberar o painel. O timeout
-  // impede que uma consulta/RLS indisponível prenda a entrada indefinidamente.
-  try{
-    const allowed=await withTimeout(coachGuard(),4500);
-    if(!allowed){
-      session=null;
-      role='none';
-      if(login){
-        login.hidden=false;
-        login.style.display='grid';
-      }
-      const err=document.getElementById('globalLoginError');
-      if(err){
-        err.hidden=false;
-        err.textContent='Esta conta não está autorizada para a comissão técnica.';
-      }
-      return false;
-    }
-  }catch(err){
-    console.error('Falha na validação da comissão:',err);
-    session=null;
-    role='none';
-    const msg=err?.message==='TIMEOUT'
-      ?'Não foi possível validar seu acesso no tempo esperado. Tente novamente.'
-      :'Não foi possível validar seu acesso. Tente novamente.';
-    const box=document.getElementById('globalLoginError');
-    if(box){
-      box.hidden=false;
-      box.textContent=msg;
-    }
-    return false;
-  }
-
-  if(splash){splash.hidden=true;splash.style.display='none'}
   if(login){login.hidden=true;login.style.display='none'}
   if(gate){gate.hidden=true;gate.style.display='none'}
   if(appShell){appShell.hidden=false;appShell.style.display='block'}
   document.body.classList.remove('auth-locked');
-
   const badge=document.getElementById('userBadge');
-  if(badge){
-    badge.textContent=role==='admin'?'Administrador':'Professor / Treinador';
-    badge.title=s.user.email||'';
-  }
-
+  if(badge){badge.textContent=name;badge.title='Treinador'}
   loadDashboard().catch(err=>{
     console.error('Falha ao carregar painel:',err);
-    setSync(false,'Não foi possível carregar o painel');
+    setSync(false,'Não foi possível atualizar os dados');
   });
   setupLiveSync();
-  return true;
 }
 function showLogin(){
   const gate=document.getElementById('authGate');
-  const splash=document.getElementById('splashScreen');
   const login=document.getElementById('loginScreen');
   const appShell=document.getElementById('appShell');
-  if(splash){splash.hidden=true;splash.style.display='none'}
   if(login){login.hidden=false;login.style.display='grid'}
   if(gate){gate.hidden=false;gate.style.display='grid'}
   if(appShell){appShell.hidden=true;appShell.style.display='none'}
   document.body.classList.remove('auth-locked');
-  bindLogin();
+  bindCoachEntry();
 }
-function bindLogin(){
+function bindCoachEntry(){
   if(loginBound)return;
-  const f=document.getElementById('globalLoginForm');
-  if(!f)return;
+  const buttons=document.querySelectorAll('[data-coach-entry]');
+  if(!buttons.length)return;
   loginBound=true;
-  f.addEventListener('submit',async e=>{
-    e.preventDefault();
-    if(authBusy)return;
-    const err=document.getElementById('globalLoginError');
-    const b=f.querySelector('button');
-    authBusy=true;
-    if(err){err.hidden=true;err.textContent=''}
-    if(b){b.disabled=true;b.textContent='Entrando…'}
-    try{
-      if(!supabaseClient){
-        throw new Error('AUTH_CLIENT_UNAVAILABLE');
+  buttons.forEach(button=>{
+    button.addEventListener('click',()=>{
+      if(authBusy)return;
+      authBusy=true;
+      buttons.forEach(b=>b.disabled=true);
+      try{enterAsCoach(button.dataset.coachEntry)}
+      finally{
+        buttons.forEach(b=>b.disabled=false);
+        authBusy=false;
       }
-      const email=document.getElementById('globalLoginEmail')?.value.trim()||'';
-      const password=document.getElementById('globalLoginPassword')?.value||'';
-      const result=await withTimeout(
-        supabaseClient.auth.signInWithPassword({email,password}),
-        10000
-      );
-      const {data,error}=result||{};
-      if(error){
-        console.error('Falha de autenticação:',error);
-        if(err){err.hidden=false;err.textContent='E-mail ou senha inválidos.'}
-        return;
-      }
-      if(!data?.session){
-        if(err){err.hidden=false;err.textContent='Não foi possível iniciar a sessão. Tente novamente.'}
-        return;
-      }
-      const opened=await showAuthenticatedApp(data.session);
-      if(!opened){
-        // A sessão autenticada não foi autorizada para o aplicativo.
-        await supabaseClient.auth.signOut().catch(()=>{});
-        return;
-      }
-    }catch(ex){
-      console.error('Erro no login:',ex);
-      if(err){
-        err.hidden=false;
-        err.textContent=ex?.message==='AUTH_CLIENT_UNAVAILABLE'
-          ?'Serviço de autenticação não carregou. Recarregue o aplicativo.'
-          :'Erro ao conectar ao sistema de acesso. Tente novamente.';
-      }
-    }finally{
-      if(b){b.disabled=false;b.textContent='Entrar'}
-      authBusy=false;
-    }
+    });
   });
+}
+async function signOut(){
+  if(liveChannel&&supabaseClient)await supabaseClient.removeChannel(liveChannel).catch(()=>{});
+  liveChannel=null;
+  session=null;
+  localStorage.removeItem('selecaobg-coach-name');
+  location.reload();
 }
 async function signOut(){if(liveChannel)await supabaseClient.removeChannel(liveChannel).catch(()=>{});liveChannel=null;await supabaseClient.auth.signOut();location.reload()}
 function setupLiveSync(){if(liveChannel)return;liveChannel=supabaseClient.channel('commission-live').on('postgres_changes',{event:'*',schema:'public',table:'Atletas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'treinos'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'chamadas'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'presencas_treino'},()=>loadDashboard()).on('postgres_changes',{event:'*',schema:'public',table:'avisos_internos'},()=>loadDashboard()).subscribe()}
@@ -580,9 +513,7 @@ document.getElementById('logoutBtn').onclick=()=>openScreen('more');
 // O login é controlado diretamente por bindLogin(). Não executamos chamadas
 // assíncronas em onAuthStateChange, evitando corrida/deadlock na entrada.
 function boot(){
-  // O login começa visível no próprio HTML. Não existe mais uma etapa
-  // assíncrona entre a abertura do app e a tela de acesso.
   document.body.classList.add('auth-locked');
-  try{showLogin()}catch(err){console.error('Falha ao preparar a tela de login:',err)}
+  try{showLogin()}catch(err){console.error('Falha ao preparar a seleção da comissão:',err)}
 }
 boot();
