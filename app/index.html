@@ -14,18 +14,19 @@
 <body>
 <div id="authGate" class="auth-gate" style="display:grid">
   <div id="loginScreen" class="login-screen" style="display:grid">
-    <div class="login-card">
+    <div class="login-card coach-select-card">
       <img src="../1000001685.png" alt="Escudo da Seleção de Baixa Grande" class="login-crest">
       <div class="eyebrow">COMISSÃO TÉCNICA</div>
-      <h1>Acesso interno</h1>
-      <p>Entre com sua conta autorizada de professor, treinador ou administrador.</p>
-      <form id="globalLoginForm" class="login-form">
-        <input id="globalLoginEmail" type="email" autocomplete="username" placeholder="E-mail" required>
-        <input id="globalLoginPassword" type="password" autocomplete="current-password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-        <div id="globalLoginError" class="login-error" hidden></div>
-      </form>
-      <small class="login-note">Ambiente privado. Dados da comissão não são publicados.</small>
+      <h1>Quem está entrando?</h1>
+      <p>Escolha seu nome para acessar o aplicativo da comissão técnica.</p>
+      <div class="coach-select-list">
+        <button type="button" class="coach-select-btn" data-coach-entry="Rubens"><strong>Entrar como Rubens</strong><small>Treinador</small></button>
+        <button type="button" class="coach-select-btn" data-coach-entry="Arlison"><strong>Entrar como Arlison</strong><small>Treinador</small></button>
+        <button type="button" class="coach-select-btn" data-coach-entry="Ramon"><strong>Entrar como Ramon</strong><small>Treinador</small></button>
+        <button type="button" class="coach-select-btn" data-coach-entry="Gabriel"><strong>Entrar como Gabriel</strong><small>Treinador</small></button>
+      </div>
+      <div id="globalLoginError" class="login-error" hidden></div>
+      <small class="login-note">Acesso da comissão técnica.</small>
     </div>
   </div>
 </div>
@@ -72,7 +73,7 @@
 (function(){
   var sources=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2','https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'];
   var appStarted=false;
-  function loadApp(){if(appStarted)return;appStarted=true;var s=document.createElement('script');s.src='app.js?v=46';s.async=false;s.onerror=function(){var e=document.getElementById('globalLoginError');if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}};document.body.appendChild(s)}
+  function loadApp(){if(appStarted)return;appStarted=true;var s=document.createElement('script');s.src='app.js?v=47';s.async=false;s.onerror=function(){var e=document.getElementById('globalLoginError');if(e){e.hidden=false;e.textContent='Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.'}};document.body.appendChild(s)}
   function load(i){if(i>=sources.length){loadApp();return}var done=false;var timer=setTimeout(function(){if(done)return;done=true;load(i+1)},1800);var s=document.createElement('script');s.src=sources[i];s.async=false;s.onload=function(){if(done)return;done=true;clearTimeout(timer);loadApp()};s.onerror=function(){if(done)return;done=true;clearTimeout(timer);load(i+1)};document.head.appendChild(s)}
   load(0);
 })();
