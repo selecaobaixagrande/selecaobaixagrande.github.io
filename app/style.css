@@ -301,3 +301,18 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .quick-grid .tile small{font-size:10px;line-height:1.35}
   .quick-grid .tile::after{right:12px;bottom:10px}
 }
+
+
+/* CORREÇÃO DEFINITIVA DA FAIXA LATERAL NO CELULAR */
+@media(max-width:700px){
+  #app,.content,#dashboard{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+  #dashboard>*{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+  #dashboard .dashboard-grid{display:block!important;width:100%!important}
+  #dashboard .dashboard-grid .panel-card{width:100%!important;box-sizing:border-box!important;margin:0 0 10px!important}
+  #dashboard .quick-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;box-sizing:border-box!important}
+  #dashboard .section-title{width:100%!important;box-sizing:border-box!important}
+  #dashboard .stats-grid{width:100%!important;box-sizing:border-box!important}
+}
+@media(max-width:430px){
+  #dashboard .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+}
