@@ -83,7 +83,7 @@ async function loadDashboard(){
 
 function shell(title,desc,body){screen.hidden=false;dashboard.hidden=true;document.querySelector('.hero').hidden=true;screen.innerHTML='<button class="back" data-screen="home">‹ Voltar</button><div class="assistant-head"><div class="assistant-icon">⚽</div><div><h2>'+esc(title)+'</h2><p>'+esc(desc||'')+'</p></div></div>'+body}
 function formField(label,input){return '<label class="field"><span>'+esc(label)+'</span>'+input+'</label>'}
-function actions(){return '<div class="form-actions"><button type="submit" class="primary-btn">Salvar</button><button type="button" class="mini-btn" data-screen="home">Cancelar</button></div>'}
+<style id="groupPickerStyles">.group-picker-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #343b3f;background:#121617;color:#fff;border-radius:14px;padding:15px;text-align:left;font-weight:900;cursor:pointer}.group-picker-btn span{color:#ffb1b5;font-size:12px}.group-picker{position:fixed;inset:0;z-index:9999}.group-picker[hidden]{display:none}.group-picker-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(5px)}.group-picker-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,calc(100vw - 28px));border:1px solid #3d2427;border-radius:22px;background:#101315;box-shadow:0 30px 90px #000;overflow:hidden}.group-picker-head{display:flex;align-items:center;justify-content:space-between;padding:18px;border-bottom:1px solid #292f33}.group-picker-head b{font-size:15px}.group-picker-close{border:0;background:#1b1f21;color:#fff;border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}.group-picker-list{padding:12px;display:grid;gap:8px}.group-picker-list button{border:1px solid #30373a;background:#15191b;color:#fff;border-radius:13px;padding:15px;text-align:left;font-weight:900;cursor:pointer}.group-picker-list button.selected{border-color:#b5121b;background:#2a1013;color:#ffb1b5}.group-picker-open{overflow:hidden}</style>function actions(){return '<div class="form-actions"><button type="submit" class="primary-btn">Salvar</button><button type="button" class="mini-btn" data-screen="home">Cancelar</button></div>'}
 function normalizeMulti(select){return [...select.selectedOptions].map(x=>x.value)}
 
 async function renderAthletes(){
@@ -145,7 +145,7 @@ async function callForm(cats,ats,x=null){
     '<form id="callForm" class="form-grid">'+
     formField("Tipo",'<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+
     formField("Categoria",'<select name="categoria_id">'+catOptions(cats,x?.categoria_id||"")+'</select>')+
-    formField("Grupo",'<select name="grupo"><option value="">Sem grupo</option><option value="A">Grupo A</option><option value="B">Grupo B</option><option value="C">Grupo C</option><option value="D">Grupo D</option></select>')+
+    formField("Grupo",'<input type="hidden" name="grupo" value="'+esc(x?.grupo||"")+'"><button type="button" class="group-picker-btn" id="chooseGroup">Escolher grupo <span id="groupPickerValue">'+esc(x?.grupo?CALL_GROUPS[x.grupo]?.label||x.grupo:"Nenhum grupo")+'</span></button><div id="groupPicker" class="group-picker" hidden><div class="group-picker-backdrop" data-close-group></div><div class="group-picker-card"><div class="group-picker-head"><b>Escolher grupo</b><button type="button" class="group-picker-close" data-close-group>×</button></div><div class="group-picker-list"><button type="button" data-group-choice="">Sem grupo</button><button type="button" data-group-choice="A">Grupo A</button><button type="button" data-group-choice="B">Grupo B</button><button type="button" data-group-choice="C">Grupo C</button><button type="button" data-group-choice="D">Grupo D</button></div></div></div>')+
     formField("Data",'<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+
     formField("Horário",'<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
     formField("Local",'<input name="local" value="'+esc(x?.local||"")+'">')+
@@ -156,8 +156,21 @@ async function callForm(cats,ats,x=null){
   const typeEl=document.querySelector("[name=tipo]");
   const catEl=document.querySelector("[name=categoria_id]");
   const groupEl=document.querySelector("[name=grupo]");
+  const chooseGroup=document.getElementById("chooseGroup");
+  const groupPicker=document.getElementById("groupPicker");
+  const groupPickerValue=document.getElementById("groupPickerValue");
+  const groupChoices=screen.querySelectorAll("[data-group-choice]");
   typeEl.value=x?.tipo||"treino";
   groupEl.value=x?.grupo||"";
+  const updateGroupUI=()=>{
+    const value=groupEl.value||"";
+    groupPickerValue.textContent=value?(CALL_GROUPS[value]?.label||value):"Nenhum grupo";
+    groupChoices.forEach(b=>b.classList.toggle("selected",b.dataset.groupChoice===value));
+  };
+  chooseGroup.onclick=()=>{groupPicker.hidden=false;document.body.classList.add("group-picker-open");updateGroupUI()};
+  screen.querySelectorAll("[data-close-group]").forEach(b=>b.onclick=()=>{groupPicker.hidden=true;document.body.classList.remove("group-picker-open")});
+  groupChoices.forEach(b=>b.onclick=()=>{groupEl.value=b.dataset.groupChoice||"";updateGroupUI();groupPicker.hidden=true;document.body.classList.remove("group-picker-open")});
+  updateGroupUI();
 
   document.getElementById("callForm").onsubmit=async e=>{
     e.preventDefault();
