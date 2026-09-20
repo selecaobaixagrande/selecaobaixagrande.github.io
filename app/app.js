@@ -98,7 +98,7 @@ function athleteForm(x=null){
   shell(x?'Editar atleta':'Novo atleta','Dados internos do elenco.',
     '<form id="athleteForm" class="form-grid">'+
     formField('Nome','<input name="nome" required value="'+esc(x?.nome||'')+'">')+
-    formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15</option><option>Sub-17</option><option>Sub-20</option></select>')+
+    formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15 / Sub-17</option></select>')+
     formField('Posição','<input name="posicao" value="'+esc(x?.posicao||'')+'">')+
     formField('Número','<input name="numero_camisa" type="number" value="'+(x?.numero_camisa??'')+'">')+
     formField('Telefone do responsável','<input name="telefone_responsavel" value="'+esc(x?.telefone_responsavel||'')+'">')+
@@ -225,7 +225,7 @@ async function callDetail(id,all,ats){
     grouped[cat].push({s,a});
   });
 
-  const categoryOrder=["Sub-13","Sub-15","Sub-17","Sub-20"];
+  const categoryOrder=["Sub-13","Sub-15 / Sub-17"];
   const orderedCategories=Object.keys(grouped).sort((a,b)=>{
     const ia=categoryOrder.indexOf(a),ib=categoryOrder.indexOf(b);
     if(ia!==-1&&ib!==-1)return ia-ib;
@@ -363,7 +363,7 @@ async function renderLineups(){
   document.getElementById('newLineup').onclick=()=>lineupForm(games.data||[],ats);
 }
 function lineupForm(games,ats){
-  shell('Nova escalação','Defina titulares e reservas.','<form id="lineupForm" class="form-grid">'+formField('Jogo','<select name="jogo_id">'+games.map(g=>'<option value="'+g.id+'">'+fmtDate(g.data_jogo)+' — Baixa Grande x '+esc(g.adversario)+'</option>').join('')+'</select>')+formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15</option><option>Sub-17</option><option>Sub-20</option></select>')+formField('Esquema','<input name="formacao" placeholder="Ex.: 4-3-3">')+formField('Titulares','<select name="titulares" multiple size="7">'+athleteOptions(ats)+'</select>')+formField('Reservas','<select name="reservas" multiple size="7">'+athleteOptions(ats)+'</select>')+formField('Capitão','<input name="capitao">')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
+  shell('Nova escalação','Defina titulares e reservas.','<form id="lineupForm" class="form-grid">'+formField('Jogo','<select name="jogo_id">'+games.map(g=>'<option value="'+g.id+'">'+fmtDate(g.data_jogo)+' — Baixa Grande x '+esc(g.adversario)+'</option>').join('')+'</select>')+formField('Categoria','<select name="categoria"><option>Sub-13</option><option>Sub-15 / Sub-17</option></select>')+formField('Esquema','<input name="formacao" placeholder="Ex.: 4-3-3">')+formField('Titulares','<select name="titulares" multiple size="7">'+athleteOptions(ats)+'</select>')+formField('Reservas','<select name="reservas" multiple size="7">'+athleteOptions(ats)+'</select>')+formField('Capitão','<input name="capitao">')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
   document.getElementById('lineupForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),s=e.target;const byId=id=>ats.find(a=>a.id===id)||{id};const r=await save('escalacoes',{jogo_id:f.get('jogo_id')||null,categoria:f.get('categoria'),formacao:f.get('formacao')||null,titulares:normalizeMulti(s.titulares).map(byId),reservas:normalizeMulti(s.reservas).map(byId),capitao:f.get('capitao')||null,observacoes:f.get('observacoes')||null,treinador_id:session.user.id});if(r.error)return alert(r.error.message);renderLineups()};
 }
 
