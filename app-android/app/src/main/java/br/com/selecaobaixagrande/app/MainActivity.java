@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
-    // ENTRADA ESCUDO 2026-09-19: APK carrega a comissao.html atualizada.
     private WebView webView;
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -20,7 +19,7 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260919-4");
+        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260920-1");
         setContentView(webView);
     }
 
