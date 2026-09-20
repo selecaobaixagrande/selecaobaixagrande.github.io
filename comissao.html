@@ -32,7 +32,7 @@ button,select,input{font:inherit}.app{min-height:100vh}.top{height:72px;border-b
 <div class="login"><div class="login-card">
 <div class="eyebrow">⚡ SELEÇÃO DE BAIXA GRANDE ⚡</div>
 <h1>Quem está acessando?</h1>
-<div class="profiles" id="profiles"><button class="profile" data-i="0"><span class="avatar">R</span>Ramon</button><button class="profile" data-i="1"><span class="avatar">R</span>Rubens</button><button class="profile" data-i="2"><span class="avatar">A</span>Arlison</button><button class="profile" data-i="3"><span class="avatar">G</span>Gabriel</button></div>
+<div class="profiles" id="profiles"><button type="button" class="profile" data-i="0" onclick="window.__soitSelectProfile(0)"><span class="avatar">R</span>Ramon</button><button type="button" class="profile" data-i="1" onclick="window.__soitSelectProfile(1)"><span class="avatar">R</span>Rubens</button><button type="button" class="profile" data-i="2" onclick="window.__soitSelectProfile(2)"><span class="avatar">A</span>Arlison</button><button type="button" class="profile" data-i="3" onclick="window.__soitSelectProfile(3)"><span class="avatar">G</span>Gabriel</button></div>
 </div></div>
 </section>
 
@@ -51,6 +51,14 @@ button,select,input{font:inherit}.app{min-height:100vh}.top{height:72px;border-b
     if(startup) startup.classList.remove('active');
     if(login) login.classList.add('active');
   }
+  window.__soitSelectProfile=function(i){
+    var login=document.getElementById('login'), dashboard=document.getElementById('dashboard');
+    if(login) login.classList.remove('active');
+    if(dashboard) dashboard.classList.add('active');
+    window.__soitPendingProfile=i;
+    var pill=document.getElementById('perfilPill');
+    if(pill) pill.textContent=['RAMON','RUBENS','ARLISON','GABRIEL'][i]||'SELEÇÃO';
+  };
   window.setTimeout(abrirLogin,2300);
 })();
 </script>
@@ -65,7 +73,7 @@ const groups={'Sub-13':['Grupo A','Grupo B'],'Sub-15':['Grupo A'],'Sub-17':['Gru
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 $('profiles').innerHTML=profiles.map((p,i)=>'<button class="profile" data-i="'+i+'"><span class="avatar">'+p[0][0]+'</span>'+p[0]+'</button>').join('');
 function selectProfile(i){selected=i;$('login').classList.remove('active');$('dashboard').classList.add('active');$('perfilPill').textContent=profiles[i][0].toUpperCase();$('funcao').textContent=profiles[i][1];render()}
-document.querySelectorAll('.profile').forEach(b=>b.onclick=()=>selectProfile(+b.dataset.i));
+window.__soitSelectProfile=(i)=>selectProfile(i);document.querySelectorAll('.profile').forEach(b=>b.onclick=()=>selectProfile(+b.dataset.i));
 $('trocar').onclick=()=>{$('dashboard').classList.remove('active');$('login').classList.add('active');selected=null;$('perfilPill').textContent='SESSÃO NÃO INICIADA'};
 document.querySelectorAll('.side button[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('.side button[data-tab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
 document.querySelectorAll('.side button[data-cat]').forEach(b=>b.onclick=()=>{category=b.dataset.cat;group=groups[category][0];render()});
