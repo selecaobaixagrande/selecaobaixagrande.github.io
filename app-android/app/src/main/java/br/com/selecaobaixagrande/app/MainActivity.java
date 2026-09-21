@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260920-9");
+        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260920-10");
         setContentView(webView);
     }
 
