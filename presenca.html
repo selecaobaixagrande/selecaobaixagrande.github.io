@@ -23,8 +23,9 @@ if(!selectedGroup){names=[];render();return}
 const links=await sb.from('grupo_atletas_app').select('atleta_id').eq('grupo_id',selectedGroup.id).eq('ativo',true);
 const ids=(links.data||[]).map(x=>x.atleta_id);
 if(!ids.length){names=[];render();return}
-const ar=await sb.from('atletas_publicos').select('id,nome').in('id',ids).order('nome');
-names=ar.data||[];
+const ar=await sb.from('atletas_publicos').select('id,nome').order('nome');
+const wanted=new Set(ids.map(String));
+names=(ar.data||[]).filter(a=>wanted.has(String(a.id)));
 data=JSON.parse(localStorage.getItem(storageKey())||'{}');
 render();
 }
