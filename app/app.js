@@ -141,16 +141,39 @@ async function renderCalls(){
 }
 
 async function callForm(cats,ats,x=null){
-  shell(x?"Editar chamada":"Nova chamada","Escolha categoria e grupo antes de convocar os atletas.",
+  const [groupsRes,membersRes]=await Promise.all([
+    q("grupos_app","id,nome,categoria_id,ativo",z=>z.eq("ativo",true).order("nome")),
+    q("grupo_atletas_app","grupo_id,atleta_id,ativo",z=>z.eq("ativo",true))
+  ]);
+  const groups=groupsRes.data||[];
+  const members=membersRes.data||[];
+  const groupByName=new Map(groups.map(g=>[String(g.nome||"").replace(/^Grupo\\s+/i,"").toUpperCase(),g]));
+  const membersByGroup=new Map();
+  members.forEach(m=>{
+    if(!membersByGroup.has(m.grupo_id))membersByGroup.set(m.grupo_id,new Set());
+    membersByGroup.get(m.grupo_id).add(m.atleta_id);
+  });
+  const selectedExisting=new Set();
+  if(x?.id){
+    const old=await q("chamada_atletas","atleta_id",z=>z.eq("chamada_id",x.id));
+    (old.data||[]).forEach(r=>selectedExisting.add(r.atleta_id));
+  }
+
+  const groupButtons=groups.map(g=>{
+    const key=String(g.nome||"").replace(/^Grupo\\s+/i,"").toUpperCase();
+    return '<button type="button" data-group-choice="'+esc(key)+'">'+esc(g.nome)+'</button>';
+  }).join("");
+
+  shell(x?"Editar chamada":"Nova chamada","Escolha categoria, grupo e os atletas convocados.",
     '<form id="callForm" class="form-grid">'+
     formField("Tipo",'<select name="tipo"><option value="treino">Treino</option><option value="jogo">Jogo</option><option value="outro">Outro</option></select>')+
     formField("Categoria",'<select name="categoria_id">'+catOptions(cats,x?.categoria_id||"")+'</select>')+
-    formField("Grupo",'<input type="hidden" name="grupo" value="'+esc(x?.grupo||"")+'"><button type="button" class="group-picker-btn" id="chooseGroup">Escolher grupo <span id="groupPickerValue">'+esc(x?.grupo?CALL_GROUPS[x.grupo]?.label||x.grupo:"Nenhum grupo")+'</span></button><div id="groupPicker" class="group-picker" hidden><div class="group-picker-backdrop" data-close-group></div><div class="group-picker-card"><div class="group-picker-head"><b>Escolher grupo</b><button type="button" class="group-picker-close" data-close-group>×</button></div><div class="group-picker-list"><button type="button" data-group-choice="">Sem grupo</button><button type="button" data-group-choice="A">Grupo A</button><button type="button" data-group-choice="B">Grupo B</button><button type="button" data-group-choice="C">Grupo C</button><button type="button" data-group-choice="D">Grupo D</button></div></div></div>')+
+    formField("Grupo",'<input type="hidden" name="grupo" value="'+esc(x?.grupo||"")+'"><button type="button" class="group-picker-btn" id="chooseGroup">Escolher grupo <span id="groupPickerValue">'+esc(x?.grupo?"Grupo "+x.grupo:"Nenhum grupo")+'</span></button><div id="groupPicker" class="group-picker" hidden><div class="group-picker-backdrop" data-close-group></div><div class="group-picker-card"><div class="group-picker-head"><b>Escolher grupo</b><button type="button" class="group-picker-close" data-close-group>×</button></div><div class="group-picker-list"><button type="button" data-group-choice="">Sem grupo</button>'+groupButtons+'</div></div></div>')+
+    '<div class="panel-card" id="athletePicker"><div class="section-title"><h2>Atletas da chamada</h2><small id="athleteCount">0 selecionados</small></div><input id="athleteSearch" class="toolbar" placeholder="Buscar atleta pelo nome..."><div id="athleteList" class="data-list"></div></div>'+
     formField("Data",'<input name="data_chamada" type="date" required value="'+(x?.data_chamada||today())+'">')+
     formField("Horário",'<input name="horario" type="time" value="'+fmtTime(x?.horario)+'">')+
     formField("Local",'<input name="local" value="'+esc(x?.local||"")+'">')+
     formField("Observações",'<textarea name="observacoes">'+esc(x?.observacoes||"")+'</textarea>')+
-    '<div class="empty-state">Os atletas são carregados pela categoria escolhida. O grupo fica registrado na chamada para a organização da comissão.</div>'+
     actions()+"</form>");
 
   const typeEl=document.querySelector("[name=tipo]");
@@ -160,32 +183,93 @@ async function callForm(cats,ats,x=null){
   const groupPicker=document.getElementById("groupPicker");
   const groupPickerValue=document.getElementById("groupPickerValue");
   const groupChoices=screen.querySelectorAll("[data-group-choice]");
+  const athleteList=document.getElementById("athleteList");
+  const athleteSearch=document.getElementById("athleteSearch");
+  const athleteCount=document.getElementById("athleteCount");
+
   typeEl.value=x?.tipo||"treino";
   groupEl.value=x?.grupo||"";
+
+  const activeForCategory=()=>{
+    const categoria=catEl.value||"";
+    const catName=cats.find(c=>String(c.id)===String(categoria))?.nome||"";
+    return ats.filter(a=>{
+      const active=String(a.status||"Ativo").toLowerCase()==="ativo";
+      return active&&(!catName||String(a.categoria||"")===String(catName));
+    });
+  };
+
+  const groupIdsForCurrent=()=>{
+    const key=String(groupEl.value||"").toUpperCase();
+    const g=groupByName.get(key);
+    return g?[g.id]:[];
+  };
+
+  const currentCandidates=()=>{
+    const base=activeForCategory();
+    const gids=groupIdsForCurrent();
+    if(!gids.length)return base;
+    const allowed=new Set();
+    gids.forEach(gid=>(membersByGroup.get(gid)||new Set()).forEach(id=>allowed.add(id)));
+    return base.filter(a=>allowed.has(a.id));
+  };
+
+  const renderAthleteList=()=>{
+    const candidates=currentCandidates();
+    const term=String(athleteSearch.value||"").trim().toLowerCase();
+    const visible=candidates.filter(a=>String(a.nome||"").toLowerCase().includes(term));
+    athleteList.innerHTML=visible.length?visible.map(a=>{
+      const checked=selectedExisting.has(a.id)?"checked":"";
+      return '<label class="data-card" style="display:flex;align-items:center;gap:12px;cursor:pointer"><input type="checkbox" class="call-athlete-check" value="'+esc(a.id)+'" '+checked+'><div class="data-body"><h3>'+esc(a.nome)+'</h3><p>'+esc(a.categoria||"")+(a.posicao?" • "+esc(a.posicao):"")+(a.numero_camisa?" • #"+a.numero_camisa:"")+'</p></div></label>';
+    }).join(""):empty(groupEl.value?"Nenhum atleta cadastrado neste grupo.":"Nenhum atleta encontrado para esta categoria.");
+    athleteCount.textContent=selectedExisting.size+" selecionados";
+  };
+
   const updateGroupUI=()=>{
     const value=groupEl.value||"";
-    groupPickerValue.textContent=value?(CALL_GROUPS[value]?.label||value):"Nenhum grupo";
+    groupPickerValue.textContent=value?"Grupo "+value:"Nenhum grupo";
     groupChoices.forEach(b=>b.classList.toggle("selected",b.dataset.groupChoice===value));
+    selectedExisting.clear();
+    currentCandidates().forEach(a=>{
+      if(x?.id){
+        if(selectedExisting.has(a.id))return;
+      } else {
+        selectedExisting.add(a.id);
+      }
+    });
+    if(x?.id){
+      const oldCandidates=currentCandidates();
+      oldCandidates.forEach(a=>{ if(selectedExisting.has(a.id)) selectedExisting.add(a.id); });
+    }
+    renderAthleteList();
   };
+
   chooseGroup.onclick=()=>{groupPicker.hidden=false;document.body.classList.add("group-picker-open");updateGroupUI()};
   screen.querySelectorAll("[data-close-group]").forEach(b=>b.onclick=()=>{groupPicker.hidden=true;document.body.classList.remove("group-picker-open")});
-  groupChoices.forEach(b=>b.onclick=()=>{groupEl.value=b.dataset.groupChoice||"";updateGroupUI();groupPicker.hidden=true;document.body.classList.remove("group-picker-open")});
+  groupChoices.forEach(b=>b.onclick=()=>{
+    groupEl.value=b.dataset.groupChoice||"";
+    if(!x?.id)selectedExisting.clear();
+    updateGroupUI();
+    groupPicker.hidden=true;
+    document.body.classList.remove("group-picker-open");
+  });
+  catEl.addEventListener("change",()=>{if(!x?.id)selectedExisting.clear();renderAthleteList()});
+  athleteSearch.addEventListener("input",renderAthleteList);
+  athleteList.addEventListener("change",e=>{
+    const cb=e.target.closest(".call-athlete-check"); if(!cb)return;
+    if(cb.checked)selectedExisting.add(cb.value); else selectedExisting.delete(cb.value);
+    athleteCount.textContent=selectedExisting.size+" selecionados";
+  });
   updateGroupUI();
 
   document.getElementById("callForm").onsubmit=async e=>{
     e.preventDefault();
     const f=new FormData(e.target);
-    const categoria=f.get("categoria_id")||null;
-    const active=ats.filter(a=>{
-      const okStatus=String(a.status||"Ativo").toLowerCase()==="ativo";
-      const okCat=!categoria||String(a.categoria||"")===String(cats.find(c=>c.id===categoria)?.nome||categoria);
-      return okStatus&&okCat;
-    });
-    if(!active.length)return alert("Nenhum atleta ativo foi encontrado para a categoria selecionada.");
-
+    const selectedIds=[...selectedExisting];
+    if(!selectedIds.length)return alert("Selecione pelo menos um atleta para a chamada.");
     const row={
       tipo:f.get("tipo"),
-      categoria_id:categoria,
+      categoria_id:f.get("categoria_id")||null,
       grupo:f.get("grupo")||null,
       data_chamada:f.get("data_chamada"),
       horario:f.get("horario")||null,
@@ -193,7 +277,6 @@ async function callForm(cats,ats,x=null){
       observacoes:f.get("observacoes")||null,
       criado_por:session.user.id
     };
-
     let id=x?.id;
     if(x){
       const r=await upd("chamadas",id,row);
@@ -205,8 +288,7 @@ async function callForm(cats,ats,x=null){
       if(r.error)return alert(r.error.message);
       id=r.data.id;
     }
-
-    const links=active.map(a=>({chamada_id:id,atleta_id:a.id,status:"pendente"}));
+    const links=selectedIds.map(atleta_id=>({chamada_id:id,atleta_id,status:"pendente"}));
     const rr=await supabaseClient.from("chamada_atletas").insert(links);
     if(rr.error)return alert("A chamada não foi salva: "+rr.error.message);
     renderCalls();
@@ -358,7 +440,6 @@ function calendarForm(cats){
   shell('Novo evento','Compromisso interno da comissão.','<form id="eventForm" class="form-grid">'+formField('Título','<input name="titulo" required>')+formField('Tipo','<select name="tipo"><option>treino</option><option>jogo</option><option>avaliacao</option><option>reuniao</option><option>convocacao</option><option>outro</option></select>')+formField('Data','<input name="data_evento" type="date" required value="'+today()+'">')+formField('Horário','<input name="horario" type="time">')+formField('Local','<input name="local">')+formField('Categoria','<select name="categoria_id">'+cats.map(c=>'<option value="'+c.id+'">'+esc(c.nome)+'</option>').join('')+'</select>')+formField('Observações','<textarea name="observacoes"></textarea>')+actions()+'</form>');
   document.getElementById('eventForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const r=await save('calendario_comissao',{titulo:f.get('titulo'),tipo:f.get('tipo'),data_evento:f.get('data_evento'),horario:f.get('horario')||null,local:f.get('local')||null,categoria_id:f.get('categoria_id')||null,observacoes:f.get('observacoes')||null,criado_por:session.user.id});if(r.error)return alert(r.error.message);renderCalendar()};
 }
-
 async function renderNotices(){
   const r=await q('avisos_internos','id,titulo,texto,prioridade,ativo,created_at',x=>x.eq('ativo',true).order('created_at',{ascending:false}));
   shell('Avisos internos','Comunicados exclusivos da comissão.','<button class="primary-btn" id="newNotice">+ Novo aviso</button><div class="data-list">'+(r.data||[]).map(x=>'<article class="data-card"><div class="assistant-icon">'+(x.prioridade==='urgente'?'!':'i')+'</div><div class="data-body"><small>'+esc(x.prioridade.toUpperCase())+'</small><h3>'+esc(x.titulo)+'</h3><p>'+esc(x.texto||'')+'</p><button class="mini-btn" data-read="'+x.id+'">Marcar como lido</button>'+(role==='admin'?'<button class="mini-btn" data-del-notice="'+x.id+'">Excluir</button>':'')+'</div></article>').join('')||empty('Nenhum aviso ativo.')+'</div>');
