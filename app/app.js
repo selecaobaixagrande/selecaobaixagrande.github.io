@@ -397,10 +397,89 @@ async function trainingForm(cats,x=null){
   document.getElementById('trainingForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);const row={categoria_id:f.get('categoria_id')||null,data_treino:f.get('data_treino'),horario:f.get('horario')||null,local:f.get('local')||null,objetivo:f.get('objetivo')||null,status:f.get('status'),observacoes:f.get('observacoes')||null,responsavel_id:session.user.id};const r=x?await upd('treinos',x.id,row):await save('treinos',row);if(r.error)return alert(r.error.message);renderTraining()};
 }
 async function presenceForm(treinoId){
-  const ats=await athletes(),r=await q('presencas_treino','id,atleta_id,status,observacao',x=>x.eq('treino_id',treinoId));const map=new Map((r.data||[]).map(x=>[x.atleta_id,x]));shell('Presença','Registre a situação de cada atleta.','<div class="presence-list">'+ats.map(a=>{const p=map.get(a.id);return '<article class="data-card"><div class="data-body"><h3>'+esc(a.nome)+'</h3><small>'+esc(a.categoria||'')+'</small><select class="status-select presence-status" data-athlete="'+a.id+'"><option value="presente" '+(p?.status==='presente'?'selected':'')+'>Presente</option><option value="falta" '+(p?.status==='falta'?'selected':'')+'>Falta</option><option value="justificada" '+(p?.status==='justificada'?'selected':'')+'>Falta justificada</option></select></div></article>'}).join('')+'</div><button class="primary-btn" id="savePresence">Salvar presença</button>');
-  document.getElementById('savePresence').onclick=async()=>{for(const s of screen.querySelectorAll('.presence-status')){const row=map.get(s.dataset.athlete);const payload={treino_id:treinoId,atleta_id:s.dataset.athlete,status:s.value,registrado_por:session.user.id};const r=row?await upd('presencas_treino',row.id,payload):await save('presencas_treino',payload);if(r.error)return alert(r.error.message)}await loadDashboard();presenceForm(treinoId)};
-}
+  const [ats,pr,groupsRes,membersRes]=await Promise.all([
+    athletes(),
+    q('presencas_treino','id,atleta_id,status,observacao',x=>x.eq('treino_id',treinoId)),
+    q('grupos_app','id,nome,categoria_id,ativo',x=>x.eq('ativo',true).order('nome')),
+    q('grupo_atletas_app','grupo_id,atleta_id,ativo',x=>x.eq('ativo',true))
+  ]);
+  const groups=groupsRes.data||[];
+  const members=membersRes.data||[];
+  const map=new Map((pr.data||[]).map(x=>[x.atleta_id,x]));
+  const membersByGroup=new Map();
+  members.forEach(m=>{
+    if(!membersByGroup.has(m.grupo_id))membersByGroup.set(m.grupo_id,new Set());
+    membersByGroup.get(m.grupo_id).add(m.atleta_id);
+  });
 
+  const groupButtons=groups.map(g=>'<button type="button" class="presence-group-btn" data-pres-group="'+esc(g.id)+'">'+esc(g.nome)+'</button>').join('');
+  shell('Presença','Selecione um grupo para carregar os atletas e registrar a frequência.',
+    '<div class="presence-group-wrap">'+
+      '<button type="button" class="group-picker-btn" id="presenceChooseGroup">Escolher grupo <span id="presenceGroupValue">Nenhum grupo</span></button>'+
+      '<div id="presenceGroupPicker" class="group-picker" hidden>'+
+        '<div class="group-picker-backdrop" data-close-pres-group></div>'+
+        '<div class="group-picker-card">'+
+          '<div class="group-picker-head"><b>Escolher grupo</b><button type="button" class="group-picker-close" data-close-pres-group>×</button></div>'+
+          '<div class="group-picker-list">'+groupButtons+'</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="panel-card" id="presencePanel"><div class="section-title"><h2>Atletas</h2><small id="presenceCount">0 atletas</small></div><input id="presenceSearch" class="toolbar" placeholder="Buscar atleta pelo nome..." disabled><div id="presenceList" class="presence-list">'+empty('Escolha um grupo para carregar os atletas.')+'</div></div>'+
+    '<button class="primary-btn" id="savePresence" disabled>Salvar presença</button>');
+
+  const picker=document.getElementById('presenceGroupPicker');
+  const choose=document.getElementById('presenceChooseGroup');
+  const value=document.getElementById('presenceGroupValue');
+  const list=document.getElementById('presenceList');
+  const search=document.getElementById('presenceSearch');
+  const saveBtn=document.getElementById('savePresence');
+  let selectedGroup=null;
+  let candidates=[];
+
+  const groupAthletes=gid=>{
+    const ids=membersByGroup.get(gid)||new Set();
+    return ats.filter(a=>ids.has(a.id)&&String(a.status||'Ativo').toLowerCase()==='ativo');
+  };
+
+  const draw=()=>{
+    const term=String(search.value||'').trim().toLowerCase();
+    const visible=candidates.filter(a=>String(a.nome||'').toLowerCase().includes(term));
+    list.innerHTML=visible.length?visible.map(a=>{
+      const p=map.get(a.id);
+      return '<article class="data-card"><div class="data-body"><h3>'+esc(a.nome)+'</h3><small>'+esc(a.categoria||'')+'</small><select class="status-select presence-status" data-athlete="'+esc(a.id)+'"><option value="presente" '+(p?.status==='presente'?'selected':'')+'>Presente</option><option value="falta" '+(p?.status==='falta'?'selected':'')+'>Falta</option><option value="justificada" '+(p?.status==='justificada'?'selected':'')+'>Falta justificada</option></select></div></article>';
+    }).join(''):empty(selectedGroup?'Nenhum atleta ativo encontrado neste grupo.':'Escolha um grupo para carregar os atletas.');
+    document.getElementById('presenceCount').textContent=candidates.length+' atletas';
+  };
+
+  choose.onclick=()=>{picker.hidden=false;document.body.classList.add('group-picker-open')};
+  picker.querySelectorAll('[data-close-pres-group]').forEach(b=>b.onclick=()=>{picker.hidden=true;document.body.classList.remove('group-picker-open')});
+  picker.querySelectorAll('[data-pres-group]').forEach(b=>b.onclick=()=>{
+    selectedGroup=b.dataset.presGroup;
+    const g=groups.find(x=>String(x.id)===String(selectedGroup));
+    value.textContent=g?.nome||'Grupo';
+    candidates=groupAthletes(selectedGroup);
+    search.disabled=false;
+    saveBtn.disabled=candidates.length===0;
+    picker.hidden=true;
+    document.body.classList.remove('group-picker-open');
+    search.value='';
+    draw();
+  });
+  search.oninput=draw;
+  saveBtn.onclick=async()=>{
+    saveBtn.disabled=true;
+    for(const a of candidates){
+      const s=screen.querySelector('.presence-status[data-athlete="'+a.id+'"]');
+      if(!s)continue;
+      const row=map.get(a.id);
+      const payload={treino_id:treinoId,atleta_id:a.id,status:s.value,registrado_por:session.user.id};
+      const r=row?await upd('presencas_treino',row.id,payload):await save('presencas_treino',payload);
+      if(r.error){saveBtn.disabled=false;alert(r.error.message);return}
+    }
+    await loadDashboard();
+    presenceForm(treinoId);
+  };
+}
 async function renderEvaluations(){
   const ats=await athletes(),r=await q('avaliacoes_atletas','id,atleta_id,tecnica,tatica,fisico,disciplina,evolucao,observacoes,created_at',x=>x.order('created_at',{ascending:false}).limit(100));
   shell('Avaliações','Avaliação técnica privada dos atletas.','<button class="primary-btn" id="newEval">+ Nova avaliação</button><div class="data-list">'+(r.data||[]).map(x=>{const a=ats.find(y=>y.id===x.atleta_id);return '<article class="data-card"><div class="data-body"><small>'+fmtDate(x.created_at.slice(0,10))+'</small><h3>'+esc(a?.nome||'Atleta')+'</h3><p>Técnica '+x.tecnica+' • Tática '+x.tatica+' • Físico '+x.fisico+' • Disciplina '+x.disciplina+' • Evolução '+x.evolucao+'</p><span>'+esc(x.observacoes||'')+'</span></div></article>'}).join('')||empty('Nenhuma avaliação registrada.')+'</div>');
