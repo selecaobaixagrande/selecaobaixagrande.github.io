@@ -17,9 +17,10 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260921-12");
+        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260921-13");
         setContentView(webView);
     }
 
