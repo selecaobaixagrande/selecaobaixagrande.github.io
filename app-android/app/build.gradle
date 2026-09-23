@@ -8,8 +8,29 @@ android {
         applicationId 'br.com.selecaobaixagrande.app'
         minSdk 23
         targetSdk 36
-        versionCode 13
-        versionName '1.12'
+        versionCode 14
+        versionName '1.13'
+    }
+
+    signingConfigs {
+        release {
+            def storePath = System.getenv("ANDROID_KEYSTORE_PATH")
+            if (storePath != null && !storePath.isEmpty()) {
+                storeFile file(storePath)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (System.getenv("ANDROID_KEYSTORE_PATH") != null && !System.getenv("ANDROID_KEYSTORE_PATH").isEmpty()) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled false
+        }
     }
 
     applicationVariants.all { variant ->
