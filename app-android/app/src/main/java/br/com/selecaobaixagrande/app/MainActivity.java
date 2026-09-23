@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
 
             String html = output.toString(StandardCharsets.UTF_8.name());
             webView.loadDataWithBaseURL(
-                "https://selecaobaixagrande.github.io/",
+                "file:///android_asset/",
                 html,
                 "text/html",
                 "UTF-8",
