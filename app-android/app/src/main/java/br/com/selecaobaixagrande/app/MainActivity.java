@@ -8,9 +8,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
-import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends Activity {
     private WebView webView;
@@ -18,6 +15,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         webView = new WebView(this);
         webView.setBackgroundColor(Color.rgb(7, 8, 9));
         webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -30,36 +28,15 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         setContentView(webView);
-        loadLocalPanel();
-    }
 
-    private void loadLocalPanel() {
-        try {
-            InputStream input = getAssets().open("comissao.html");
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
-            int count;
-            while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
-            input.close();
-
-            String html = output.toString(StandardCharsets.UTF_8.name());
-            webView.loadDataWithBaseURL(
-                "file:///android_asset/",
-                html,
-                "text/html",
-                "UTF-8",
-                null
-            );
-        } catch (Exception e) {
-            webView.loadData(
-                "<html><body style='background:#070809;color:white;font-family:sans-serif;padding:30px'><h2>Erro ao carregar o aplicativo</h2><p>O painel local não pôde ser aberto.</p></body></html>",
-                "text/html",
-                "UTF-8"
-            );
-        }
+        // O APK deve abrir o painel que está dentro do próprio APK.
+        // Não depende de /comissao.html no GitHub Pages, evitando o 404.
+        webView.loadUrl("file:///android_asset/comissao.html");
     }
 
     @Override
