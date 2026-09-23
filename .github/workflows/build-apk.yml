@@ -69,3 +69,5 @@ jobs:
           name: selecao-baixa-grande-apk
           path: app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk
           if-no-files-found: error
+
+# rebuild trigger
