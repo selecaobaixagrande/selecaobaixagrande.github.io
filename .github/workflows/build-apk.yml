@@ -46,6 +46,7 @@ jobs:
         working-directory: app-android
         run: gradle wrapper --gradle-version 8.13 --no-daemon
 
+      # Build the signed release APK used in the downloadable ZIP artifact.
       - name: Prepare persistent release signing
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
