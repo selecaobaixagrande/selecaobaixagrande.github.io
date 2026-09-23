@@ -39,33 +39,48 @@ jobs:
           if [ ! -x "$SDKMANAGER" ]; then
             SDKMANAGER="$ANDROID_SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager"
           fi
-          echo "Using sdkmanager: $SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
           "$SDKMANAGER" "platform-tools" "platforms;android-36" "build-tools;36.0.0"
-
-      - name: Verify toolchain
-        run: |
-          java -version
-          gradle --version
-          "$ANDROID_SDK_ROOT/platform-tools/adb" --version
-          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --version 2>/dev/null || "$ANDROID_SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager" --version
 
       - name: Generate Gradle wrapper
         working-directory: app-android
         run: gradle wrapper --gradle-version 8.13 --no-daemon
 
-      - name: Build debug APK
-        working-directory: app-android
-        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
-
-      - name: Verify APK
+      - name: Prepare persistent release signing
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          test -f 'app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk'
-          ls -lh 'app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk'
+          set -e
+          test -n "$KEYSTORE_B64" || { echo "::error::Configure ANDROID_KEYSTORE_BASE64 before building the release APK."; exit 1; }
+          test -n "$KEYSTORE_PASSWORD" || { echo "::error::Configure ANDROID_KEYSTORE_PASSWORD before building the release APK."; exit 1; }
+          test -n "$KEY_ALIAS" || { echo "::error::Configure ANDROID_KEY_ALIAS before building the release APK."; exit 1; }
+          test -n "$KEY_PASSWORD" || { echo "::error::Configure ANDROID_KEY_PASSWORD before building the release APK."; exit 1; }
+          echo "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/selecao-release.jks"
+          test -s "$RUNNER_TEMP/selecao-release.jks"
 
-      - name: Upload APK
+      - name: Build signed release APK
+        working-directory: app-android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/selecao-release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Verify APK and signature
+        run: |
+          set -e
+          APK='app-android/app/build/outputs/apk/release/Seleção De Baixa Grande.apk'
+          test -f "$APK"
+          "$ANDROID_SDK_ROOT/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
+          ls -lh "$APK"
+
+      - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: selecao-baixa-grande-apk
-          path: app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk
+          name: selecao-baixa-grande-apk-release
+          path: app-android/app/build/outputs/apk/release/Seleção De Baixa Grande.apk
           if-no-files-found: error
