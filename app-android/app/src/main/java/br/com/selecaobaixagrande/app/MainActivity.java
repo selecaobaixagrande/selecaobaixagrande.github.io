@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
-        webView.loadUrl("https://selecaobaixagrande.github.io/comissao.html?v=20260921-14");
+        webView.loadUrl("file:///android_asset/comissao.html");
         setContentView(webView);
     }
 
