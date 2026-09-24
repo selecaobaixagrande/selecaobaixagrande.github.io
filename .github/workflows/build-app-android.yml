@@ -25,13 +25,13 @@ jobs:
         with:
           gradle-version: "8.13"
 
-      - name: Gerar APK
+      - name: Gerar APK assinado para instalação
         working-directory: app-android
-        run: gradle assembleRelease --no-daemon
+        run: gradle assembleDebug --no-daemon
 
       - name: Publicar APK como artefato
         uses: actions/upload-artifact@v4
         with:
           name: selecao-de-baixa-grande-apk
-          path: app-android/app/build/outputs/apk/release/Seleção De Baixa Grande.apk
+          path: app-android/app/build/outputs/apk/debug/Seleção De Baixa Grande.apk
           if-no-files-found: error
