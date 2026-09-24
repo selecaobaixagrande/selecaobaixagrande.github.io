@@ -19,7 +19,7 @@ main{padding:22px 18px 110px}.screen{display:none}.screen.active{display:block}
 .login{min-height:calc(100vh - 74px);display:none!important;align-items:center;justify-content:center}.login.active{display:flex!important}
 .login-card{width:min(960px,100%);padding:30px;border:1px solid rgba(255,255,255,.08);border-radius:28px;background:#101216}
 .eyebrow{color:#ff6971;font-size:9px;letter-spacing:2.5px;font-weight:900}.login h1{font-size:clamp(30px,6vw,52px);line-height:1;margin:9px 0 12px}.sub{color:#89929d;font-size:12px;max-width:580px;line-height:1.6}
-.profiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px}.profile{border:1px solid var(--line);border-radius:20px;background:#15181d;color:#fff;padding:17px 12px;text-align:left}.avatar{width:58px;height:58px;border-radius:18px;overflow:hidden;background:#210c10;margin-bottom:14px;border:1px solid #512027}.avatar img{width:100%;height:100%;object-fit:cover}.profile strong{display:block;font-size:13px}.profile small{display:block;color:#77818d;font-size:8px;line-height:1.45;margin-top:5px}
+.profiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px}.profile{border:1px solid var(--line);border-radius:20px;background:#15181d;color:#fff;padding:17px 12px;text-align:left}.avatar{width:58px;height:58px;border-radius:18px;overflow:hidden;background:#210c10;margin-bottom:14px;border:1px solid #512027}.avatar{display:grid;place-items:center;color:#ff6971;font-size:14px;font-weight:900}.profile strong{display:block;font-size:13px}.profile small{display:block;color:#77818d;font-size:8px;line-height:1.45;margin-top:5px}
 .hero{border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:23px;background:#111317}
 .hero h1{font-size:clamp(25px,5vw,42px);margin:6px 0}.hero p{margin:0;color:#89929d;font-size:10px;line-height:1.6}
 .badge{padding:7px 10px;border:1px solid #562028;background:#200d10;color:#ff8d93;border-radius:999px;font-size:8px;font-weight:900;white-space:nowrap}
@@ -38,7 +38,7 @@ main{padding:22px 18px 110px}.screen{display:none}.screen.active{display:block}
 <body>
 <div class="app">
 <header class="top">
-<div class="brand"><img loading="lazy" decoding="async" class="crest" src="https://selecaobaixagrande.github.io/1000001685.png" onerror="this.style.display='none'"><div><b>SELEÇÃO DE BAIXA GRANDE</b><span>COMISSÃO TÉCNICA · APP OFICIAL</span></div></div>
+<div class="brand"><div class="crest" aria-hidden="true">BG</div><div><b>SELEÇÃO DE BAIXA GRANDE</b><span>COMISSÃO TÉCNICA · APP OFICIAL</span></div></div>
 <div class="session"><span class="dot" id="dot"></span><button id="switch">Entrar</button></div>
 </header>
 <main>
@@ -47,10 +47,10 @@ main{padding:22px 18px 110px}.screen{display:none}.screen.active{display:block}
 <div class="eyebrow">ÁREA INTERNA</div><h1>Gestão de alto nível.</h1>
 <div class="sub">Escolha seu perfil para acessar o ambiente da comissão técnica. Sem senha neste aplicativo.</div>
 <div class="profiles">
-<button class="profile" data-profile="Ramon"><div class="avatar"><img loading="lazy" decoding="async" src="https://selecaobaixagrande.github.io/file_00000000be04820ea1ba9add36276082~4.jpg"></div><strong>Ramon</strong><small>Treinador · Coordenação técnica</small></button>
-<button class="profile" data-profile="Rubens"><div class="avatar"><img loading="lazy" decoding="async" src="https://selecaobaixagrande.github.io/file_00000000be04820ea1ba9add36276082~5.jpg"></div><strong>Rubens</strong><small>Comissão técnica · Análise</small></button>
-<button class="profile" data-profile="Arlison"><div class="avatar"><img loading="lazy" decoding="async" src="https://selecaobaixagrande.github.io/file_00000000be04820ea1ba9add36276082~6.jpg"></div><strong>Arlison</strong><small>Comissão técnica · Preparação</small></button>
-<button class="profile" data-profile="Gabriel"><div class="avatar"><img loading="lazy" decoding="async" src="https://selecaobaixagrande.github.io/2026_08_17_13.56.20~2.jpg"></div><strong>Gabriel</strong><small>Comissão técnica · Gestão</small></button>
+<button class="profile" data-profile="Ramon"><div class="avatar">RA</div><strong>Ramon</strong><small>Treinador · Coordenação técnica</small></button>
+<button class="profile" data-profile="Rubens"><div class="avatar">RU</div><strong>Rubens</strong><small>Comissão técnica · Análise</small></button>
+<button class="profile" data-profile="Arlison"><div class="avatar">AR</div><strong>Arlison</strong><small>Comissão técnica · Preparação</small></button>
+<button class="profile" data-profile="Gabriel"><div class="avatar">GA</div><strong>Gabriel</strong><small>Comissão técnica · Gestão</small></button>
 </div></div>
 </section>
 
