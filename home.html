@@ -30,6 +30,19 @@
 @media(max-width:600px){.home-hero{min-height:calc(100svh - 64px);align-items:flex-end}.home-hero::before{background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.93)),url('Handler%20(1).jpg') center/cover}.home-hero::after{right:-12%;top:25%;font-size:74px;letter-spacing:-4px}.hero-inner{padding:60px 16px 42px}.hero-crest{width:72px;height:72px;margin-bottom:16px}.hero-title{font-size:clamp(45px,13vw,63px);letter-spacing:-2.5px}.hero-copy{font-size:12px}.hero-actions{flex-direction:column}.hero-actions a{width:100%}.home-content{padding:0 15px}.home-section{padding:52px 0}.section-head{display:block}.section-link{margin-top:13px}.result-feature{grid-template-columns:1fr 64px 1fr;padding:21px 9px;gap:4px}.result-team img{width:58px;height:58px}.result-team strong{font-size:9px}.result-score b{font-size:27px}.result-meta{font-size:9px}.feature-grid,.category-showcase,.news-grid-home{grid-template-columns:1fr}.news-home-card:first-child{grid-column:auto}.news-home-card{min-height:235px}.next-panel,.info-panel{padding:22px}.social-home{display:block;padding:23px}.social-home a{display:inline-flex;margin-top:16px}.category-showcase a{min-height:135px}}
 @media(prefers-reduced-motion:reduce){.hero-actions a,.feature-card,.news-home-card,.category-showcase a{transition:none}.hero-actions a:hover,.feature-card:hover,.news-home-card:hover,.category-showcase a:hover{transform:none}}
 </style>
+
+<style>
+.kids-day{position:relative;overflow:hidden;margin:0;background:radial-gradient(ellipse at 82% 45%,rgba(237,39,51,.22),transparent 42%),linear-gradient(115deg,#160709,#090a0c 72%);border-top:1px solid rgba(237,39,51,.35);border-bottom:1px solid #292d32}
+.kids-day-inner{max-width:1180px;margin:auto;padding:34px 20px;display:grid;grid-template-columns:180px 1fr;gap:28px;align-items:center}
+.kids-day-art{height:150px;border:1px solid rgba(255,255,255,.13);border-radius:20px;display:flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(181,18,27,.15));font-size:30px;box-shadow:inset 0 0 35px rgba(237,39,51,.08)}
+.kids-day-art span:first-child{font-size:54px}.kids-day-art span:nth-child(2){align-self:flex-start;margin-top:18px;color:#ff5962}.kids-day-art span:last-child{align-self:flex-end;margin-bottom:20px}
+.kids-day-kicker{color:#ff5962;font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+.kids-day-copy h2{font:800 clamp(30px,5vw,48px)/.98 Oswald,Arial,sans-serif;letter-spacing:-1px;margin:10px 0}
+.kids-day-copy h2 strong{color:#ff4652}.kids-day-copy p{max-width:760px;color:#c3c6cb;font-size:13px;line-height:1.75;margin:12px 0}
+.kids-day-signature{display:inline-block;margin-top:5px;color:#fff;font-size:10px;font-weight:800;letter-spacing:.3px}
+@media(max-width:600px){.kids-day-inner{grid-template-columns:1fr;gap:17px;padding:25px 16px}.kids-day-art{height:90px}.kids-day-art span:first-child{font-size:43px}.kids-day-copy h2{font-size:36px}.kids-day-copy p{font-size:12px}}
+</style>
+
 </head>
 <body class="home">
 <header>
@@ -64,6 +77,18 @@
     <div class="hero-actions">
       <a class="hero-primary" href="jogos.html">Ver agenda →</a>
       <a class="hero-secondary" href="elenco.html">Conhecer o elenco →</a>
+    </div>
+  </div>
+</section>
+
+<section class="kids-day" aria-label="Mensagem de Dia das Crianças">
+  <div class="kids-day-inner">
+    <div class="kids-day-art" aria-hidden="true"><span>⚽</span><span>★</span><span>❤️</span></div>
+    <div class="kids-day-copy">
+      <span class="kids-day-kicker">12 de outubro • Dia das Crianças</span>
+      <h2>FELIZ DIA DAS <strong>CRIANÇAS!</strong></h2>
+      <p>A Seleção de Baixa Grande celebra a alegria, os sonhos e a esperança de cada criança. Que nunca faltem oportunidades para brincar, aprender e acreditar nos seus sonhos — dentro e fora de campo.</p>
+      <span class="kids-day-signature">Com carinho, Seleção de Baixa Grande ⚽</span>
     </div>
   </div>
 </section>
