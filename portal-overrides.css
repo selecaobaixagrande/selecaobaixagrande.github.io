@@ -3,3 +3,45 @@
 html,body{background:#070708!important;background-attachment:fixed!important;color:#f5f5f5!important;font-family:Inter,Arial,Helvetica,sans-serif!important}body:before{background:radial-gradient(circle at 85% 0,rgba(181,18,27,.10),transparent 28%),radial-gradient(circle at 8% 45%,rgba(181,18,27,.045),transparent 25%)!important}main,body>main{background:transparent!important}h1,h2,h3,h4,.titulo h2,.banner-pagina h2,.marca h1{font-family:Oswald,'Arial Narrow',Arial,sans-serif!important}nav a{font-family:Inter,Arial,sans-serif!important}nav a.ativo{background:transparent!important;color:#fff!important;box-shadow:none!important;position:relative!important}nav a.ativo:after{content:"";position:absolute;left:11px;right:11px;bottom:3px;height:2px;background:#ed2733;border-radius:8px}.card,.destaque,.social,.jogo,.category-card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important}.card:hover,.destaque:hover,.category-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.30)}@keyframes sbFadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}main>section,.page-content>section{animation:sbFadeUp .55s ease both}@media(max-width:760px){.header nav a.ativo:after{display:none!important}.header nav a.ativo{background:#b5121b!important}.header nav.menu-open a{animation:sbFadeUp .2s ease both}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 /* Home: remover somente os dois blocos solicitados. */
 .home .home-section:has(#proximo-title),.home .home-section:has(#categorias-title){display:none!important}
+/* CAMADA VISUAL PREMIUM — preserva conteúdo, links e identidade oficial */
+:root{--sb-red:#c51625;--sb-red-bright:#f23845;--sb-border:rgba(255,255,255,.10)}
+html{scroll-padding-top:88px}
+body{letter-spacing:-.012em;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(197,22,37,.8);color:#fff}
+a:focus-visible,button:focus-visible{outline:2px solid #ff5962;outline-offset:4px}
+header{background:rgba(7,8,9,.88)!important;border-bottom:1px solid rgba(255,255,255,.09)!important;box-shadow:0 8px 32px rgba(0,0,0,.28)!important}
+.header{max-width:1240px!important;min-height:76px}
+.logo-header{width:48px;height:48px}
+.marca h1{font-size:13px;letter-spacing:1px}
+nav{gap:4px}
+nav a{padding:10px 12px;border-radius:8px;color:#b5b8be}
+nav a:hover{background:rgba(255,255,255,.065)!important;color:#fff!important}
+nav a.ativo{color:#fff!important}
+nav a.ativo:after{height:3px!important;bottom:1px!important;background:linear-gradient(90deg,var(--sb-red),var(--sb-red-bright))!important}
+.banner-pagina{background:radial-gradient(ellipse at 80% 20%,rgba(197,22,37,.16),transparent 36%),linear-gradient(135deg,#090a0b,#121417 62%,#170609)!important}
+.banner-pagina h2{letter-spacing:-2px!important}
+section{scroll-margin-top:90px}
+.card,.social,.jogo,.destaque,.category-card,.feature-card,.news-home-card,.next-panel,.info-panel,.result-feature,.social-home{border-color:var(--sb-border)!important;box-shadow:0 16px 44px rgba(0,0,0,.18)}
+.card,.feature-card,.next-panel,.info-panel{background:linear-gradient(145deg,rgba(22,24,28,.96),rgba(10,11,13,.98))!important}
+.card:before{height:2px!important;background:linear-gradient(90deg,transparent,rgba(242,56,69,.8),transparent)!important}
+.card:hover,.feature-card:hover,.news-home-card:hover,.category-card:hover,.category-showcase a:hover{border-color:rgba(242,56,69,.5)!important;box-shadow:0 24px 60px rgba(0,0,0,.34),0 0 0 1px rgba(242,56,69,.06)!important}
+.btn,.botao,.instagram,.acesso-btn,.noticia-btn,.category-content a{border-radius:9px!important;transition:transform .2s ease,filter .2s ease,box-shadow .2s ease!important}
+.botao-vermelho,.btn:not(.botao-branco),.hero-primary{background:linear-gradient(135deg,#b5121b,#d91f2d)!important;box-shadow:0 10px 26px rgba(197,22,37,.20)!important}
+.botao-vermelho:hover,.btn:hover,.botao:hover,.instagram:hover,.hero-actions a:hover{box-shadow:0 14px 32px rgba(197,22,37,.24)!important}
+footer{background:linear-gradient(180deg,#08090a,#040405)!important;border-top:1px solid rgba(255,255,255,.09)!important}
+footer strong{letter-spacing:1px}
+.home .home-hero{border-bottom-color:rgba(255,255,255,.10)}
+.home .home-hero::before{filter:saturate(.9) contrast(1.08)!important}
+.home .hero-title{letter-spacing:-4.5px}
+.home .hero-title span{color:#ff3948;text-shadow:0 8px 35px rgba(197,22,37,.16)}
+.home .hero-kicker{color:#ff6872}
+.home .hero-primary{border-color:#ef3542!important}
+.home .hero-secondary{border-color:rgba(255,255,255,.24)!important;background:rgba(12,13,15,.58)!important}
+.home .section-head h2{letter-spacing:-1.8px}
+.home .result-feature{background:radial-gradient(ellipse at 50% 0,rgba(197,22,37,.14),transparent 55%),linear-gradient(130deg,#121417,#0a0b0d 70%,#170609)!important}
+.home .social-home{background:radial-gradient(ellipse at 85% 0,rgba(197,22,37,.13),transparent 45%),linear-gradient(130deg,#121417,#090a0b)!important}
+.home .social-home a{border:1px solid rgba(255,255,255,.2);transition:transform .2s ease,background .2s ease}
+.home .social-home a:hover{transform:translateY(-2px);background:#ffecee}
+@media(min-width:1100px){.home .hero-inner{padding-top:108px;padding-bottom:90px}.home .hero-copy{font-size:15px;line-height:1.85}.home .home-section{padding-top:82px;padding-bottom:82px}}
+@media(max-width:760px){.header{min-height:66px!important}.logo-header{width:40px;height:40px}.marca h1{font-size:10px}#menuBtn,.menu-toggle{border-color:rgba(255,255,255,.15)!important;background:#151619!important}.header nav,.page-nav nav{border-color:rgba(255,255,255,.12)!important;background:rgba(8,9,10,.98)!important}.banner-pagina{padding-top:64px!important;padding-bottom:48px!important}.home .hero-title{letter-spacing:-2.8px}.home .hero-inner{padding-bottom:44px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
