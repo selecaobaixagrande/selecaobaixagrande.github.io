@@ -92,6 +92,29 @@
 </header>
 
 <main>
+<section class="kids-game" aria-labelledby="kids-game-title">
+  <div class="kids-game-wrap">
+    <div class="kids-game-head">
+      <span class="kids-game-tag">Especial • Dia das Crianças</span>
+      <h2 id="kids-game-title">DESAFIO DO <span>CRAQUE MIRIM</span> ⚽</h2>
+      <p>Toque na bola o máximo de vezes que conseguir em 20 segundos! Vamos ver quem é o craque da criançada.</p>
+      <div class="kids-game-stats" aria-live="polite">
+        <div class="kids-game-stat">PONTOS<strong id="kidsScore">0</strong></div>
+        <div class="kids-game-stat">TEMPO<strong><span id="kidsTime">20</span>s</strong></div>
+        <div class="kids-game-stat">RECORDE<strong id="kidsBest">0</strong></div>
+      </div>
+    </div>
+    <div class="kids-game-field" id="kidsField" aria-label="Campo do jogo. Toque na bola para marcar pontos">
+      <button class="kids-game-target" id="kidsBall" type="button" aria-label="Tocar na bola para marcar ponto" disabled>⚽</button>
+    </div>
+    <div class="kids-game-message" id="kidsMessage" role="status">Aperte “Começar jogo” e prepare o dedo!</div>
+    <div class="kids-game-controls">
+      <button class="kids-game-btn" id="kidsStart" type="button">Começar jogo</button>
+      <button class="kids-game-btn secondary" id="kidsReset" type="button">Reiniciar</button>
+    </div>
+  </div>
+</section>
+
 <section class="home-hero" aria-labelledby="hero-title">
   <div class="hero-inner">
     <img class="hero-crest" src="1000001685.png" alt="Escudo oficial da Seleção de Baixa Grande">
@@ -118,28 +141,7 @@
 </section>
 
 
-<section class="kids-game" aria-labelledby="kids-game-title">
-  <div class="kids-game-wrap">
-    <div class="kids-game-head">
-      <span class="kids-game-tag">Especial • Dia das Crianças</span>
-      <h2 id="kids-game-title">DESAFIO DO <span>CRAQUE MIRIM</span> ⚽</h2>
-      <p>Toque na bola o máximo de vezes que conseguir em 20 segundos! Vamos ver quem é o craque da criançada.</p>
-      <div class="kids-game-stats" aria-live="polite">
-        <div class="kids-game-stat">PONTOS<strong id="kidsScore">0</strong></div>
-        <div class="kids-game-stat">TEMPO<strong><span id="kidsTime">20</span>s</strong></div>
-        <div class="kids-game-stat">RECORDE<strong id="kidsBest">0</strong></div>
-      </div>
-    </div>
-    <div class="kids-game-field" id="kidsField" aria-label="Campo do jogo. Toque na bola para marcar pontos">
-      <button class="kids-game-target" id="kidsBall" type="button" aria-label="Tocar na bola para marcar ponto" disabled>⚽</button>
-    </div>
-    <div class="kids-game-message" id="kidsMessage" role="status">Aperte “Começar jogo” e prepare o dedo!</div>
-    <div class="kids-game-controls">
-      <button class="kids-game-btn" id="kidsStart" type="button">Começar jogo</button>
-      <button class="kids-game-btn secondary" id="kidsReset" type="button">Reiniciar</button>
-    </div>
-  </div>
-</section>
+
 
 <div class="home-content">
 <section class="home-section" aria-labelledby="resultado-title">
