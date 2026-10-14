@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="680" viewBox="0 0 1600 680" role="img" aria-labelledby="title desc">
+<title id="title">Feliz Dia das Crianças — Seleção de Baixa Grande</title><desc id="desc">Arte comemorativa com cores preto, vermelho e dourado, crianças jogando futebol ao pôr do sol.</desc>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#08090b"/><stop offset=".58" stop-color="#171014"/><stop offset="1" stop-color="#35080d"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#ffdca0" stop-opacity=".92"/><stop offset="1" stop-color="#ef2733" stop-opacity="0"/></radialGradient>
+ <linearGradient id="jersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#27282b"/><stop offset="1" stop-color="#070809"/></linearGradient>
+ <linearGradient id="gold"><stop stop-color="#ffe5a0"/><stop offset="1" stop-color="#d29a35"/></linearGradient>
+ <pattern id="grain" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M0 14H80M0 55H80" stroke="#fff" stroke-opacity=".025"/></pattern>
+ <filter id="glow"><feGaussianBlur stdDeviation="22"/></filter>
+</defs>
+<rect width="1600" height="680" fill="url(#bg)"/><rect width="1600" height="680" fill="url(#grain)"/>
+<circle cx="1240" cy="245" r="265" fill="url(#sun)"/><circle cx="1240" cy="245" r="120" fill="#ffc977" opacity=".15" filter="url(#glow)"/>
+<path d="M0 0H22L0 90ZM1600 0h-22l22 90ZM0 680h28L0 620ZM1600 680h-28l28-70" fill="#ed2733"/>
+<path d="M0 80L140 0H205L0 120ZM1600 540l-120 140h-65l185-200" fill="#ed2733" opacity=".85"/>
+<text x="92" y="112" fill="#ff5962" font-family="Arial,sans-serif" font-size="19" font-weight="700" letter-spacing="5">12 DE OUTUBRO  •  SELEÇÃO DE BAIXA GRANDE</text>
+<text x="84" y="218" fill="#fff" font-family="Arial,sans-serif" font-size="72" font-weight="900" letter-spacing="-2">FELIZ DIA DAS</text>
+<text x="75" y="310" fill="#ed2733" font-family="Arial,sans-serif" font-size="104" font-weight="900" letter-spacing="-3">CRIANÇAS!</text>
+<path d="M89 333Q280 348 550 324" fill="none" stroke="#ed2733" stroke-width="8" stroke-linecap="round"/>
+<text x="95" y="390" fill="#f1f1f1" font-family="Arial,sans-serif" font-size="24">Que nunca faltem alegria, carinho,</text>
+<text x="95" y="425" fill="#f1f1f1" font-family="Arial,sans-serif" font-size="24">oportunidades e sonhos para realizar.</text>
+<text x="95" y="482" fill="#d5d5d5" font-family="Arial,sans-serif" font-size="19">O futuro também joga com eles. ⚽</text>
+<text x="95" y="550" fill="url(#gold)" font-family="Arial,sans-serif" font-size="22" font-weight="700">COM CARINHO, SELEÇÃO DE BAIXA GRANDE</text>
+<!-- glowing horizon -->
+<path d="M730 488Q1060 410 1600 492V680H730Z" fill="#9b3828" opacity=".22"/><path d="M760 545Q1180 455 1600 530" fill="none" stroke="#ffb35a" stroke-opacity=".3" stroke-width="3"/>
+<!-- child 1 -->
+<g transform="translate(790 0)">
+ <ellipse cx="88" cy="292" rx="54" ry="62" fill="#a66c49"/><path d="M35 286Q28 220 88 218Q151 222 143 286L128 265 48 270Z" fill="#191516"/>
+ <path d="M24 360Q88 325 152 360L193 545 0 545Z" fill="url(#jersey)"/><path d="M24 360L4 458 28 468 62 384M151 360l40 90-24 13-39-79" fill="#242529"/>
+ <path d="M18 382H157" stroke="#ed2733" stroke-width="12"/><text x="88" y="427" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">BAIXA GRANDE</text>
+ <path d="M45 545L34 660H80L92 550M110 550L128 660H174L150 545" fill="#111216"/><path d="M31 650H83M125 650H178" stroke="#ed2733" stroke-width="12"/>
+</g>
+<!-- child 2 -->
+<g transform="translate(1005 0)">
+ <ellipse cx="91" cy="275" rx="58" ry="65" fill="#70452f"/><path d="M32 277Q22 205 90 207Q156 205 150 276L133 247 47 246Z" fill="#171314"/>
+ <path d="M15 351Q91 319 166 351L208 545H-20Z" fill="url(#jersey)"/><path d="M15 372H168" stroke="#ed2733" stroke-width="13"/><text x="91" y="418" fill="#fff" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle">BAIXA GRANDE</text>
+ <path d="M24 545L15 660H66L87 548M112 548L134 660H183L160 545" fill="#101114"/><path d="M12 650H69M130 650H189" stroke="#ed2733" stroke-width="12"/>
+</g>
+<!-- child 3 with curly hair -->
+<g transform="translate(1250 0)">
+ <ellipse cx="96" cy="304" rx="53" ry="62" fill="#9a6141"/><g fill="#211819"><circle cx="57" cy="253" r="24"/><circle cx="82" cy="235" r="27"/><circle cx="111" cy="237" r="27"/><circle cx="137" cy="256" r="24"/><circle cx="145" cy="278" r="20"/></g>
+ <path d="M32 370Q96 336 161 370L196 548H-5Z" fill="url(#jersey)"/><path d="M33 390H160" stroke="#ed2733" stroke-width="13"/><text x="96" y="432" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="700" text-anchor="middle">BAIXA GRANDE</text>
+ <path d="M19 548L12 660H65L86 550M110 550L130 660H179L157 548" fill="#111216"/><path d="M9 650H68M126 650H184" stroke="#ed2733" stroke-width="12"/>
+</g>
+<!-- ball -->
+<g transform="translate(1170 530)"><circle r="56" fill="#f6f2e8" stroke="#25262a" stroke-width="5"/><path d="M-19 -17L0 -32 20 -17 13 7-13 7Z" fill="#202124"/><path d="M-19 -17L-43 -24M20 -17L42 -29M13 7L30 33M-13 7L-28 32M0 -32L-4 -53" fill="none" stroke="#202124" stroke-width="4"/></g>
+<!-- floating stars -->
+<path d="M1455 120l8 20 22 1-17 14 6 21-19-12-18 12 6-21-17-14 22-1Z" fill="url(#gold)"/><path d="M700 160l5 12 13 1-10 8 3 12-11-7-10 7 3-12-10-8 13-1Z" fill="#fff" opacity=".6"/>
+<rect x="0" y="610" width="1600" height="70" fill="#050607" opacity=".48"/><text x="800" y="653" fill="#fff" font-family="Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="4" text-anchor="middle">ESPORTE  •  UNIÃO  •  DISCIPLINA  •  SONHOS</text>
+</svg>
