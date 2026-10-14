@@ -49,6 +49,61 @@ body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
 .som:hover{transform:rotate(12deg) scale(1.06)}
 @media(prefers-reduced-motion:reduce){.conteudo,.escudo,.linha,.subtitulo,.frase,.botoes,.kids-home-link{animation:none!important}.kids-home-link,.kids-home-link img,.btn,.som{transition:none!important}}
 
+
+/* Abertura cinematografica: escudo primeiro, depois o restante do portal */
+@keyframes crestReveal{
+  0%{opacity:0;transform:translateY(65px) scale(.48) rotate(-7deg);filter:drop-shadow(0 0 0 rgba(237,39,51,0))}
+  58%{opacity:1;transform:translateY(-8px) scale(1.06) rotate(1deg);filter:drop-shadow(0 0 38px rgba(237,39,51,.62))}
+  78%{transform:translateY(3px) scale(.98) rotate(0)}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:drop-shadow(0 16px 38px rgba(0,0,0,.8))}
+}
+@keyframes crestHalo{
+  0%,100%{opacity:0;transform:translate(-50%,-50%) scale(.72)}
+  45%{opacity:.85;transform:translate(-50%,-50%) scale(1.05)}
+  75%{opacity:.25;transform:translate(-50%,-50%) scale(1.3)}
+}
+@keyframes smokeDrift{
+  0%{opacity:0;transform:translate3d(-7%,8%,0) scale(.78)}
+  18%{opacity:.38}
+  65%{opacity:.23}
+  100%{opacity:0;transform:translate3d(9%,-13%,0) scale(1.35)}
+}
+@keyframes smokeDriftReverse{
+  0%{opacity:0;transform:translate3d(8%,10%,0) scale(.8)}
+  20%{opacity:.28}
+  68%{opacity:.18}
+  100%{opacity:0;transform:translate3d(-10%,-15%,0) scale(1.4)}
+}
+@keyframes restReveal{
+  from{opacity:0;transform:translateY(24px);filter:blur(5px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+.entrada{isolation:isolate}
+.conteudo{animation:none}
+.escudo{position:relative;z-index:4;opacity:0;animation:crestReveal 1.65s cubic-bezier(.16,1,.3,1) .25s forwards!important;filter:drop-shadow(0 18px 35px rgba(0,0,0,.8))}
+.escudo::after{content:""}
+/* Camadas de fumaça CSS, sem imagens externas ou arquivos adicionais */
+.entrada .smoke-layer{position:fixed;z-index:2;left:-18%;right:-18%;top:18%;height:64%;pointer-events:none;overflow:hidden;opacity:0;filter:blur(24px);background:
+ radial-gradient(ellipse at 18% 62%,rgba(220,224,230,.23) 0,rgba(125,132,143,.12) 17%,transparent 43%),
+ radial-gradient(ellipse at 76% 52%,rgba(225,227,232,.20) 0,rgba(115,123,134,.12) 20%,transparent 46%),
+ radial-gradient(ellipse at 50% 80%,rgba(181,18,27,.13) 0,transparent 48%);
+}
+.entrada .smoke-one{animation:smokeDrift 5.2s ease-out .45s both}
+.entrada .smoke-two{top:28%;height:55%;filter:blur(34px);background:radial-gradient(ellipse at 28% 55%,rgba(195,200,208,.17),transparent 48%),radial-gradient(ellipse at 80% 64%,rgba(160,166,176,.19),transparent 44%);animation:smokeDriftReverse 5.8s ease-out .8s both}
+.entrada .crest-halo{position:absolute;left:50%;top:calc(50% - 150px);width:230px;height:230px;border-radius:50%;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(237,39,51,.25),rgba(181,18,27,.09) 42%,transparent 70%);animation:crestHalo 2.3s ease-out .45s both}
+.conteudo>*:not(.escudo){opacity:0;animation:restReveal .8s cubic-bezier(.2,.7,.2,1) both}
+.conteudo>.escudo{display:block}
+.conteudo .linha{animation-delay:1.55s}
+.conteudo .mini{animation-delay:1.72s}
+.conteudo .titulo{animation-delay:1.88s}
+.conteudo .subtitulo{animation-delay:2.08s}
+.conteudo .frase{animation-delay:2.2s}
+.conteudo .botoes{animation-delay:2.35s}
+.kids-home-link{opacity:0;animation:restReveal .85s ease 2.5s forwards}
+.rodape,.som{opacity:0;animation:restReveal .65s ease 2.65s forwards}
+@media(max-width:600px){.entrada .crest-halo{top:calc(50% - 155px);width:175px;height:175px}.entrada .smoke-layer{top:20%;height:52%;filter:blur(19px)}}
+@media(prefers-reduced-motion:reduce){.escudo,.conteudo>*:not(.escudo),.kids-home-link,.rodape,.som,.entrada .smoke-layer,.entrada .crest-halo{animation:none!important;opacity:1!important;filter:none!important}}
+
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SportsTeam","name":"Seleção de Baixa Grande","sport":"Futebol","url":"https://selecaobaixagrande.github.io/","logo":"https://selecaobaixagrande.github.io/1000001685.png","description":"Site oficial da Seleção de Baixa Grande, Bahia, com informações sobre futebol de base, jogos, resultados, categorias, elenco e notícias."}</script>
 </head>
@@ -79,6 +134,7 @@ body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
 <audio id="musica" src="prettyjohn1-sports-football-soccer-music-499975.mp3" preload="none" loop></audio>
 <button class="som" id="som" type="button" aria-label="Ativar ou desativar música">🔇</button>
 <div class="rodape">SELEÇÃO DE BAIXA GRANDE • BAHIA • 2026</div>
+<div class="crest-halo" aria-hidden="true"></div><div class="smoke-layer smoke-one" aria-hidden="true"></div><div class="smoke-layer smoke-two" aria-hidden="true"></div>
 </main>
 <script src="click-sound.js"></script>
 <script>const musica=document.getElementById('musica'),som=document.getElementById('som');som.addEventListener('click',()=>{if(musica.paused){musica.volume=.4;musica.play().then(()=>som.textContent='🔊').catch(()=>{})}else{musica.pause();som.textContent='🔇'}});</script>
