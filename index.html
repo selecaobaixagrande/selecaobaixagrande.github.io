@@ -50,60 +50,24 @@ body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
 @media(prefers-reduced-motion:reduce){.conteudo,.escudo,.linha,.subtitulo,.frase,.botoes,.kids-home-link{animation:none!important}.kids-home-link,.kids-home-link img,.btn,.som{transition:none!important}}
 
 
-/* Abertura cinematografica: escudo primeiro, depois o restante do portal */
-@keyframes crestReveal{
-  0%{opacity:0;transform:translateY(65px) scale(.48) rotate(-7deg);filter:drop-shadow(0 0 0 rgba(237,39,51,0))}
-  58%{opacity:1;transform:translateY(-8px) scale(1.06) rotate(1deg);filter:drop-shadow(0 0 38px rgba(237,39,51,.62))}
-  78%{transform:translateY(3px) scale(.98) rotate(0)}
-  100%{opacity:1;transform:translateY(0) scale(1);filter:drop-shadow(0 16px 38px rgba(0,0,0,.8))}
-}
-@keyframes crestHalo{
-  0%,100%{opacity:0;transform:translate(-50%,-50%) scale(.72)}
-  45%{opacity:.85;transform:translate(-50%,-50%) scale(1.05)}
-  75%{opacity:.25;transform:translate(-50%,-50%) scale(1.3)}
-}
-@keyframes smokeDrift{
-  0%{opacity:0;transform:translate3d(-7%,8%,0) scale(.78)}
-  18%{opacity:.38}
-  65%{opacity:.23}
-  100%{opacity:0;transform:translate3d(9%,-13%,0) scale(1.35)}
-}
-@keyframes smokeDriftReverse{
-  0%{opacity:0;transform:translate3d(8%,10%,0) scale(.8)}
-  20%{opacity:.28}
-  68%{opacity:.18}
-  100%{opacity:0;transform:translate3d(-10%,-15%,0) scale(1.4)}
-}
-@keyframes restReveal{
-  from{opacity:0;transform:translateY(24px);filter:blur(5px)}
-  to{opacity:1;transform:translateY(0);filter:blur(0)}
-}
-.entrada{isolation:isolate}
-.conteudo{animation:none}
-.escudo{position:relative;z-index:4;opacity:0;animation:crestReveal 1.65s cubic-bezier(.16,1,.3,1) .25s forwards!important;filter:drop-shadow(0 18px 35px rgba(0,0,0,.8))}
-.escudo::after{content:""}
-/* Camadas de fumaça CSS, sem imagens externas ou arquivos adicionais */
-.entrada .smoke-layer{position:fixed;z-index:2;left:-18%;right:-18%;top:18%;height:64%;pointer-events:none;overflow:hidden;opacity:0;filter:blur(24px);background:
- radial-gradient(ellipse at 18% 62%,rgba(220,224,230,.23) 0,rgba(125,132,143,.12) 17%,transparent 43%),
- radial-gradient(ellipse at 76% 52%,rgba(225,227,232,.20) 0,rgba(115,123,134,.12) 20%,transparent 46%),
- radial-gradient(ellipse at 50% 80%,rgba(181,18,27,.13) 0,transparent 48%);
-}
-.entrada .smoke-one{animation:smokeDrift 5.2s ease-out .45s both}
-.entrada .smoke-two{top:28%;height:55%;filter:blur(34px);background:radial-gradient(ellipse at 28% 55%,rgba(195,200,208,.17),transparent 48%),radial-gradient(ellipse at 80% 64%,rgba(160,166,176,.19),transparent 44%);animation:smokeDriftReverse 5.8s ease-out .8s both}
-.entrada .crest-halo{position:absolute;left:50%;top:calc(50% - 150px);width:230px;height:230px;border-radius:50%;z-index:2;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(237,39,51,.25),rgba(181,18,27,.09) 42%,transparent 70%);animation:crestHalo 2.3s ease-out .45s both}
-.conteudo>*:not(.escudo){opacity:0;animation:restReveal .8s cubic-bezier(.2,.7,.2,1) both}
-.conteudo>.escudo{display:block}
-.conteudo .linha{animation-delay:1.55s}
-.conteudo .mini{animation-delay:1.72s}
-.conteudo .titulo{animation-delay:1.88s}
-.conteudo .subtitulo{animation-delay:2.08s}
-.conteudo .frase{animation-delay:2.2s}
-.conteudo .botoes{animation-delay:2.35s}
-.kids-home-link{opacity:0;animation:restReveal .85s ease 2.5s forwards}
-.rodape,.som{opacity:0;animation:restReveal .65s ease 2.65s forwards}
-@media(max-width:600px){.entrada .crest-halo{top:calc(50% - 155px);width:175px;height:175px}.entrada .smoke-layer{top:20%;height:52%;filter:blur(19px)}}
-@media(prefers-reduced-motion:reduce){.escudo,.conteudo>*:not(.escudo),.kids-home-link,.rodape,.som,.entrada .smoke-layer,.entrada .crest-halo{animation:none!important;opacity:1!important;filter:none!important}}
-
+/* Abertura cinematográfica corrigida: nada fica invisível se a animação falhar */
+.entrada{isolation:isolate;position:relative;min-height:100svh;height:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden}
+.conteudo{position:relative;z-index:5;width:min(820px,90%);margin:auto;text-align:center;padding:28px 0 12px}
+.escudo{display:block;width:clamp(112px,22vw,160px);height:clamp(112px,22vw,160px);object-fit:contain;margin:0 auto 18px;opacity:1;transform-origin:center;animation:crestReveal 1.55s cubic-bezier(.16,1,.3,1) both;filter:drop-shadow(0 16px 35px rgba(0,0,0,.8))}
+@keyframes crestReveal{0%{opacity:0;transform:translateY(58px) scale(.45) rotate(-8deg);filter:drop-shadow(0 0 0 rgba(237,39,51,0))}55%{opacity:1;transform:translateY(-7px) scale(1.08) rotate(1deg);filter:drop-shadow(0 0 34px rgba(237,39,51,.75))}78%{transform:translateY(2px) scale(.98)}100%{opacity:1;transform:translateY(0) scale(1);filter:drop-shadow(0 16px 35px rgba(0,0,0,.8))}}
+@keyframes haloPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}45%{opacity:.8;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}}
+@keyframes smokeLeft{0%{opacity:0;transform:translate(-8%,12%) scale(.7)}25%{opacity:.42}70%{opacity:.22}100%{opacity:0;transform:translate(12%,-12%) scale(1.35)}}
+@keyframes smokeRight{0%{opacity:0;transform:translate(9%,10%) scale(.75)}25%{opacity:.32}70%{opacity:.18}100%{opacity:0;transform:translate(-12%,-14%) scale(1.4)}}
+@keyframes contentReveal{from{opacity:0;transform:translateY(20px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+.conteudo>.linha,.conteudo>.mini,.conteudo>.titulo,.conteudo>.subtitulo,.conteudo>.frase,.conteudo>.botoes{opacity:1;animation:contentReveal .7s ease-out both}
+.conteudo>.linha{animation-delay:1.25s}.conteudo>.mini{animation-delay:1.4s}.conteudo>.titulo{animation-delay:1.55s}.conteudo>.subtitulo{animation-delay:1.75s}.conteudo>.frase{animation-delay:1.9s}.conteudo>.botoes{animation-delay:2.05s}
+.entrada .crest-halo{position:absolute;left:50%;top:calc(50% - 155px);width:240px;height:240px;border-radius:50%;z-index:3;pointer-events:none;opacity:0;background:radial-gradient(circle,rgba(237,39,51,.30),rgba(181,18,27,.10) 45%,transparent 72%);animation:haloPulse 2.1s ease-out .25s both}
+.entrada .smoke-layer{position:fixed;z-index:2;left:-18%;right:-18%;top:18%;height:64%;pointer-events:none;opacity:0;filter:blur(25px);background:radial-gradient(ellipse at 18% 62%,rgba(230,233,238,.32),rgba(125,132,143,.12) 22%,transparent 46%),radial-gradient(ellipse at 76% 52%,rgba(225,227,232,.28),rgba(115,123,134,.12) 24%,transparent 48%),radial-gradient(ellipse at 50% 80%,rgba(181,18,27,.16),transparent 50%)}
+.entrada .smoke-one{animation:smokeLeft 5.3s ease-out .1s both}.entrada .smoke-two{top:27%;height:55%;filter:blur(34px);background:radial-gradient(ellipse at 28% 55%,rgba(220,224,230,.22),transparent 49%),radial-gradient(ellipse at 80% 64%,rgba(160,166,176,.26),transparent 46%);animation:smokeRight 5.8s ease-out .35s both}
+.kids-home-link{opacity:1;animation:contentReveal .8s ease-out 2.2s both}
+.rodape,.som{opacity:1;animation:contentReveal .7s ease-out 2.35s both}
+@media(max-width:600px){.entrada{justify-content:flex-start;padding:4vh 0 18px}.conteudo{padding:16px 0 8px}.escudo{width:112px;height:112px}.entrada .crest-halo{top:145px;width:185px;height:185px}.entrada .smoke-layer{top:15%;height:55%;filter:blur(20px)}}
+@media(prefers-reduced-motion:reduce){.escudo,.conteudo>.linha,.conteudo>.mini,.conteudo>.titulo,.conteudo>.subtitulo,.conteudo>.frase,.conteudo>.botoes,.kids-home-link,.rodape,.som,.entrada .smoke-layer,.entrada .crest-halo{animation:none!important;opacity:1!important;filter:none!important}}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SportsTeam","name":"Seleção de Baixa Grande","sport":"Futebol","url":"https://selecaobaixagrande.github.io/","logo":"https://selecaobaixagrande.github.io/1000001685.png","description":"Site oficial da Seleção de Baixa Grande, Bahia, com informações sobre futebol de base, jogos, resultados, categorias, elenco e notícias."}</script>
 </head>
