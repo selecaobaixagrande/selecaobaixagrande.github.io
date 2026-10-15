@@ -21,7 +21,7 @@
   `;
   document.head.appendChild(style);
   // Páginas que já possuem menu principal usam o controle existente.
-  const hasExistingMenu = document.querySelector("#menuBtn, .menu-toggle, button.menu, #menu, header nav, .page-nav nav");
+  const hasExistingMenu = document.querySelector("#menuBtn, .menu-toggle, button.menu, #menu");
   if (hasExistingMenu) {
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") {
