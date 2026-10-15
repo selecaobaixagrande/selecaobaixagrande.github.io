@@ -76,7 +76,7 @@ body.home footer strong{color:var(--portal-blue)!important}
 @media(max-width:760px){body.home .header{min-height:66px;padding:8px 13px}body.home .marca h1{font-size:10px;line-height:1.15}body.home .home-hero{min-height:min(620px,76svh);border-radius:0 0 18px 18px}body.home .hero-inner{padding:44px 17px 34px}body.home .hero-crest{width:64px;height:64px}body.home .hero-title{font-size:clamp(42px,12vw,61px);line-height:.92}body.home .hero-copy{font-size:12px;line-height:1.6}body.home .home-content{padding:0 14px}body.home .home-section{padding:38px 0}body.home .section-head{display:flex;align-items:flex-end;gap:10px}body.home .section-head h2{font-size:30px}body.home .section-link{padding:9px;font-size:8px}body.home .result-feature{border-radius:16px;padding:17px 8px;gap:3px}body.home .result-team img{width:52px;height:52px}body.home .result-team strong{font-size:9px}body.home .result-score b{font-size:26px}body.home .feature-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}body.home .feature-card{min-height:148px;padding:15px;border-radius:13px}body.home .feature-card h3{font-size:20px}body.home .news-grid-home{grid-template-columns:1fr;gap:11px}body.home .news-home-card,body.home .news-home-card:first-child{grid-column:auto;min-height:205px;border-radius:14px}body.home .category-showcase{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}body.home .category-showcase a{min-height:132px;border-radius:13px}body.home .next-panel,body.home .info-panel{padding:19px;border-radius:15px}body.home .social-home{padding:21px;border-radius:15px}body.home footer{padding-bottom:94px}.mobile-portal-nav{position:fixed;z-index:1200;left:10px;right:10px;bottom:max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:8px 5px calc(7px + env(safe-area-inset-bottom));border:1px solid #dce7f3;border-radius:17px;background:rgba(255,255,255,.96);box-shadow:0 8px 32px #092d5b24;backdrop-filter:blur(16px)}.mobile-portal-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#64748b;font-size:9px;font-weight:700;line-height:1.1;padding:3px 0}.mobile-portal-nav a span{font-size:19px;line-height:1}.mobile-portal-nav a[aria-current="page"]{color:#1555c0}}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}.home-hero::before{animation:none!important}.mobile-portal-nav{backdrop-filter:none}}
 </style>
-<link rel="stylesheet" href="home-reference.css?v=6">
+<link rel="stylesheet" href="home-reference.css?v=7">
 </head>
 <body class="home">
 <header>
@@ -93,12 +93,12 @@ body.home footer strong{color:var(--portal-blue)!important}
 
 <div class="home-content">
 <section class="quick-links" aria-label="Acesso rápido">
-<a href="jogos.html"><span>⚽</span><strong>JOGOS<br>E RESULTADOS</strong></a>
-<a href="noticias.html"><span>▤</span><strong>NOTÍCIAS</strong></a>
-<a href="elenco.html"><span>♟</span><strong>ATLETAS</strong></a>
-<a href="galeria.html"><span>▧</span><strong>GALERIA</strong></a>
-<a href="jogos.html"><span>▦</span><strong>CALENDÁRIO</strong></a>
-<a href="classificacao.html"><span>🏆</span><strong>CLASSIFICAÇÃO</strong></a>
+<a href="jogos.html"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m12 7 4 3-1.5 5h-5L8 10l4-3Z"/><path d="m8 10-3-1M9.5 15l-2 3M14.5 15l2 3M16 10l3-1M12 7V3"/></svg></span><strong>JOGOS E<br>RESULTADOS</strong></a>
+<a href="noticias.html"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h10l4 4v11H5z"/><path d="M15 4.5v4h4M8 12h8M8 15.5h8"/></svg></span><strong>NOTÍCIAS</strong></a>
+<a href="elenco.html"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19v-1.2a5.5 5.5 0 0 1 11 0V19z"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.5 4.4V19h-4"/></svg></span><strong>ATLETAS</strong></a>
+<a href="galeria.html"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="m4.5 17 5-5 3.5 3 2.5-2 4 4"/></svg></span><strong>GALERIA</strong></a>
+<a href="jogos.html"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="15" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16M8 13h2M13 13h3M8 16.5h2"/></svg></span><strong>CALENDÁRIO</strong></a>
+<a href="classificacao.html"><span class="quick-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4h8v4a4 4 0 0 1-8 0V4Z"/><path d="M8 6H4v2a4 4 0 0 0 4 4M16 6h4v2a4 4 0 0 1-4 4M12 12v5M8 20h8M9 17h6"/></svg></span><strong>CLASSIFICAÇÃO</strong></a>
 </section>
 <form id="homeSearch" class="home-search" role="search"><label for="homeSearchInput">Buscar no portal</label><input id="homeSearchInput" type="search" placeholder="Buscar notícias, jogos e atletas…"><button type="submit">Buscar</button></form>
 
