@@ -86,3 +86,31 @@ body:not(.home) input,body:not(.home) textarea,body:not(.home) select{max-width:
  body:not(.home) section{padding:42px 15px!important}
  body:not(.home) .card{border-radius:15px!important}
 }
+
+
+/* Interações globais — navegação, botões e animações acessíveis */
+:root{--sb-motion:cubic-bezier(.2,.7,.2,1);--sb-focus:#f23845}
+a,button,[role="button"],input[type="submit"]{ -webkit-tap-highlight-color:transparent }
+a:focus-visible,button:focus-visible,[role="button"]:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--sb-focus)!important;outline-offset:3px!important}
+button:not(:disabled),input[type="submit"]:not(:disabled),[role="button"]{cursor:pointer}
+button:disabled,input:disabled{cursor:not-allowed;opacity:.62}
+a,button,.btn,.botao,.noticia-btn,.category-content a,.card,.agenda-card,.news-home-card,.feature-card,.social-home,.central-card,.category-card,.jogo,.destaque{transition:color .2s var(--sb-motion),background-color .2s var(--sb-motion),border-color .2s var(--sb-motion),box-shadow .25s var(--sb-motion),transform .25s var(--sb-motion),filter .2s var(--sb-motion)}
+button:not(:disabled):active,.btn:active,.botao:active,.noticia-btn:active,.category-content a:active{transform:translateY(1px) scale(.985)}
+@keyframes sbMenuIn{from{opacity:0;transform:translateY(-7px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes sbCardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sbSoftPulse{0%,100%{box-shadow:0 8px 24px rgba(197,22,37,.12)}50%{box-shadow:0 12px 32px rgba(197,22,37,.22)}}
+@media(min-width:761px){
+ .header nav a:hover,.page-nav nav a:hover{transform:translateY(-2px)}
+ .card:hover,.agenda-card:hover,.news-home-card:hover,.feature-card:hover,.central-card:hover,.jogo:hover,.destaque:hover{transform:translateY(-4px)}
+}
+@media(max-width:760px){
+ .header>#menuBtn,.header>.menu-toggle,.page-nav .menu-toggle{min-height:42px;min-width:44px;touch-action:manipulation}
+ .header nav.menu-open,.page-nav nav.open{animation:sbMenuIn .2s var(--sb-motion) both;transform-origin:top right}
+ .header nav.menu-open a,.page-nav nav.open a{animation:sbCardIn .22s var(--sb-motion) both}
+ .header nav.menu-open a:nth-child(2),.page-nav nav.open a:nth-child(2){animation-delay:20ms}
+ .header nav.menu-open a:nth-child(3),.page-nav nav.open a:nth-child(3){animation-delay:35ms}
+ .header nav.menu-open a:nth-child(4),.page-nav nav.open a:nth-child(4){animation-delay:50ms}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
