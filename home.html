@@ -133,5 +133,5 @@ if(!reduceMotion&&'IntersectionObserver' in window){const revealObserver=new Int
 if(menuBtn&&nav){menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');menuBtn.setAttribute('aria-expanded',String(open));menuBtn.setAttribute('aria-label',open?'Fechar menu':'Abrir menu')});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('menu-open');menuBtn.setAttribute('aria-expanded','false');menuBtn.setAttribute('aria-label','Abrir menu')}));document.addEventListener('click',e=>{if(window.innerWidth<=760&&!nav.contains(e.target)&&!menuBtn.contains(e.target)){nav.classList.remove('menu-open');menuBtn.setAttribute('aria-expanded','false')}})}
 </script>
 <nav class="mobile-portal-nav" aria-label="Navegação rápida no celular"><a href="home.html" aria-current="page"><span>⌂</span>Início</a><a href="noticias.html"><span>▤</span>Notícias</a><a href="jogos.html"><span>⚽</span>Jogos</a><a href="galeria.html"><span>▧</span>Galeria</a><a href="#nav" onclick="document.getElementById('menuBtn')?.click();return false"><span>☰</span>Menu</a></nav>
-</body>
+<script src="site-interactions.js" defer></script></body>
 </html>
