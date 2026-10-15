@@ -40,3 +40,10 @@ body:not(.home) img{max-width:100%}
  body:not(.home) .fotos-arthur img{height:auto!important;max-height:440px}
  body:not(.home) footer{padding-bottom:90px!important}
 }
+
+/* Contraste corrigido: cartões claros e placares legíveis */
+body:not(.home) .card,body:not(.home) .agenda-card,body:not(.home) .match-empty,body:not(.home) .noticia-arthur,body:not(.home) .feature-card,body:not(.home) .info-panel,body:not(.home) .next-panel{background:#fff!important;background-image:none!important;border:1px solid #dce7f3!important;color:#092d5b!important;box-shadow:0 8px 24px rgba(18,54,109,.09)!important}
+body:not(.home) .card h1,body:not(.home) .card h2,body:not(.home) .card h3,body:not(.home) .card h4,body:not(.home) .agenda-card h1,body:not(.home) .agenda-card h2,body:not(.home) .agenda-card h3,body:not(.home) .feature-card h2,body:not(.home) .feature-card h3{color:#12366d!important}
+body:not(.home) .card p,body:not(.home) .card small,body:not(.home) .agenda-card p,body:not(.home) .feature-card p,body:not(.home) .info-panel p,body:not(.home) .next-panel p{color:#60748b!important}
+body:not(.home) .card .icone,body:not(.home) .card strong{color:#12366d!important}
+@media(max-width:760px){body:not(.home) .card,body:not(.home) .agenda-card{border-radius:18px!important}body:not(.home) .card{padding:20px!important}}
