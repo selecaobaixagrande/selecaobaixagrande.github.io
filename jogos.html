@@ -36,4 +36,4 @@ function render(jogos){const lista=Array.isArray(jogos)?jogos:[];if(!lista.lengt
 async function carregar(){try{const r=await sb.from('jogos').select('*').eq('status','agendado').order('data_jogo',{ascending:true}).order('horario',{ascending:true});if(r.error)throw r.error;render(r.data||[])}catch(e){console.error('Erro ao carregar agenda:',e);render([])}}carregar();
 const menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('nav');menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('menu-open');menuBtn.setAttribute('aria-expanded',String(open));menuBtn.setAttribute('aria-label',open?'Fechar menu':'Abrir menu')});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('menu-open');menuBtn.setAttribute('aria-expanded','false')}));
 </script><script src="click-sound.js"></script>
-</body></html>
+<script src="site-interactions.js" defer></script></body></html>
