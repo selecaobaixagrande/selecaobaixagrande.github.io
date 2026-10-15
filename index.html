@@ -102,5 +102,5 @@ body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
 </main>
 <script src="click-sound.js"></script>
 <script>const musica=document.getElementById('musica'),som=document.getElementById('som');som.addEventListener('click',()=>{if(musica.paused){musica.volume=.4;musica.play().then(()=>som.textContent='🔊').catch(()=>{})}else{musica.pause();som.textContent='🔇'}});</script>
-</body>
+<script src="site-interactions.js" defer></script></body>
 </html>
