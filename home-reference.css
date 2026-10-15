@@ -317,3 +317,45 @@ body.home .social-home{min-height:90px!important}
  body.home #searchToggle{flex-basis:32px!important;width:32px!important;height:36px!important;font-size:25px!important}
  body.home #menuBtn{flex-basis:32px!important;width:32px!important;height:36px!important;font-size:22px!important}
 }
+
+
+/* Atalhos profissionais: ícones vetoriais consistentes e tipografia legível */
+body.home .quick-links{
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ gap:10px!important;margin:18px 0 8px!important;padding:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important
+}
+body.home .quick-links a{
+ min-width:0!important;min-height:104px!important;padding:16px 8px!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+ gap:11px!important;text-align:center!important;text-decoration:none!important;
+ border:1px solid #e0e8f2!important;border-radius:14px!important;background:#fff!important;
+ color:#12366d!important;box-shadow:0 5px 18px rgba(18,54,109,.055)!important;
+ transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important
+}
+body.home .quick-links a:hover{transform:translateY(-3px)!important;border-color:#b7cce5!important;box-shadow:0 10px 24px rgba(18,54,109,.11)!important}
+body.home .quick-links a .quick-icon{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:42px!important;height:42px!important;flex:0 0 42px!important;
+ border-radius:12px!important;background:#edf4fc!important;color:#12366d!important
+}
+body.home .quick-links a .quick-icon svg{
+ display:block!important;width:23px!important;height:23px!important;fill:none!important;
+ stroke:currentColor!important;stroke-width:1.7!important;stroke-linecap:round!important;stroke-linejoin:round!important
+}
+body.home .quick-links a:nth-child(2) .quick-icon,body.home .quick-links a:nth-child(5) .quick-icon{background:#fff2f2!important;color:#d92736!important}
+body.home .quick-links a:nth-child(6) .quick-icon{background:#fff8df!important;color:#9b7100!important}
+body.home .quick-links a strong{
+ display:block!important;max-width:100%!important;color:#12366d!important;
+ font-family:Arial,sans-serif!important;font-size:10px!important;font-weight:800!important;
+ line-height:1.25!important;letter-spacing:.45px!important;text-transform:uppercase!important
+}
+@media(max-width:760px){
+ body.home .quick-links{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin:12px 0 6px!important}
+ body.home .quick-links a{min-height:94px!important;padding:12px 5px!important;gap:8px!important;border-radius:12px!important}
+ body.home .quick-links a .quick-icon{width:36px!important;height:36px!important;flex-basis:36px!important;border-radius:10px!important}
+ body.home .quick-links a .quick-icon svg{width:21px!important;height:21px!important}
+ body.home .quick-links a strong{font-size:9px!important;letter-spacing:.35px!important}
+}
+@media(max-width:360px){body.home .quick-links{gap:6px!important}body.home .quick-links a strong{font-size:8px!important}}
+@media(prefers-reduced-motion:reduce){body.home .quick-links a{transition:none!important}}
