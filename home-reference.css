@@ -275,3 +275,45 @@ body.home .copyright{color:#d3e0f2!important}
 body.home .hero-dots button{width:9px;height:9px;border:0;border-radius:50%;padding:0;background:#ffffff80;cursor:pointer;transition:all .2s}
 body.home .hero-dots button.active{width:11px;height:11px;background:#fff;box-shadow:0 0 0 3px #ffffff28}
 @media(max-width:760px){body.home #menuBtn{display:inline-flex!important}}
+
+
+/* Ajuste de fidelidade à referência enviada — cabeçalho, hero e fluxo mobile */
+body.home .header{display:flex!important;align-items:center!important}
+body.home .marca{display:flex!important;align-items:center!important;flex:1 1 auto!important}
+body.home .marca-text{display:flex;flex-direction:column;min-width:0;gap:2px}
+body.home .marca h1{margin:0!important}
+body.home .marca-tagline{display:block!important;color:#496585!important;font-size:9px!important;font-weight:700!important;letter-spacing:.65px!important;line-height:1.15!important}
+body.home .home-hero{height:280px!important;min-height:280px!important;max-height:none!important;align-items:center!important;border-radius:0!important}
+body.home .home-hero:before{background:linear-gradient(90deg,rgba(4,31,72,.86) 0%,rgba(4,31,72,.58) 48%,rgba(4,31,72,.12) 100%),linear-gradient(0deg,rgba(3,25,61,.38),transparent 70%),url('IMG_20260825_154603.jpg') center 38%/cover no-repeat!important;filter:saturate(1.12)!important}
+body.home .hero-inner{padding-top:20px!important;padding-bottom:20px!important}
+body.home .hero-kicker{display:none!important}
+body.home .hero-title{max-width:440px!important;font-size:clamp(35px,8.7vw,52px)!important;line-height:.92!important;margin:0 0 8px!important}
+body.home .hero-copy{max-width:300px!important;font-size:11px!important;margin:8px 0 0!important;text-transform:uppercase!important;font-weight:800!important}
+body.home .hero-actions{margin-top:13px!important}
+body.home .hero-actions a{min-height:35px!important}
+body.home .hero-dots{justify-content:center!important;margin-top:15px!important}
+body.home .quick-links{border-radius:0 0 13px 13px!important}
+body.home .latest-news{padding-top:20px!important}
+body.home .section-head h2{font-family:Arial,sans-serif!important}
+body.home .news-home-content time{white-space:nowrap!important}
+body.home .next-game{margin-bottom:4px!important}
+body.home .social-home{min-height:90px!important}
+@media(min-width:761px){
+ body.home .home-hero{height:390px!important;min-height:390px!important}
+ body.home .hero-title{font-size:clamp(48px,5vw,68px)!important}
+ body.home .hero-inner{padding-left:5vw!important}
+}
+@media(max-width:760px){
+ body.home .header{gap:7px!important}
+ body.home .marca{gap:8px!important}
+ body.home .logo-header{width:46px!important;height:46px!important}
+ body.home .marca h1{font-size:10px!important;line-height:1.05!important}
+ body.home .marca span{font-size:17px!important;line-height:1.02!important}
+ body.home .marca-tagline{font-size:7px!important;letter-spacing:.35px!important;margin-top:2px!important}
+ body.home .home-hero{height:280px!important;min-height:280px!important}
+ body.home .hero-title{font-size:clamp(32px,8.8vw,44px)!important;max-width:270px!important}
+ body.home .hero-copy{max-width:260px!important;font-size:9px!important}
+ body.home .hero-actions a{align-self:flex-start!important;width:auto!important;min-width:0!important;padding:9px 13px!important}
+ body.home #searchToggle{flex-basis:32px!important;width:32px!important;height:36px!important;font-size:25px!important}
+ body.home #menuBtn{flex-basis:32px!important;width:32px!important;height:36px!important;font-size:22px!important}
+}
