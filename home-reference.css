@@ -359,3 +359,9 @@ body.home .quick-links a strong{
 }
 @media(max-width:360px){body.home .quick-links{gap:6px!important}body.home .quick-links a strong{font-size:8px!important}}
 @media(prefers-reduced-motion:reduce){body.home .quick-links a{transition:none!important}}
+
+
+/* Evita duplicidade do botão Menu no celular: o acesso fica na navegação inferior */
+@media(max-width:760px){
+ body.home #menuBtn{display:none!important}
+}
