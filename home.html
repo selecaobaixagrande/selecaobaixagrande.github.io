@@ -89,7 +89,7 @@ body.home footer strong{color:var(--portal-blue)!important}
   </div>
 </header>
 <main>
-<section class="home-hero" aria-label="Destaque da Seleção"><div class="hero-inner"><span class="hero-kicker">TRADIÇÃO • UNIÃO • FUTEBOL</span><h1 id="hero-title" class="hero-title">JUNTOS SOMOS<br><span>MAIS FORTES</span></h1><p class="hero-copy">Nossa força vem da nossa gente. Juntos somos mais fortes!</p><div class="hero-actions"><a class="hero-primary" href="elenco.html">Conheça a Seleção →</a></div><div class="hero-dots" aria-label="Destaque 1 de 1"><span class="active"></span><span></span><span></span><span></span></div></div></section>
+<section class="home-hero" aria-label="Destaque da Seleção"><div class="hero-inner"><span class="hero-kicker">TRADIÇÃO • UNIÃO • FUTEBOL</span><h1 id="hero-title" class="hero-title">JUNTOS SOMOS<br><span>MAIS FORTES</span></h1><p class="hero-copy">Nossa força vem da nossa gente. Juntos somos mais fortes!</p><div class="hero-actions"><a class="hero-primary" href="elenco.html">Conheça a Seleção →</a></div><div class="hero-dots" aria-label="Escolher destaque"><button type="button" class="active" aria-label="Destaque 1" aria-pressed="true"></button><button type="button" aria-label="Destaque 2" aria-pressed="false"></button><button type="button" aria-label="Destaque 3" aria-pressed="false"></button></div></div></section>
 
 <div class="home-content">
 <section class="quick-links" aria-label="Acesso rápido">
@@ -117,6 +117,15 @@ body.home footer strong{color:var(--portal-blue)!important}
 <script src="click-sound.js"></script>
 <script>
 const menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('nav'),searchToggle=document.getElementById('searchToggle'),searchForm=document.getElementById('homeSearch'),searchInput=document.getElementById('homeSearchInput');
+const heroTitle=document.getElementById('hero-title'),heroCopy=document.querySelector('.hero-copy'),heroDots=[...document.querySelectorAll('.hero-dots button')];
+const heroSlides=[
+{title:'JUNTOS SOMOS<br><span>MAIS FORTES</span>',copy:'Nossa força vem da nossa gente. Juntos somos mais fortes!'},
+{title:'ORGULHO DE SER<br><span>BAIXAGRANDENSE</span>',copy:'Uma cidade, uma camisa e uma paixão que nos une.'},
+{title:'TRADIÇÃO, UNIÃO<br><span>E FUTEBOL</span>',copy:'Acompanhe a história, os jogos e os talentos da nossa Seleção.'}
+];
+function setHeroSlide(index){if(!heroTitle||!heroCopy)return;const slide=heroSlides[index];heroTitle.innerHTML=slide.title;heroCopy.textContent=slide.copy;heroDots.forEach((dot,i)=>{dot.classList.toggle('active',i===index);dot.setAttribute('aria-pressed',String(i===index))})}
+heroDots.forEach((dot,index)=>dot.addEventListener('click',()=>setHeroSlide(index)));
+
 if(searchToggle&&searchForm){searchToggle.addEventListener('click',()=>{const open=searchForm.classList.toggle('is-open');searchToggle.setAttribute('aria-expanded',String(open));if(open)searchInput?.focus()});searchForm.addEventListener('submit',e=>{e.preventDefault();const q=(searchInput?.value||'').trim().toLocaleLowerCase('pt-BR');document.querySelectorAll('#homeNewsList .news-home-card').forEach(card=>{card.hidden=!!q&&!card.innerText.toLocaleLowerCase('pt-BR').includes(q)});if(q)document.querySelector('#noticias-title')?.scrollIntoView({behavior:'smooth',block:'start'})})}
 const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealSections=document.querySelectorAll('.home-section');
