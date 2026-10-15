@@ -1,0 +1,42 @@
+/* Sistema visual unificado do portal oficial */
+:root{--sb-blue:#12366d;--sb-red:#e52535;--sb-gold:#f5c928;--sb-ink:#092d5b;--sb-muted:#60748b;--sb-line:#dce7f3}
+*{box-sizing:border-box}
+body:not(.home){background:#f5f8fc!important;color:var(--sb-ink)!important;font-family:Inter,Arial,sans-serif!important}
+body:not(.home)>header,body:not(.home) header{background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--sb-line)!important;box-shadow:0 5px 22px #12366d0c!important}
+body:not(.home) .header{max-width:1240px!important;min-height:76px!important;padding:8px 16px}
+body:not(.home) .marca,body:not(.home) .marca h1{color:var(--sb-blue)!important;text-decoration:none}
+body:not(.home) .logo-header{width:48px;height:48px;object-fit:contain}
+body:not(.home) .marca span{color:var(--sb-red)!important}
+body:not(.home) nav a{color:#4c6280!important;border-radius:8px;text-decoration:none}
+body:not(.home) nav a:hover,body:not(.home) nav a.ativo{background:#eef5fc!important;color:var(--sb-blue)!important}
+body:not(.home) #menuBtn,body:not(.home) .menu{background:#f3f7fc!important;border:1px solid #d5e2f1!important;color:var(--sb-blue)!important;border-radius:9px}
+body:not(.home) .banner-pagina,body:not(.home) .hero{background:linear-gradient(120deg,#12366d,#0a2854)!important;color:white!important}
+body:not(.home) .banner-pagina h2,body:not(.home) .banner-pagina p,body:not(.home) .hero h1,body:not(.home) .hero p{color:white!important}
+body:not(.home) main,body:not(.home) section,body:not(.home) .wrap{color:var(--sb-ink)}
+body:not(.home) h1,body:not(.home) h2,body:not(.home) h3,body:not(.home) .titulo h2{color:var(--sb-blue)}
+body:not(.home) p{line-height:1.65}
+body:not(.home) .card,body:not(.home) .agenda-card,body:not(.home) .match-empty,body:not(.home) .noticia-arthur,body:not(.home) .jogo,body:not(.home) .destaque{border-radius:15px!important}
+body:not(.home) .card,body:not(.home) .agenda-card,body:not(.home) .match-empty,body:not(.home) .noticia-arthur{background:#fff!important;border:1px solid var(--sb-line)!important;box-shadow:0 8px 24px #12366d0c!important;color:var(--sb-ink)!important}
+body:not(.home) .card h3,body:not(.home) .agenda-card h3,body:not(.home) .noticia-corpo h2{color:var(--sb-blue)!important}
+body:not(.home) .card p,body:not(.home) .agenda-card p,body:not(.home) .noticia-corpo p{color:var(--sb-muted)!important}
+body:not(.home) .jogo,body:not(.home) .destaque{background:linear-gradient(120deg,#12366d,#0a2854)!important;color:white!important}
+body:not(.home) .jogo h2,body:not(.home) .jogo h3,body:not(.home) .jogo p,body:not(.home) .destaque h2,body:not(.home) .destaque p{color:white!important}
+body:not(.home) .btn,body:not(.home) .botao-vermelho,body:not(.home) .noticia-btn,body:not(.home) .category-content a{background:var(--sb-red)!important;border-color:var(--sb-red)!important;color:white!important;border-radius:9px!important}
+body:not(.home) footer{background:#fff!important;border-top:1px solid var(--sb-line)!important;color:var(--sb-muted)!important}
+body:not(.home) footer strong{color:var(--sb-blue)!important}
+body:not(.home) img{max-width:100%}
+@media(max-width:760px){
+ body:not(.home){padding-bottom:86px!important}
+ body:not(.home) .header{min-height:66px!important;padding:8px 12px!important}
+ body:not(.home) .logo-header{width:43px;height:43px}
+ body:not(.home) .marca h1{font-size:11px!important;line-height:1.15}
+ body:not(.home) .header nav,body:not(.home) .nav{display:none;position:absolute;top:calc(100% + 5px);right:10px;z-index:2000;flex-direction:column;align-items:stretch;width:min(240px,85vw);padding:8px;background:white!important;border:1px solid var(--sb-line);border-radius:12px;box-shadow:0 14px 35px #12366d25}
+ body:not(.home) .header nav.menu-open,body:not(.home) .nav.menu-open{display:flex!important}
+ body:not(.home) .header nav a{padding:12px!important}
+ body:not(.home) .banner-pagina{padding:42px 18px!important}
+ body:not(.home) section{padding:26px 14px!important}
+ body:not(.home) .grid,body:not(.home) .grid-3{grid-template-columns:1fr!important}
+ body:not(.home) .fotos-arthur{grid-template-columns:1fr!important}
+ body:not(.home) .fotos-arthur img{height:auto!important;max-height:440px}
+ body:not(.home) footer{padding-bottom:90px!important}
+}
