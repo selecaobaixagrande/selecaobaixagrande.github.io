@@ -45,3 +45,45 @@ footer strong{letter-spacing:1px}
 @media(min-width:1100px){.home .hero-inner{padding-top:108px;padding-bottom:90px}.home .hero-copy{font-size:15px;line-height:1.85}.home .home-section{padding-top:82px;padding-bottom:82px}}
 @media(max-width:760px){.header{min-height:66px!important}.logo-header{width:40px;height:40px}.marca h1{font-size:10px}#menuBtn,.menu-toggle{border-color:rgba(255,255,255,.15)!important;background:#151619!important}.header nav,.page-nav nav{border-color:rgba(255,255,255,.12)!important;background:rgba(8,9,10,.98)!important}.banner-pagina{padding-top:64px!important;padding-bottom:48px!important}.home .hero-title{letter-spacing:-2.8px}.home .hero-inner{padding-bottom:44px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+
+/* Portal claro e consistente nas páginas internas — outubro/2026 */
+:root{--portal-blue:#12366d;--portal-red:#e52535;--portal-gold:#f5c928;--portal-ink:#092d5b;--portal-muted:#60748b;--portal-line:#dce7f3}
+body:not(.home){background:#f5f8fc!important;color:var(--portal-ink)!important}
+body:not(.home):before{background:radial-gradient(circle at 85% 0,#12366d0a,transparent 30%),radial-gradient(circle at 5% 45%,#e5253508,transparent 25%)!important}
+body:not(.home)>header,body:not(.home) header,body:not(.home) .page-nav{background:rgba(255,255,255,.96)!important;border-bottom:1px solid var(--portal-line)!important;box-shadow:0 5px 22px #12366d0b!important}
+body:not(.home) .marca h1{color:var(--portal-blue)!important}
+body:not(.home) .marca span{color:var(--portal-red)!important}
+body:not(.home) .logo-header{filter:none!important}
+body:not(.home) nav a,body:not(.home) .page-nav nav a{color:#4c6280!important}
+body:not(.home) nav a:hover,body:not(.home) .page-nav nav a:hover{background:#eef5fc!important;color:var(--portal-blue)!important}
+body:not(.home) nav a.ativo,body:not(.home) .page-nav nav a.ativo{color:var(--portal-blue)!important}
+body:not(.home) #menuBtn,body:not(.home) .menu-toggle{background:#f3f7fc!important;border-color:#d5e2f1!important;color:var(--portal-blue)!important}
+body:not(.home) .banner-pagina{background:linear-gradient(120deg,#12366d,#0a2854 75%)!important;border-color:#dce7f3!important}
+body:not(.home) .banner-pagina h2{color:#fff!important}
+body:not(.home) .banner-pagina p{color:#dce9f8!important}
+body:not(.home) section{color:var(--portal-ink)}
+body:not(.home) .titulo h2,body:not(.home) section h2,body:not(.home) section h3{color:var(--portal-blue)}
+body:not(.home) .titulo small,body:not(.home) .category-number{color:var(--portal-red)!important}
+body:not(.home) .titulo p,body:not(.home) section p{color:var(--portal-muted)}
+body:not(.home) .card,body:not(.home) .agenda-card,body:not(.home) .match-empty{background:#fff!important;border-color:var(--portal-line)!important;box-shadow:0 8px 24px #12366d0c!important;color:var(--portal-ink)!important}
+body:not(.home) .card:before{background:linear-gradient(90deg,transparent,var(--portal-red),transparent)!important}
+body:not(.home) .card h3,body:not(.home) .agenda-card h3{color:var(--portal-blue)!important}
+body:not(.home) .card p,body:not(.home) .agenda-card p{color:var(--portal-muted)!important}
+body:not(.home) .jogo{background:linear-gradient(125deg,#12366d,#0a2854)!important;border-color:#244d83!important}
+body:not(.home) .jogo .time,body:not(.home) .jogo .vs{color:#fff!important}
+body:not(.home) .jogo .info-jogo{border-color:#ffffff30!important;color:#e0eafb!important}
+body:not(.home) .destaque{background:linear-gradient(125deg,#12366d,#0a2854)!important;border-color:#244d83!important}
+body:not(.home) .destaque h2,body:not(.home) .destaque p{color:#fff!important}
+body:not(.home) .botao-vermelho,body:not(.home) .btn,body:not(.home) .category-content a{background:var(--portal-red)!important;border-color:var(--portal-red)!important}
+body:not(.home) footer{background:#fff!important;border-top:1px solid var(--portal-line)!important;color:var(--portal-muted)!important}
+body:not(.home) footer strong{color:var(--portal-blue)!important}
+body:not(.home) input,body:not(.home) textarea,body:not(.home) select{max-width:100%}
+@media(max-width:760px){
+ body:not(.home) .header{min-height:66px!important}
+ body:not(.home) .header nav,body:not(.home) .page-nav nav{background:#fff!important;border-color:var(--portal-line)!important;box-shadow:0 20px 50px #12366d20!important}
+ body:not(.home) .header nav a.ativo,body:not(.home) .page-nav nav a.ativo{background:#eaf3ff!important}
+ body:not(.home) .banner-pagina{padding-top:60px!important;padding-bottom:45px!important}
+ body:not(.home) section{padding:42px 15px!important}
+ body:not(.home) .card{border-radius:15px!important}
+}
