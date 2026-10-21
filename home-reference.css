@@ -372,3 +372,23 @@ body.home .quick-links a strong{
 .news-home-placeholder svg{width:54px;height:54px;opacity:.8}
 .news-home-placeholder span{font-size:12px;text-transform:uppercase}
 @media(max-width:600px){.news-home-placeholder{min-height:150px}}
+
+/* Paleta pedida conforme a captura: fundo cinza-claro, cartões brancos,
+   azul-marinho nos textos e vermelho nos detalhes. */
+body.home{background:#f1f4f9!important;color:#183765!important}
+body.home main,body.home .home-content{background:#f1f4f9!important;color:#183765!important}
+body.home .home-section{background:#fff!important;color:#183765!important}
+body.home>header,body.home .header{background:#fff!important;color:#183765!important;border-color:#dce4ef!important}
+body.home .marca h1,body.home .marca span,body.home .marca-tagline{color:#183765!important}
+body.home .quick-links{background:transparent!important}
+body.home .quick-links a,body.home .feature-card,body.home .news-home-card,body.home .result-feature,body.home .next-panel,body.home .info-panel,body.home .social-home{background:#fff!important;color:#183765!important;border:1px solid #dce4ef!important;box-shadow:0 4px 16px rgba(19,49,91,.06)!important}
+body.home .quick-links a strong,body.home .feature-card h3,body.home .news-home-content h3,body.home .news-home-card h3,body.home .section-head h2,body.home .home-section h2,body.home .result-team strong,body.home .result-score b,body.home .next-panel h3,body.home .info-panel h3{color:#183765!important}
+body.home .quick-links a .quick-icon{background:#edf3fc!important;color:#183765!important}
+body.home .quick-links a:nth-child(2) .quick-icon,body.home .quick-links a:nth-child(5) .quick-icon{background:#fff0f1!important;color:#cf2338!important}
+body.home .quick-links a:nth-child(6) .quick-icon{background:#fff7df!important;color:#927000!important}
+body.home .section-head h2{border-left-color:#cf2338!important}
+body.home .section-kicker,body.home .news-home-content small,body.home .next-panel .eyebrow{color:#cf2338!important}
+body.home .section-link,body.home .home-section a{color:#183765!important}
+body.home .home-hero{background:#183765!important}
+body.home .hero-title span{color:#f5c928!important}
+@media(max-width:760px){body.home,body.home main,body.home .home-content{background:#f1f4f9!important}body.home .home-section{background:#fff!important}}
