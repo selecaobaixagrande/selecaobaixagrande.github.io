@@ -424,3 +424,25 @@ body.home footer{background:#e8eef6!important;color:#5f7087!important;border-top
 body.home footer strong{color:var(--portal-blue)!important}
 body.home .mobile-portal-nav{background:rgba(255,255,255,.97)!important;border-color:var(--portal-line)!important}
 body.home .mobile-portal-nav a[aria-current="page"]{color:var(--portal-red)!important}
+
+
+/* PALETA OFICIAL: PRETO + VERMELHO — substitui superfícies brancas da página inicial */
+:root{--portal-blue:#17171b;--portal-red:#d21f35;--portal-gold:#d8a91e;--portal-ink:#f5f5f7;--portal-muted:#b8b8c2;--portal-line:#38383f;--portal-bg:#101014}
+body.home{background:#101014!important;color:#f5f5f7!important}
+body.home main,body.home .home-main,body.home .page-content{background:#101014!important;color:#f5f5f7!important}
+body.home header,body.home .site-header,body.home .topbar,body.home .main-header{background:#141418!important;color:#fff!important;border-color:#34343b!important}
+body.home h1,body.home h2,body.home h3,body.home h4,body.home .section-head h2,body.home .feature-card h3,body.home .news-home-content h3,body.home .result-feature h3,body.home .info-panel h3{color:#fff!important}
+body.home .quick-links a,body.home .feature-card,body.home .news-home-card,body.home .result-feature,body.home .next-panel,body.home .info-panel,body.home .social-home{background:#1b1b21!important;color:#f5f5f7!important;border:1px solid #37373f!important;box-shadow:0 8px 22px rgba(0,0,0,.28)!important}
+body.home .quick-links a .quick-icon{background:#29292f!important;color:#fff!important}
+body.home .quick-links a:nth-child(2) .quick-icon,body.home .quick-links a:nth-child(5) .quick-icon{background:#481a24!important;color:#ff5266!important}
+body.home .quick-links a:nth-child(6) .quick-icon,body.home .social-home a{background:#302714!important;color:#f0c84b!important}
+body.home .feature-card p,body.home .news-home-content p,body.home .next-panel p,body.home .info-panel p,body.home .result-meta,body.home .feature-card small,body.home .feature-card span{color:#c4c4cd!important}
+body.home .section-kicker,body.home .section-link,body.home .news-home-content small,body.home .next-panel .eyebrow,body.home .result-score span{color:#ff4359!important}
+body.home .result-meta,body.home .info-item{border-color:#38383f!important}
+body.home .info-item strong,body.home footer strong{color:#fff!important}
+body.home footer{background:#0b0b0e!important;color:#c4c4cd!important;border-top:1px solid #38383f!important}
+body.home .mobile-portal-nav{background:rgba(20,20,24,.97)!important;border-color:#38383f!important;color:#fff!important;box-shadow:0 -5px 20px rgba(0,0,0,.35)!important}
+body.home .mobile-portal-nav a{color:#e3e3e8!important}
+body.home .mobile-portal-nav a[aria-current="page"]{color:#ff4359!important}
+body.home .section-head h2{border-left-color:#d21f35!important}
+body.home a{transition:color .2s ease,background-color .2s ease,border-color .2s ease}
