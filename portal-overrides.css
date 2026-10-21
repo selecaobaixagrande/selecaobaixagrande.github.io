@@ -155,3 +155,6 @@ body.home header, body.home .header {
 .home .mobile-portal-nav a[aria-current="page"] {background:#edf3fc !important;color:#173765 !important}
 .home .mobile-portal-nav a[aria-current="page"] .nav-icon {color:#c91f35 !important}
 @media(max-width:760px){body.home {padding-bottom:calc(82px + env(safe-area-inset-bottom)) !important}}
+
+/* Remoção explícita da barra inferior na página inicial */
+body.home .mobile-portal-nav, body.home nav[aria-label="Navegação rápida no celular"] {display:none!important;visibility:hidden!important;pointer-events:none!important}
