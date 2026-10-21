@@ -1,5 +1,6 @@
 /* Navegação móvel profissional e consistente em todas as páginas públicas */
 (() => {
+  if (document.body && document.body.classList.contains("home")) return;
   const pages = [
     {label:"Início",url:"home.html",icon:"home"},
     {label:"Notícias",url:"noticias.html",icon:"news"},
