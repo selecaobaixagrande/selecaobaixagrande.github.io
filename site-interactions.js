@@ -48,7 +48,9 @@
   // Replace a versão antiga da barra na HOME e desenhar a mesma navegação em cada página pública.
   document.querySelectorAll(".mobile-portal-nav").forEach(el=>el.remove());
   const current = (location.pathname.split("/").pop() || "index.html").toLowerCase();
-  const currentPage = current === "index.html" ? "home.html" : current;
+  // A tela de entrada (index.html) não deve exibir a barra inferior do portal.
+  if (current === "index.html" || current === "") return;
+  const currentPage = current;
   const bar = document.createElement("nav");
   bar.className = "mobile-portal-nav";
   bar.setAttribute("aria-label","Navegação principal");
