@@ -37,8 +37,10 @@ self.addEventListener('fetch', event => {
       const NAV_SCRIPT = `
 (function(){
   if(!/\\.html$/.test(location.pathname) && location.pathname!=='/') return;
+  var current=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  // A barra inferior aparece apenas dentro do portal, nunca na tela de entrada.
+  if(current==='index.html' || location.pathname==='/') return;
   if(document.querySelector('.mobile-portal-nav')) return;
-  var current=(location.pathname.split('/').pop()||'home.html').toLowerCase();
   var links=[
     ['home.html','⌂','Início'],
     ['noticias.html','▤','Notícias'],
