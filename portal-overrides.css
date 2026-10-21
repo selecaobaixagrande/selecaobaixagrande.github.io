@@ -116,45 +116,42 @@ button:not(:disabled):active,.btn:active,.botao:active,.noticia-btn:active,.cate
 }
 
 
-/* Identidade visual da página inicial: azul-marinho, vermelho e dourado */
+
+/* Paleta correta da home: branco/cinza claro, azul-marinho e vermelho */
 body.home, .home, body.home main, .home-content {
-  background-color:#06142b !important;
-  color:#f5f7fc !important;
+  background:#f3f6fb !important;
+  color:#173765 !important;
 }
 body.home, body.home main {
-  background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(12,74,145,.28), transparent 42%),
-    linear-gradient(180deg,#071a38 0%,#06142b 56%,#030b19 100%) !important;
+  background-image:linear-gradient(180deg,#f7f9fc 0%,#eef2f8 100%) !important;
 }
 body.home header, body.home .header {
-  background:linear-gradient(110deg,#06142b,#092550 60%,#06142b) !important;
-  border-bottom:1px solid rgba(226,177,62,.32) !important;
+  background:#ffffff !important;
+  border-bottom:1px solid #dfe6f0 !important;
+  box-shadow:0 4px 18px rgba(23,55,101,.07) !important;
 }
-.home .home-section, .home .home-content {background:transparent !important;color:#f5f7fc !important}
-.home .section-head h2 {color:#fff !important}
-.home .section-kicker, .home .section-link {color:#f0bd45 !important}
+.home .home-section, .home .home-content {background:transparent !important;color:#173765 !important}
+.home .section-head h2 {color:#173765 !important}
+.home .section-kicker, .home .section-link {color:#173765 !important}
 .home .feature-card, .home .news-home-card, .home .next-panel, .home .info-panel,
 .home .result-feature, .home .social-home, .home .home-section .card {
-  background:linear-gradient(145deg,rgba(9,35,75,.98),rgba(4,17,39,.99)) !important;
-  border:1px solid rgba(63,139,220,.48) !important;
-  color:#f5f7fc !important;
-  box-shadow:0 12px 30px rgba(0,0,0,.22) !important;
+  background:#ffffff !important;
+  border:1px solid #dce5f1 !important;
+  color:#173765 !important;
+  box-shadow:0 5px 18px rgba(23,55,101,.06) !important;
 }
 .home .feature-card h3, .home .news-home-card h3, .home .news-home-card strong,
-.home .feature-card strong {color:#fff !important}
-.home .feature-card p, .home .news-home-card p, .home .home-section p {color:#c4d5ed !important}
-.home .feature-card .icon, .home .feature-card svg {color:#f0bd45}
+.home .feature-card strong {color:#173765 !important}
+.home .feature-card p, .home .news-home-card p, .home .home-section p {color:#5e6f87 !important}
+.home .feature-card .icon, .home .feature-card svg {color:#173765 !important}
 .home .mobile-portal-nav {
-  left:0 !important; right:0 !important; bottom:0 !important; width:100% !important;
-  transform:none !important; border-radius:18px 18px 0 0 !important;
-  background:rgba(5,20,44,.98) !important;
-  border:1px solid rgba(226,177,62,.25) !important;
-  box-shadow:0 -8px 28px rgba(0,0,0,.35) !important;
+  position:fixed !important; left:0 !important; right:0 !important; bottom:0 !important;
+  transform:none !important; box-sizing:border-box !important; width:100% !important; max-width:none !important;
+  background:rgba(255,255,255,.98) !important; border:1px solid #dce5f1 !important;
+  border-bottom:0 !important; border-radius:18px 18px 0 0 !important;
+  box-shadow:0 -6px 24px rgba(23,55,101,.12) !important;
 }
-.home .mobile-portal-nav a, .home .mobile-portal-nav button {color:#b9c9df !important}
-.home .mobile-portal-nav a[aria-current="page"] {background:#102e59 !important;color:#fff !important}
-.home .mobile-portal-nav a[aria-current="page"] .nav-icon {color:#f0bd45 !important}
-@media(max-width:760px){
-  body.home {padding-bottom:calc(82px + env(safe-area-inset-bottom)) !important}
-  body.home .home-content {padding-left:14px !important;padding-right:14px !important}
-}
+.home .mobile-portal-nav a, .home .mobile-portal-nav button {color:#66758a !important}
+.home .mobile-portal-nav a[aria-current="page"] {background:#edf3fc !important;color:#173765 !important}
+.home .mobile-portal-nav a[aria-current="page"] .nav-icon {color:#c91f35 !important}
+@media(max-width:760px){body.home {padding-bottom:calc(82px + env(safe-area-inset-bottom)) !important}}
