@@ -68,7 +68,7 @@ self.addEventListener('fetch', event => {
   });
 })();
 `;
-      const injection = '<script data-sb-fix="1">' + FIX_SCRIPT.replace(/<\\/script>/gi,'<\\/scr'+'ipt>') + '</script><script data-sb-mobile-nav="1">' + NAV_SCRIPT.replace(/<\\/script>/gi,'<\\/scr'+'ipt>') + '</script>';
+      const injection = '<script data-sb-fix="1">' + FIX_SCRIPT.replace(/<\\/script>/gi,'<\\/scr'+'ipt>') + '</script>';
       if (!html.includes('data-sb-fix="1"')) html = html.replace(/<\\/body>/i, injection + '</body>');
       return new Response(html, {status:response.status,statusText:response.statusText,headers:response.headers});
     })());
