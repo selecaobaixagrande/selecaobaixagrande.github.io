@@ -7,3 +7,41 @@ section{max-width:var(--max);margin:auto;padding:76px 20px}.titulo{margin-bottom
 /* categorias e páginas específicas */.category-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.category-card{position:relative;min-height:320px;overflow:hidden;border:1px solid var(--line);border-radius:22px;background-color:#101214;background-size:cover;background-position:center;transition:.25s}.category-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.10),rgba(0,0,0,.93))}.category-content{position:absolute;left:24px;right:24px;bottom:24px;z-index:1}.category-number{color:#ff5962;font-size:9px;font-weight:900;letter-spacing:2px}.category-content h3{font:700 42px/.9 Oswald,Arial,sans-serif;margin:8px 0;letter-spacing:-1px}.category-content p{color:#d0d3d7;font-size:12px;max-width:430px}.category-content a{display:inline-flex;margin-top:14px;padding:11px 15px;background:var(--vermelho);border:1px solid var(--vermelho2);border-radius:8px;font-size:10px;font-weight:900}.agenda-card{padding:24px 18px}.teams{display:flex;align-items:center;justify-content:center;gap:18px}.team{flex:1;max-width:210px;font-weight:900}.team strong{display:block;font-size:14px;margin-top:8px}.match-image{display:block;width:90px;height:90px;object-fit:contain;margin:auto;padding:8px;border:1px solid var(--line);border-radius:13px;background:#0b0c0d}.match-empty{padding:30px 20px;text-align:center}.match-empty p{color:var(--muted)}
 /* mobile */@media(max-width:1000px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3,.grid-2{grid-template-columns:1fr}}@media(max-width:760px){.header{min-height:64px;padding:8px 12px}.logo-header{width:38px;height:38px}.marca{gap:7px}.marca h1{font-size:10px}.header>#menuBtn,.menu-toggle{display:inline-flex}.header nav,.page-nav nav{display:none!important;position:absolute!important;right:12px!important;top:calc(100% + 8px)!important;width:235px!important;padding:7px!important;flex-direction:column!important;align-items:stretch!important;gap:2px!important;background:rgba(10,11,12,.98)!important;border:1px solid #30343a!important;border-radius:14px!important;box-shadow:0 20px 50px rgba(0,0,0,.65)!important}.header nav.menu-open,.page-nav nav.open{display:flex!important}.header nav a,.page-nav nav a{padding:12px!important;font-size:12px!important;border-radius:8px!important}.header nav a.ativo,.page-nav nav a.ativo{background:var(--vermelho)!important}.header nav a.ativo:after{display:none!important}.banner-pagina{padding:66px 16px 52px}.banner-pagina h2{font-size:42px;letter-spacing:-2px}.banner-pagina p{font-size:12px}.section,section{padding:58px 16px}.grid-4{grid-template-columns:1fr 1fr;gap:12px}.category-grid{grid-template-columns:1fr}.category-card{min-height:270px}.times{gap:16px}.time{font-size:12px}.time img{width:70px;height:70px}.vs{font-size:22px}.destaque,.jogo{padding:25px 18px}}@media(max-width:440px){.grid-4{grid-template-columns:1fr}.category-content h3{font-size:38px}.times{gap:8px}.match-image{width:70px;height:70px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+
+/* ===== PADRÃO UNIFICADO: PRETO + VERMELHO | 23/10/2026 ===== */
+:root{color-scheme:dark;--vermelho:#d71920;--vermelho2:#ff3038;--bg:#080808;--surface:#111;--card:#151515;--line:#303030;--muted:#b5b5b5;--white:#fff}
+html{background:#080808!important;scroll-padding-top:84px}
+body{background-color:#080808!important;color:#f7f7f7}
+::selection{background:#d71920;color:#fff}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #ff3038!important;outline-offset:3px}
+img{max-width:100%}
+button,.btn,.botao,.acesso-btn,.instagram,.card-btn,.hero-primary,.category-content a{background-color:#c9151e;border-color:#ff3038;color:#fff}
+button:hover,.btn:hover,.botao:hover,.acesso-btn:hover,.card-btn:hover,.category-content a:hover{filter:brightness(1.12);border-color:#ff3038}
+header,.header,.page-nav{background-color:rgba(7,7,7,.97)}
+header{border-bottom-color:#2b1112}
+nav a:hover,.header nav a:hover{background:#241012;color:#fff}
+nav a.ativo,.header nav a.ativo{color:#fff}
+nav a.ativo:after{background:#ff3038}
+.banner-pagina{background:linear-gradient(135deg,#080808 0%,#151010 58%,#25090b 100%);border-color:#301214}
+.card,.social,.jogo,.agenda-card,.category-card,.quick,.news-home-card,.result-feature{border-color:#303030}
+.card:before{background:linear-gradient(90deg,transparent,#d71920,transparent)}
+.card:hover,.category-card:hover,.quick:hover,.news-home-card:hover{border-color:#c9151e}
+.destaque{background:linear-gradient(135deg,#31090c,#b5121b 58%,#4a080d);border-color:#d71920}
+.jogo:before{background:radial-gradient(circle at 50% 45%,rgba(215,25,32,.18),transparent 48%)}
+.section-kicker,.titulo small,.category-number,.jogo-label,.quick small,.hero-kicker,.hero-title:after{color:#ff4048}
+.hero-title:after{background:#d71920}
+input,select,textarea{background:#111!important;color:#fff!important;border-color:#393939!important}
+input:focus,select:focus,textarea:focus{border-color:#d71920!important;box-shadow:0 0 0 3px rgba(215,25,32,.16)!important}
+footer{background:#050505;border-top-color:#2d1113}
+footer a:hover{color:#ff4048}
+@media(max-width:760px){
+ .header{gap:10px}
+ .banner-pagina{padding:58px 16px 44px}
+ section,.section{padding:48px 16px}
+ .card{padding:21px 17px;border-radius:15px}
+ .destaque,.jogo{border-radius:17px}
+ .header nav,.page-nav nav{background:#0b0b0b!important;border-color:#3a2021!important}
+ .header nav a.ativo,.page-nav nav a.ativo{background:#c9151e!important}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
