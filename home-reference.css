@@ -446,3 +446,26 @@ body.home .mobile-portal-nav a{color:#e3e3e8!important}
 body.home .mobile-portal-nav a[aria-current="page"]{color:#ff4359!important}
 body.home .section-head h2{border-left-color:#d21f35!important}
 body.home a{transition:color .2s ease,background-color .2s ease,border-color .2s ease}
+
+
+/* AJUSTE DEFINITIVO 23/10/2026 — tema preto/vermelho e navegação móvel funcional */
+:root{--portal-red:#e52336;--portal-dark:#101014;--portal-panel:#1a1a20;--portal-border:#35353d;--portal-text:#f6f6f8;--portal-muted:#b8b8c2}
+html,body.home,body.home main,body.home .home-content{background:#101014!important;color:#f6f6f8!important}
+body.home header,body.home>header,body.home .header{background:#141418!important;color:#fff!important;border-color:#35353d!important}
+body.home .marca h1,body.home .marca span,body.home .marca-tagline,body.home nav#nav a,body.home #searchToggle{color:#f6f6f8!important}
+body.home nav#nav a.ativo,body.home nav#nav a:hover{color:#ff4359!important}
+body.home .home-section,body.home main .home-content{background:transparent!important;color:#f6f6f8!important}
+body.home .section-head h2,body.home .feature-card h3,body.home .news-home-content h3,body.home .result-team strong,body.home .result-score b,body.home .next-panel h3,body.home .info-panel h3{color:#fff!important}
+body.home .section-kicker,body.home .news-home-content small,body.home .next-panel .eyebrow,body.home .result-score span,body.home .feature-card small{color:#ff4359!important}
+body.home .quick-links a,body.home .feature-card,body.home .result-feature,body.home .next-panel,body.home .info-panel,body.home .social-home{background:#1a1a20!important;color:#f6f6f8!important;border:1px solid #35353d!important;box-shadow:0 8px 22px rgba(0,0,0,.28)!important}
+body.home .quick-links a strong,body.home .feature-card span,body.home .info-item strong,body.home .result-meta strong{color:#fff!important}
+body.home .quick-links a .quick-icon{background:#29292f!important;color:#fff!important}
+body.home .quick-links a:nth-child(2) .quick-icon,body.home .quick-links a:nth-child(5) .quick-icon{background:#481a24!important;color:#ff5266!important}
+body.home .feature-card p,body.home .news-home-content p,body.home .next-panel p,body.home .info-panel p,body.home .result-meta{color:#b8b8c2!important}
+body.home .section-link{color:#ff4359!important;border-color:#4a3035!important;background:#1a1a20!important}
+body.home .result-meta,body.home .info-item{border-color:#35353d!important}
+body.home footer{background:#0b0b0e!important;color:#c4c4cd!important;border-top:1px solid #35353d!important}
+body.home footer strong{color:#fff!important}
+body.home .social-home a{background:#e52336!important;color:#fff!important}
+body.home .mobile-portal-nav,body.home nav[aria-label="Navegação rápida no celular"]{display:grid!important;visibility:visible!important;pointer-events:auto!important}
+@media(max-width:760px){body.home{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.mobile-portal-nav{position:fixed!important;z-index:1200!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;box-sizing:border-box!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:2px!important;padding:8px 5px calc(7px + env(safe-area-inset-bottom))!important;border:1px solid #35353d!important;border-bottom:0!important;border-radius:17px 17px 0 0!important;background:rgba(20,20,24,.98)!important;box-shadow:0 -6px 24px rgba(0,0,0,.4)!important;backdrop-filter:blur(16px)}.mobile-portal-nav a{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;color:#c4c4cd!important;font-size:9px!important;font-weight:800!important;line-height:1.1!important;padding:4px 0!important;text-decoration:none!important}.mobile-portal-nav a span{font-size:19px!important;line-height:1!important}.mobile-portal-nav a[aria-current="page"]{color:#ff4359!important;background:#32171d!important;border-radius:9px!important}body.home footer{padding-bottom:20px!important}}
